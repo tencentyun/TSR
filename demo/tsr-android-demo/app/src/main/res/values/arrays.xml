@@ -1,0 +1,25 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="video_names">
+        <item>4K.mp4</item>
+        <item>1080P.mp4</item>
+        <item>864P.mp4</item>
+        <item>720P.mp4</item>
+        <item>576P.mp4</item>
+        <item>540P.mp4</item>
+    </string-array>
+
+    <string-array name="sr_ratio">
+        <item>OFF</item>
+        <item>1.0</item>
+        <item>1.25</item>
+        <item>1.5</item>
+        <item>1.7</item>
+        <item>2.0</item>
+    </string-array>
+
+    <string-array name="codecs">
+        <item>H264</item>
+        <item>H265</item>
+    </string-array>
+</resources>

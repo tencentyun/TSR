@@ -1,0 +1,698 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4D02E2142B6365DA0019EA2F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D02E2132B6365DA0019EA2F /* SettingsViewController.m */; };
+		4D1E68E82B67C6E200B8FA8E /* Logger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E68E72B67C6E200B8FA8E /* Logger.m */; };
+		4D2411742B60C1D000720192 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411732B60C1D000720192 /* AppDelegate.m */; };
+		4D2411772B60C1D000720192 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411762B60C1D000720192 /* SceneDelegate.m */; };
+		4D24117A2B60C1D000720192 /* VideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411792B60C1D000720192 /* VideoPlayViewController.m */; };
+		4D24117D2B60C1D000720192 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D24117B2B60C1D000720192 /* Main.storyboard */; };
+		4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D24117E2B60C1D200720192 /* Assets.xcassets */; };
+		4D2411822B60C1D200720192 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D2411802B60C1D200720192 /* LaunchScreen.storyboard */; };
+		4D2411852B60C1D200720192 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411842B60C1D200720192 /* main.m */; };
+		4D24118F2B60C1D300720192 /* tsr_ios_demoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D24118E2B60C1D300720192 /* tsr_ios_demoTests.m */; };
+		4D2411992B60C1D300720192 /* tsr_ios_demoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411982B60C1D300720192 /* tsr_ios_demoUITests.m */; };
+		4D24119B2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */; };
+		4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D2411A72B60C1F800720192 /* girl-544x960.mp4 */; };
+		4D2411AA2B60C21100720192 /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411A92B60C21100720192 /* shader.metal */; };
+		4DF5FCD02BB2779000A333C6 /* 720P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */; };
+		4DF5FCD12BB2779000A333C6 /* 540P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */; };
+		4DF5FCD22BB2779000A333C6 /* 4K.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */; };
+		4DF5FCD32BB2779000A333C6 /* 576P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */; };
+		4DF5FCD42BB2779000A333C6 /* 864P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */; };
+		4DF5FCD52BB2779000A333C6 /* 1080P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4D24118B2B60C1D300720192 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4D2411672B60C1D000720192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4D24116E2B60C1D000720192;
+			remoteInfo = "tsr-ios-demo";
+		};
+		4D2411952B60C1D300720192 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4D2411672B60C1D000720192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4D24116E2B60C1D000720192;
+			remoteInfo = "tsr-ios-demo";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4DB63C412B62389A00E563DE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4D02E2122B6365A90019EA2F /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		4D02E2132B6365DA0019EA2F /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		4D1E68E52B67C6BB00B8FA8E /* Logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
+		4D1E68E72B67C6E200B8FA8E /* Logger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Logger.m; sourceTree = "<group>"; };
+		4D24116F2B60C1D000720192 /* tsr-ios-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tsr-ios-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D2411722B60C1D000720192 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4D2411732B60C1D000720192 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4D2411752B60C1D000720192 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		4D2411762B60C1D000720192 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		4D2411782B60C1D000720192 /* VideoPlayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoPlayViewController.h; sourceTree = "<group>"; };
+		4D2411792B60C1D000720192 /* VideoPlayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoPlayViewController.m; sourceTree = "<group>"; };
+		4D24117C2B60C1D000720192 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4D24117E2B60C1D200720192 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4D2411812B60C1D200720192 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		4D2411832B60C1D200720192 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4D2411842B60C1D200720192 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4D24118A2B60C1D300720192 /* tsr-ios-demoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tsr-ios-demoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D24118E2B60C1D300720192 /* tsr_ios_demoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tsr_ios_demoTests.m; sourceTree = "<group>"; };
+		4D2411942B60C1D300720192 /* tsr-ios-demoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tsr-ios-demoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D2411982B60C1D300720192 /* tsr_ios_demoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tsr_ios_demoUITests.m; sourceTree = "<group>"; };
+		4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tsr_ios_demoUITestsLaunchTests.m; sourceTree = "<group>"; };
+		4D2411A72B60C1F800720192 /* girl-544x960.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "girl-544x960.mp4"; sourceTree = "<group>"; };
+		4D2411A92B60C21100720192 /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
+		4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720P.mp4; sourceTree = "<group>"; };
+		4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 540P.mp4; sourceTree = "<group>"; };
+		4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4K.mp4; sourceTree = "<group>"; };
+		4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 576P.mp4; sourceTree = "<group>"; };
+		4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 864P.mp4; sourceTree = "<group>"; };
+		4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1080P.mp4; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4D24116C2B60C1D000720192 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D2411872B60C1D300720192 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D2411912B60C1D300720192 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4D2411662B60C1D000720192 = {
+			isa = PBXGroup;
+			children = (
+				4D2411712B60C1D000720192 /* tsr-ios-demo */,
+				4D24118D2B60C1D300720192 /* tsr-ios-demoTests */,
+				4D2411972B60C1D300720192 /* tsr-ios-demoUITests */,
+				4D2411702B60C1D000720192 /* Products */,
+				4DB63CEE2B625D5300E563DE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4D2411702B60C1D000720192 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4D24116F2B60C1D000720192 /* tsr-ios-demo.app */,
+				4D24118A2B60C1D300720192 /* tsr-ios-demoTests.xctest */,
+				4D2411942B60C1D300720192 /* tsr-ios-demoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4D2411712B60C1D000720192 /* tsr-ios-demo */ = {
+			isa = PBXGroup;
+			children = (
+				4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */,
+				4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */,
+				4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */,
+				4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */,
+				4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */,
+				4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */,
+				4D2411A92B60C21100720192 /* shader.metal */,
+				4D2411A72B60C1F800720192 /* girl-544x960.mp4 */,
+				4D2411722B60C1D000720192 /* AppDelegate.h */,
+				4D2411732B60C1D000720192 /* AppDelegate.m */,
+				4D2411752B60C1D000720192 /* SceneDelegate.h */,
+				4D2411762B60C1D000720192 /* SceneDelegate.m */,
+				4D2411782B60C1D000720192 /* VideoPlayViewController.h */,
+				4D2411792B60C1D000720192 /* VideoPlayViewController.m */,
+				4D24117B2B60C1D000720192 /* Main.storyboard */,
+				4D24117E2B60C1D200720192 /* Assets.xcassets */,
+				4D2411802B60C1D200720192 /* LaunchScreen.storyboard */,
+				4D2411832B60C1D200720192 /* Info.plist */,
+				4D2411842B60C1D200720192 /* main.m */,
+				4D02E2122B6365A90019EA2F /* SettingsViewController.h */,
+				4D02E2132B6365DA0019EA2F /* SettingsViewController.m */,
+				4D1E68E52B67C6BB00B8FA8E /* Logger.h */,
+				4D1E68E72B67C6E200B8FA8E /* Logger.m */,
+			);
+			path = "tsr-ios-demo";
+			sourceTree = "<group>";
+		};
+		4D24118D2B60C1D300720192 /* tsr-ios-demoTests */ = {
+			isa = PBXGroup;
+			children = (
+				4D24118E2B60C1D300720192 /* tsr_ios_demoTests.m */,
+			);
+			path = "tsr-ios-demoTests";
+			sourceTree = "<group>";
+		};
+		4D2411972B60C1D300720192 /* tsr-ios-demoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4D2411982B60C1D300720192 /* tsr_ios_demoUITests.m */,
+				4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */,
+			);
+			path = "tsr-ios-demoUITests";
+			sourceTree = "<group>";
+		};
+		4DB63CEE2B625D5300E563DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4D24116E2B60C1D000720192 /* tsr-ios-demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4D24119E2B60C1D300720192 /* Build configuration list for PBXNativeTarget "tsr-ios-demo" */;
+			buildPhases = (
+				4D24116B2B60C1D000720192 /* Sources */,
+				4D24116C2B60C1D000720192 /* Frameworks */,
+				4D24116D2B60C1D000720192 /* Resources */,
+				4DB63C412B62389A00E563DE /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tsr-ios-demo";
+			productName = "tsr-ios-demo";
+			productReference = 4D24116F2B60C1D000720192 /* tsr-ios-demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4D2411892B60C1D300720192 /* tsr-ios-demoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4D2411A12B60C1D300720192 /* Build configuration list for PBXNativeTarget "tsr-ios-demoTests" */;
+			buildPhases = (
+				4D2411862B60C1D300720192 /* Sources */,
+				4D2411872B60C1D300720192 /* Frameworks */,
+				4D2411882B60C1D300720192 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4D24118C2B60C1D300720192 /* PBXTargetDependency */,
+			);
+			name = "tsr-ios-demoTests";
+			productName = "tsr-ios-demoTests";
+			productReference = 4D24118A2B60C1D300720192 /* tsr-ios-demoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4D2411932B60C1D300720192 /* tsr-ios-demoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4D2411A42B60C1D300720192 /* Build configuration list for PBXNativeTarget "tsr-ios-demoUITests" */;
+			buildPhases = (
+				4D2411902B60C1D300720192 /* Sources */,
+				4D2411912B60C1D300720192 /* Frameworks */,
+				4D2411922B60C1D300720192 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4D2411962B60C1D300720192 /* PBXTargetDependency */,
+			);
+			name = "tsr-ios-demoUITests";
+			productName = "tsr-ios-demoUITests";
+			productReference = 4D2411942B60C1D300720192 /* tsr-ios-demoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4D2411672B60C1D000720192 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					4D24116E2B60C1D000720192 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					4D2411892B60C1D300720192 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 4D24116E2B60C1D000720192;
+					};
+					4D2411932B60C1D300720192 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 4D24116E2B60C1D000720192;
+					};
+				};
+			};
+			buildConfigurationList = 4D24116A2B60C1D000720192 /* Build configuration list for PBXProject "tsr-ios-demo" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4D2411662B60C1D000720192;
+			productRefGroup = 4D2411702B60C1D000720192 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4D24116E2B60C1D000720192 /* tsr-ios-demo */,
+				4D2411892B60C1D300720192 /* tsr-ios-demoTests */,
+				4D2411932B60C1D300720192 /* tsr-ios-demoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4D24116D2B60C1D000720192 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4DF5FCD22BB2779000A333C6 /* 4K.mp4 in Resources */,
+				4DF5FCD32BB2779000A333C6 /* 576P.mp4 in Resources */,
+				4D2411822B60C1D200720192 /* LaunchScreen.storyboard in Resources */,
+				4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */,
+				4DF5FCD12BB2779000A333C6 /* 540P.mp4 in Resources */,
+				4DF5FCD52BB2779000A333C6 /* 1080P.mp4 in Resources */,
+				4DF5FCD42BB2779000A333C6 /* 864P.mp4 in Resources */,
+				4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */,
+				4D24117D2B60C1D000720192 /* Main.storyboard in Resources */,
+				4DF5FCD02BB2779000A333C6 /* 720P.mp4 in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D2411882B60C1D300720192 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D2411922B60C1D300720192 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4D24116B2B60C1D000720192 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D24117A2B60C1D000720192 /* VideoPlayViewController.m in Sources */,
+				4D2411742B60C1D000720192 /* AppDelegate.m in Sources */,
+				4D2411852B60C1D200720192 /* main.m in Sources */,
+				4D02E2142B6365DA0019EA2F /* SettingsViewController.m in Sources */,
+				4D2411772B60C1D000720192 /* SceneDelegate.m in Sources */,
+				4D1E68E82B67C6E200B8FA8E /* Logger.m in Sources */,
+				4D2411AA2B60C21100720192 /* shader.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D2411862B60C1D300720192 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D24118F2B60C1D300720192 /* tsr_ios_demoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D2411902B60C1D300720192 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4D24119B2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m in Sources */,
+				4D2411992B60C1D300720192 /* tsr_ios_demoUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4D24118C2B60C1D300720192 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4D24116E2B60C1D000720192 /* tsr-ios-demo */;
+			targetProxy = 4D24118B2B60C1D300720192 /* PBXContainerItemProxy */;
+		};
+		4D2411962B60C1D300720192 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4D24116E2B60C1D000720192 /* tsr-ios-demo */;
+			targetProxy = 4D2411952B60C1D300720192 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4D24117B2B60C1D000720192 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4D24117C2B60C1D000720192 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		4D2411802B60C1D200720192 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4D2411812B60C1D200720192 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4D24119C2B60C1D300720192 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		4D24119D2B60C1D300720192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4D24119F2B60C1D300720192 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KN7WY94HU7;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/tsr-ios-demo",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "tsr-ios-demo/Info.plist";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-fprofile-instr-generate",
+					"-lstdc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4D2411A02B60C1D300720192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KN7WY94HU7;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/tsr-ios-demo",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "tsr-ios-demo/Info.plist";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-fprofile-instr-generate",
+					"-lstdc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4D2411A22B60C1D300720192 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VFTG275W9A;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demoTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tsr-ios-demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/tsr-ios-demo";
+			};
+			name = Debug;
+		};
+		4D2411A32B60C1D300720192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VFTG275W9A;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demoTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tsr-ios-demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/tsr-ios-demo";
+			};
+			name = Release;
+		};
+		4D2411A52B60C1D300720192 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VFTG275W9A;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demoUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "tsr-ios-demo";
+			};
+			name = Debug;
+		};
+		4D2411A62B60C1D300720192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VFTG275W9A;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demoUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "tsr-ios-demo";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4D24116A2B60C1D000720192 /* Build configuration list for PBXProject "tsr-ios-demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D24119C2B60C1D300720192 /* Debug */,
+				4D24119D2B60C1D300720192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4D24119E2B60C1D300720192 /* Build configuration list for PBXNativeTarget "tsr-ios-demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D24119F2B60C1D300720192 /* Debug */,
+				4D2411A02B60C1D300720192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4D2411A12B60C1D300720192 /* Build configuration list for PBXNativeTarget "tsr-ios-demoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D2411A22B60C1D300720192 /* Debug */,
+				4D2411A32B60C1D300720192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4D2411A42B60C1D300720192 /* Build configuration list for PBXNativeTarget "tsr-ios-demoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D2411A52B60C1D300720192 /* Debug */,
+				4D2411A62B60C1D300720192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4D2411672B60C1D000720192 /* Project object */;
+}
