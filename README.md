@@ -81,38 +81,7 @@ tsrPass.release();
 
 为了编译运行，您需要先联系腾讯云商务获取SDK和授权，再配置到Demo工程中。步骤如下：
 
-1. 将SDK放在工程的libs文件夹下（可以自定义），在settings.gradle中添加
-```
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenLocal()
-        maven { url 'https://jitpack.io' }
-        google()
-        mavenCentral()
-
-        flatDir {
-            dirs "libs"
-        }
-    }
-    
-        versionCatalogs {
-        libs {
-            version('versionName', '1.0.0')
-            version('versionCode', '2')
-            version('compileSdk', '32')
-            version('minSdk', '21')
-            version('targetSdk', '32')
-        }
-    }
-}
-```
-
-然后在app目录下的build.gradle中配置
-```
-implementation(name:'tsrsdk', ext:'aar')
-```
-
+1. 将SDK放在工程的libs文件夹下。
 
 2. 在MainActivity.java下配置初始化参数，离线校验初始化需要APPID与licensePath。
 
