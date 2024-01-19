@@ -48,12 +48,15 @@ import javax.microedition.khronos.opengles.GL10;
 public class MainActivity extends AppCompatActivity implements GLSurfaceView.Renderer, OnFrameAvailableListener {
     private static final String TAG = "MainActivity";
 
-    /**---------------- The params for sdk verification.--------------*/
-    // AppId
-    private long mAppId;
-    // Offline verification's license.
-    private String mLicensePath;
-    /**---------------------------------------------------------------*/
+    /**--------------------------------- THE PARAMS FOR SDK VERIFICATION----------------------------------------*/
+    // Modify mAppId to your APPID which can be found in Tencent Cloud account.
+    private final long mAppId = -1;
+
+    // Modify mLicensePath to your sdk license's path in your test phone.
+    // If you want to run demo as soon as possible, you can just put your sdk license to assets. Demo is going to
+    // copy .crt file from assets to sdcard as the mLicensePath is null, and will load it to init TsrSdk.
+    private String mLicensePath = null;
+    /**---------------------------------------------------------------------------------------------------------*/
 
     // Time interval for double swipe to exit
     private static final long TIME_EXIT = 2000;
