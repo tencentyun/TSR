@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectSettingStore" SelectCheckersValue="" SelectCheckersKey="" WhitePathList="" AbsWhitePathList="" SkipPathList="" YamlRelPath="build.yml" SelectCheckersJsonData="" CheckerSetJson="" CodeccPath="" ProjectName="" BasePath="" ToolMetaJson="" SelectToolList="" SelectLangList="" NewLangList="" CheckerList="" SuffixForSelectTools="" EnablePreCommit="false" CheckDiffScanPreCommit="false" CheckAllScanPreCommit="false" CheckPipePreCommit="false" EnablePrePush="false" CheckDiffScanPrePush="false" CheckAllScanPrePush="false" CheckPipePrePush="false" ScheduleCodeCCInitJobTime="" YamlCheck="true" DockerInstallCheck="true" PreCITaskInfo="" LocalScanLog="" DockerRunStatus="true" Init="false" CronJobExecDate="" />
+</project>
