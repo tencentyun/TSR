@@ -1,18 +1,9 @@
-﻿# **TSRSDK接入指南**
+# **TSRSDK接入指南**
 ## 1. **SDK授权申请**
-### **1.1  APPID获取**
-您需要注册腾讯云帐号，在 【账号中心】-> 【账号信息】-> 【基本信息】中可以查看您的APPID。
-### **1.2 授权服务开通**
-授权服务需在SDK内预置集成APP信息，用来与APP进行绑定。<font color="red">**需提供绑定APP信息**</font>如下：
+请联系您的腾讯云商务开通服务。您需要提供将要集成SDK的App的这些信息：腾讯云账号APPID、App签名证书信息(签名证书的序列号、发布者、所有者)、App包名。
 
-|**APP上线平台**|**提供信息**|
-| :-: | :-: |
-|android|<font color="red">**APPID、应用签名信息(签名证书序列号、发布者、所有者)、包名**</font>|
-
-**例如：**
-
-我开发了一个APP名称为SRPlayer，包名是com.tencent.mps.srplayer。这个APP使用test.keystore证书进行签名。然后我使用命令查证书信息：
-
+APPID可以在您的腾讯云【账号中心】->【账号信息】->【基本信息】中查看。
+App签名证书信息可以使用keytool命令查看，例如
 ```keytool -list -v -keystore test.keystore```
 
 ![cert.png](./docs/cert.png)
