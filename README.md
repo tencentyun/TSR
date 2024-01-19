@@ -81,13 +81,12 @@ tsrPass.release();
 
 为了编译运行，您需要先联系腾讯云商务获取SDK和授权，再配置到Demo工程中。步骤如下：
 
-1. 将SDK放在工程的libs文件夹下。
+1. 将SDK放在工程的./SRPlayer/app/libs文件夹下。
 
-2. 在MainActivity.java下配置初始化参数，离线校验初始化需要APPID与licensePath。
+2. 在MainActivity.java下配置初始化参数，离线校验初始化需要APPID与licensePath。如果您只是想快速的运行demo，您可以把license直接放入./SRPlayer/app/src/main/assets文件夹内，demo会去读取assets文件夹中的文件拷贝到sdcard中。
 
    ![verification-params.png](./docs/verification-params.png)
 
-如果您只是想快速的运行demo，您可以把license直接放入assets文件夹内，demo会去读取assets文件夹中的文件拷贝到sdcard中。
 
 3. 对APK进行签名
 - 在Android Studio中，找到【File】-> 【Project Structure】 -> 【Modules】-> 【Signing Configs】中配置您的签名证书。
