@@ -83,7 +83,7 @@ tsrPass.release();
 
 1. 将SDK放在工程的./SRPlayer/app/libs文件夹下。
 
-2. 在MainActivity.java下配置初始化参数，离线校验初始化需要APPID与licensePath。如果您只是想快速的运行demo，您可以把license直接放入./SRPlayer/app/src/main/assets文件夹内，demo会去读取assets文件夹中的文件拷贝到sdcard中。
+2. 在MainActivity.java下配置初始化参数，离线校验初始化需要APPID与licensePath。如果您只是想快速的运行demo，您可以把license直接放入./SRPlayer/app/src/main/assets文件夹内，demo会去读取assets文件夹中的文件拷贝到sdcard中，用于初始化TsrSdk。
 
    ![verification-params.png](./docs/verification-params.png)
 
