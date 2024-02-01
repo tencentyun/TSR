@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">SRPlayer</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="video_app_header">播放内置视频</string>
+    <string name="video_local_header">播放本地视频</string>
+    <string name="config_header">播放设置</string>
+
+    <string name="video_title">选择视频</string>
+    <string name="video_not_choose">未选择视频</string>
+    <string name="video_choose">点击选择视频</string>
+    <string name="video_choose_hint">请先选择视频</string>
+    <string name="video_format_not_support">只支持.mp4、.webm、.3gp封装格式的视频</string>
+    <string name="sr_ratio">超分倍数</string>
+    <string name="video_choose_type">视频选择模式</string>
+
+    <string name="full_screen_config">是否全屏绘制</string>
+    <string name="compare_lerp">对比双线性</string>
+    <string name="cycle_play">循环播放</string>
+
+    <string name="full_screen_on">将全屏绘制纹理，绘制的大小可能与纹理原本大小不一致</string>
+    <string name="full_screen_off">将按照纹理的原大小绘制</string>
+    <string name="compare_lerp_on">会将SR超分后的图像与线性放大的图像对比</string>
+    <string name="compare_lerp_off">只绘制SR超分后的图像</string>
+    <string name="cycle_play_on">播放结束后从头开始循环播放</string>
+    <string name="cycle_play_off">播放结束后停止</string>
+
+    <string name="start_play">开始播放</string>
+    <string name="right_bilinear">Right: Bilinear</string>
+    <string name="left_sr">Left: TSR</string>
+    <string name="play_video">播放</string>
+    <string name="pause_video">暂停</string>
+
+    <string name="dump_start">开始Dump，请等待Dump完成…</string>
+    <string name="dump_done">Dump完成</string>
+    <string name="slide_again">"再划动一次退出播放"</string>
+
+    <string name="sr1.0x">1.0</string>
+    <string name="sr1.2x">1.2</string>
+    <string name="sr1.5x">1.5</string>
+    <string name="sr1.7x">1.7</string>
+    <string name="sr2.0x">2.0</string>
+
+    <string name="local_video">选择手机本地视频</string>
+    <string name="in_app_video">选择app内置视频</string>
+
+    <string name="girl_video">girl-544x960.mp4</string>
+    <string name="van_video">van-720p.mp4</string>
+</resources>

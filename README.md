@@ -1,4 +1,10 @@
 # **TSRSDK接入指南**
+| 接入平台                           |
+|--------------------------------|
+| [Android接入指南](#anchor-android) |
+| [iOS接入指南](#anchor-ios)         |
+
+# <a name="anchor-android">Android</a>
 ## 1. **SDK授权申请**
 请联系您的腾讯云商务开通服务。您需要提供将要集成SDK的App的这些信息：腾讯云账号APPID、App签名证书信息(签名证书的序列号、发布者、所有者)、App包名。
 
@@ -95,4 +101,76 @@ tsrPass.release();
 
 4. 运行demo
 
+# <a name="anchor-ios">iOS</a>
+## 1. **SDK授权申请**
+请联系您的腾讯云商务开通服务。您需要提供将要集成SDK的APP的这些信息：**腾讯云账号APPID**、**APP的Bundle Identifier**。
+
+* APPID可以在您的腾讯云【账号中心】->【账号信息】->【基本信息】中查看。
+* Bundle Identifier可以在xcode项目中的【TARGETS】-> 【General】-> 【Identity】-> 【Bundle Identifier】查看。
+
+#### 例：提供的信息
+|信息|值|
+| ------ | ----------- |
+|APPID|12345678|
+|Bundle Identifier|com.tencent.mps.ios-demo|
+
+离线授权方案分为授权申请和授权验证两个过程，其中授权申请在授权有效期内，只会进行一次。授权服务开通后，我们会给您提供离线的license，用于在TSRSDK初始化时进行鉴权。授权服务具有有效期限，当授权过期失效后需要重新获取授权。
+
+## 2. **SDK接入指南**
+### **2.1 程序流程**
+![tsr-work-flow.png](./docs/tsr-work-flow.png)
+
+#### **2.1.1 TSRSdk**
+TSRSdk包括`initWithAppId:licenseURL:tsrLogger:`和`reset`两个方法。`initWithAppId:licenseURL:tsrLogger:`方法用于初始化SDK，`initWithAppId:licenseURL:tsrLogger:`方法用于初始化SDK，`reset`方法用于释放资源。
+1. 离线鉴权初始化TSRSdk，您需要传入**APPID、licenseUri**用于离线鉴权，除此之外，还需要传入一个 TsrLogger，用于获取SDK的日志。`initWithAppId:licenseURL:tsrLogger:`会有返回值`TSRSdkLicenseStatus` ，表示license校验的结果。下面是示例代码：
+```
+TSRSdkLicenseStatus statatus = [TSRSdk.sharedInstance itWithAppId:appId licenseURL:licenseURL tsrLogger:tsrLogger];
+if (status == TSRSRSdkLicenseStatusAvailable) {
+// Perform super-resolution rendering using TSRPass class.
+} else {
+// Do something when the verification of sdk’s license failed.
+}
+// Release resources when the TSRSdk object is no longer needed.
+tsrSdk.reset();
+```
+
+
+2. 当您已经不需要使用TSRSdk时，需要调用TSRSdk的reset方法，释放资源。
+```
+// Release resources when the TSRSdk object is no longer needed.
+tsrSdk.reset();
+```
+#### **2.1.2 TSRPass**
+**注意：这个类使用Metal框架进行超分辨率渲染，需要设备支持Metal。**
+
+TSRPass是用于进行超分辨率渲染的类，它包括了`initWithDevice:inputWidth:inputHeight:srRatio:`和`render:commandBuffer:`方法。
+
+* 在使用TSRPass前，您需要调用`initWithDevice:inputWidth:inputHeight:srRatio:`方法进行初始化。
+
+* `render:commmandBufffer:`方法将超分辨率渲染过程应用于输入图像，提高其质量。处理后的图像渲染在TSRPass对象内的MTLTexture上。返回的是已执行超分辨率渲染的MTLTexture。
+
+#### **2.1.3 TsrLogger**
+TsrLogger用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
+### **2.2 API文档**
+您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
+
+
+### **2.3 体验Demo**
+#### **2.3.1 安装包**
+请联系您的腾讯云商务获取。
+#### **2.3.2 源码**
+我们开放了体验Demo的工程源码，供您接入参考。
+
+为了编译运行，您需要先联系腾讯云商务获取SDK和授权，再配置到Demo工程中。步骤如下：
+
+1. 使用xcode打开工程项目，将sdk拖入工程的目录下。勾选Copy items if needed，并检查Link Binary With Libraries是否已经包含sdk
+   ![ios-demo-step1-1](./docs/ios-demo-step1-1.png)
+   ![ios-demo-step1-2](./docs/ios-demo-step1-2.png)
+   ![ios-demo-step1-3](./docs/ios-demo-step1-3.png)
+2. 在【TARGETS】-> 【General】-> 【Frameworks, Libraries, and Embedded Content】中设置SDK的【Embed】为"Embed & Sign"
+   ![ios-demo-step2](./docs/ios-demo-step2.png)
+3. 将证书拖入工程目录的tsr-ios-demo下，并确认【Target Membembership】已勾选。
+4. 在VideoPlayViewController.h中填写licenseName和appId
+   ![ios-demo-step4](./docs/ios-demo-step4.png)
+5. 运行demo
 

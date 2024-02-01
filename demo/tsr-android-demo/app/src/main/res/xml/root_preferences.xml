@@ -1,0 +1,38 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:key="choose_app_video" app:title="@string/video_app_header">
+        <ListPreference
+                app:key="@string/video_title"
+                app:title="@string/video_title"
+                app:entries="@array/video_names"
+                app:entryValues="@array/video_names"
+                app:defaultValue="girl-544x960.mp4"
+                app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/config_header">
+
+        <ListPreference
+                app:key="@string/sr_ratio"
+                app:title="@string/sr_ratio"
+                app:entries="@array/sr_ratio"
+                app:entryValues="@array/sr_ratio"
+                app:defaultValue="2.0"
+                app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+                app:key="@string/full_screen_config"
+                app:title="@string/full_screen_config"
+                app:summaryOn="@string/full_screen_on"
+                app:summaryOff="@string/full_screen_off"/>
+
+        <SwitchPreferenceCompat
+                app:key="@string/compare_lerp"
+                app:title="@string/compare_lerp"
+                app:summaryOn="@string/compare_lerp_on"
+                app:summaryOff="@string/compare_lerp_off"
+                app:defaultValue="true"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
