@@ -78,7 +78,7 @@ tsrPass.release();
 ### **2.2 API文档**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK API文档](https://tencentyun.github.io/TSR/com/tencent/mps/tsr/api/package-summary.html)
+[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/com/tencent/mps/tsr/api/package-summary.html)
 ### **2.3 体验Demo**
 #### **2.3.1 安装包**
 请联系您的腾讯云商务获取。
@@ -153,7 +153,7 @@ TSRPass是用于进行超分辨率渲染的类，它包括了`initWithDevice:inp
 TsrLogger用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
 ### **2.2 API文档**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
-
+[TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/index.html)
 
 ### **2.3 体验Demo**
 #### **2.3.1 安装包**
