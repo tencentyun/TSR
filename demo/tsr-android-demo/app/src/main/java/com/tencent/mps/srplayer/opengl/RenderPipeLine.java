@@ -34,6 +34,14 @@ public class RenderPipeLine {
      * （超分）Viewport在shader中uniform变量的位置
      */
     private final int mViewportInfoLocation;
+    /**
+     * 顶点坐标位置
+     */
+    private int inPosLocation;
+    /**
+     * 纹理坐标位置
+     */
+    private int inTcLocation;
 
 
     /**
@@ -51,8 +59,8 @@ public class RenderPipeLine {
         final String INPUT_TEXTURE_COORDINATE_NAME = "aCoordinate";
 
         // 获取Attribute变量位置
-        int inPosLocation = mShader.getAttribLocation(INPUT_VERTEX_COORDINATE_NAME);
-        int inTcLocation = mShader.getAttribLocation(INPUT_TEXTURE_COORDINATE_NAME);
+        inPosLocation = mShader.getAttribLocation(INPUT_VERTEX_COORDINATE_NAME);
+        inTcLocation = mShader.getAttribLocation(INPUT_TEXTURE_COORDINATE_NAME);
 
         // 创建一个顶点缓冲对象
         int[] buffer = new int[1];
@@ -63,10 +71,10 @@ public class RenderPipeLine {
         // 矩形平面的顶点和纹理坐标数据
         // 顶点顺序: 左下, 左上, 右下, 右上
         float[] RECTANGLE_VERTEX_DATA = {
-                -1.0f, -1.0f, 0.0f, 0.0f,
-                -1.0f,  1.0f, 0.0f, 1.0f,
-                1.0f, -1.0f, 1.0f, 0.0f,
+                -1.0f, 1.0f, 0.0f, 1.0f,
                 1.0f,  1.0f, 1.0f, 1.0f,
+                -1.0f, -1.0f, 0.0f, 0.0f,
+                1.0f,  -1.0f, 1.0f, 0.0f,
         };
         ByteBuffer mVertexByteBuffer = ByteBuffer.allocateDirect(RECTANGLE_VERTEX_DATA.length * 4);
         mVertexByteBuffer.order(ByteOrder.nativeOrder());
@@ -74,14 +82,6 @@ public class RenderPipeLine {
         fb.put(RECTANGLE_VERTEX_DATA);
         fb.position(0);
         GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, RECTANGLE_VERTEX_DATA.length * 4, fb, GLES20.GL_STATIC_DRAW);
-
-        // 设置绘制顶点位置的属性
-        GLES20.glVertexAttribPointer(inPosLocation, 2, GLES20.GL_FLOAT, false, 4 * 4, 0);
-        GLES20.glEnableVertexAttribArray(inPosLocation);
-
-        // 设置纹理位置的属性
-        GLES20.glVertexAttribPointer(inTcLocation, 2, GLES20.GL_FLOAT, false, 4 * 4, 2 * 4);
-        GLES20.glEnableVertexAttribArray(inTcLocation);
 
         // 获取Uniform变量位置
         for (int i = 0; i < inputTextures.size(); i++) {
@@ -116,6 +116,14 @@ public class RenderPipeLine {
         // 设置OpenGL渲染区域(视口)
         Texture renderTarget = renderState.getRenderTarget();
         GLES20.glViewport(0, 0, renderTarget.getWidth(), renderTarget.getHeight());
+
+        // 设置绘制顶点位置的属性
+        GLES20.glVertexAttribPointer(inPosLocation, 2, GLES20.GL_FLOAT, false, 4 * 4, 0);
+        GLES20.glEnableVertexAttribArray(inPosLocation);
+
+        // 设置纹理位置的属性
+        GLES20.glVertexAttribPointer(inTcLocation, 2, GLES20.GL_FLOAT, false, 4 * 4, 2 * 4);
+        GLES20.glEnableVertexAttribArray(inTcLocation);
 
         // 设置Uniform变量ViewportInfo
         if (mViewportInfoLocation > -1) {
