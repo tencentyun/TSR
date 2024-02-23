@@ -32,7 +32,7 @@ App签名证书信息可以使用keytool命令查看，例如
 #### **2.1.1 TSRSdk**
 [TSRSdk](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.html)包括init和release两个方法。init方法用于初始化SDK，release方法用于释放资源。
 
-1. 离线鉴权初始化[TSRSdk](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.html#init(long,java.lang.String,com.tencent.mps.tsr.api.TSRLogger))，您需要传入**APPID、license路径**用于离线鉴权，除此之外，还需要传入一个 [TSRLogger](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRLogger.html)，用于获取SDK的日志。[init](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.html#init(long,java.lang.String,com.tencent.mps.tsr.api.TSRLogger))会有返回值[SdkLicenseStatus](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.TSRSdkLicenseStatus.html) ，表示license校验的结果。下面是示例代码：
+1. 离线鉴权初始化[TSRSdk](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.html#init(long,java.lang.String,com.tencent.mps.tsr.api.TSRLogger))，您需要传入**APPID、license路径**用于离线鉴权，除此之外，还需要传入一个 [TSRLogger](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRLogger.html)，用于获取SDK的日志。[init](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.html#init(long,java.lang.String,com.tencent.mps.tsr.api.TSRLogger))会有返回值[TSRSdkLicenseStatus](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.TSRSdkLicenseStatus.html) ，表示license校验的结果。下面是示例代码：
 ```
 String licensePath = "----path to you sdk license.----";
 TSRSdkLicenseStatus status = TSRSdk.getInstance().init(appId, licensePath, tsrLogger);
