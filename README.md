@@ -29,52 +29,51 @@ App签名证书信息可以使用keytool命令查看，例如
 ### **2.1 程序流程**
 ![tsr-work-flow.png](./docs/tsr-work-flow.png)
 
-#### **2.1.1 TsrSdk**
-[TsrSdk](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TsrSdk.html)包括init和release两个方法。init方法用于初始化SDK，release方法用于释放资源。
+#### **2.1.1 TSRSdk**
+[TSRSdk](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.html)包括init和release两个方法。init方法用于初始化SDK，release方法用于释放资源。
 
-1. 离线鉴权初始化[TsrSdk](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TsrSdk.html#init(long,java.lang.String,com.tencent.mps.tsr.api.TsrLogger))，您需要传入**APPID、license路径**用于离线鉴权，除此之外，还需要传入一个 [TsrLogger](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TsrLogger.html)，用于获取SDK的日志。[init](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TsrSdk.html#init(long,java.lang.String,com.tencent.mps.tsr.api.TsrLogger))会有返回值[SdkLicenseStatus](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TsrSdk.SdkLicenseStatus.html) ，表示license校验的结果。下面是示例代码：
+1. 离线鉴权初始化[TSRSdk](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.html#init(long,java.lang.String,com.tencent.mps.tsr.api.TSRLogger))，您需要传入**APPID、license路径**用于离线鉴权，除此之外，还需要传入一个 [TSRLogger](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRLogger.html)，用于获取SDK的日志。[init](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.html#init(long,java.lang.String,com.tencent.mps.tsr.api.TSRLogger))会有返回值[SdkLicenseStatus](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRSdk.TSRSdkLicenseStatus.html) ，表示license校验的结果。下面是示例代码：
 ```
 String licensePath = "----path to you sdk license.----";
-TsrSdk tsrSdk = TsrSdk.getInstance();
-SdkLicenseStatus status = tsrSdk.init(appId, licensePath, logger);
-if (status == SdkLicenseStatus.AVAILABLE) {
-// Perform super-resolution rendering using TsrPass class.
+TSRSdkLicenseStatus status = TSRSdk.getInstance().init(appId, licensePath, tsrLogger);
+if (status == TSRSdkLicenseStatus.AVAILABLE) {
+// Perform super-resolution rendering using TSRPass class.
 } else {
 // Do something when the verification of sdk's license failed.
 }
 ```
 
 
-2. 当您已经不需要使用TsrSdk时，需要调用TsrSdk的release方法，释放资源。<font color="red">**注意：在调用TsrSdk的release方法前，确保所有TsrPass已经被release，否则会有意想不到的问题。**</font>
+2. 当您已经不需要使用TSRSdk时，需要调用TSRSdk的release方法，释放资源。<font color="red">**注意：在调用TSRSdk的release方法前，确保所有TSRPass已经被release，否则会有意想不到的问题。**</font>
 ```
-// If you have created TsrPass, you should release it before release TsrSdk.
+// If you have created TSRPass, you should release it before release TSRSdk.
 tsrPass.release();
-// Release resources when the TsrSdk object is no longer needed.
-tsrSdk.release();
+// Release resources when the TSRSdk object is no longer needed.
+TSRSdk.getInstance().release();
 ```
-#### **2.1.2 TsrPass**
-[TsrPass](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TsrPass.html)是用于进行超分辨率渲染的类，它包括了init、render和release方法。在使用TsrPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用release方法释放资源。
+#### **2.1.2 TSRPass**
+[TSRPass](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRPass.html)是用于进行超分辨率渲染的类，它包括了init、render和release方法。在使用TSRPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用release方法释放资源。
 
 以下是代码示例：
 ```
-// Create a TsrPass object using the constructor.
-TsrPass tsrPass = new TsrPass();
+// Create a TSRPass object using the constructor.
+TSRPass tsrPass = new TSRPass();
 
 // The code below must be executed in glThread.
 //----------------------GL Thread---------------------//
-// Init TsrPass
+// Init TSRPass
 tsrPass.init(inputWidth, inputHeight, srRatio);
 // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
 int outputTextureId = tsrPass.render(inputTextureId);
 
 //----------------------GL Thread---------------------//
 
-// Release resources when the TsrPass object is no longer needed.
+// Release resources when the TSRPass object is no longer needed.
 tsrPass.release();
 ```
 
-#### **2.1.3 TsrLogger**
-[TsrLogger](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TsrLogger.html)用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
+#### **2.1.3 TSRLogger**
+[TSRLogger](https://tencentyun.github.io/TSR/android-docs/com/tencent/mps/tsr/api/TSRLogger.html)用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
 ### **2.2 API文档**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
@@ -89,7 +88,7 @@ tsrPass.release();
 
 1. 将SDK放在工程的./SRPlayer/app/libs文件夹下。
 
-2. 在MainActivity.java下配置初始化参数，离线校验初始化需要APPID与licensePath。如果您只是想快速的运行demo，您可以把license直接放入./SRPlayer/app/src/main/assets文件夹内，demo会去读取assets文件夹中的文件拷贝到sdcard中，用于初始化TsrSdk。
+2. 在MainActivity.java下配置初始化参数，离线校验初始化需要APPID与licensePath。如果您只是想快速的运行demo，您可以把license直接放入./SRPlayer/app/src/main/assets文件夹内，demo会去读取assets文件夹中的文件拷贝到sdcard中，用于初始化TSRSdk。
 
    ![verification-params.png](./docs/verification-params.png)
 
@@ -122,16 +121,14 @@ tsrPass.release();
 
 #### **2.1.1 TSRSdk**
 TSRSdk包括`initWithAppId:licenseURL:tsrLogger:`和`reset`两个方法。`initWithAppId:licenseURL:tsrLogger:`方法用于初始化SDK，`initWithAppId:licenseURL:tsrLogger:`方法用于初始化SDK，`reset`方法用于释放资源。
-1. 离线鉴权初始化TSRSdk，您需要传入**APPID、licenseUri**用于离线鉴权，除此之外，还需要传入一个 TsrLogger，用于获取SDK的日志。`initWithAppId:licenseURL:tsrLogger:`会有返回值`TSRSdkLicenseStatus` ，表示license校验的结果。下面是示例代码：
+1. 离线鉴权初始化TSRSdk，您需要传入**APPID、licenseUri**用于离线鉴权，除此之外，还需要传入一个 TSRLogger，用于获取SDK的日志。`initWithAppId:licenseURL:tsrLogger:`会有返回值`TSRSdkLicenseStatus` ，表示license校验的结果。下面是示例代码：
 ```
-TSRSdkLicenseStatus statatus = [TSRSdk.sharedInstance itWithAppId:appId licenseURL:licenseURL tsrLogger:tsrLogger];
-if (status == TSRSRSdkLicenseStatusAvailable) {
+TSRSdkLicenseStatus status = [TSRSdk.sharedInstance initWithAppId:appId licenseURL:licenseURL tsrLogger:tsrLogger];
+if (status == TSRSdkLicenseStatusAvailable) {
 // Perform super-resolution rendering using TSRPass class.
 } else {
 // Do something when the verification of sdk’s license failed.
 }
-// Release resources when the TSRSdk object is no longer needed.
-tsrSdk.reset();
 ```
 
 
@@ -149,8 +146,8 @@ TSRPass是用于进行超分辨率渲染的类，它包括了`initWithDevice:inp
 
 * `render:commmandBufffer:`方法将超分辨率渲染过程应用于输入图像，提高其质量。处理后的图像渲染在TSRPass对象内的MTLTexture上。返回的是已执行超分辨率渲染的MTLTexture。
 
-#### **2.1.3 TsrLogger**
-TsrLogger用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
+#### **2.1.3 TSRLogger**
+TSRLogger用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
 ### **2.2 API文档**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 [TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/index.html)
