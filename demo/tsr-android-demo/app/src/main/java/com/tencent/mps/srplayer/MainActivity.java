@@ -33,10 +33,10 @@ import com.tencent.mps.srplayer.pass.CompareTexDrawer;
 import com.tencent.mps.srplayer.pass.BilinearRenderPass;
 import com.tencent.mps.srplayer.pass.TexOESToTex2DPass;
 import com.tencent.mps.srplayer.pass.VideoFrameDrawer;
-import com.tencent.mps.tsr.api.TsrLogger;
-import com.tencent.mps.tsr.api.TsrPass;
-import com.tencent.mps.tsr.api.TsrSdk;
-import com.tencent.mps.tsr.api.TsrSdk.SdkLicenseStatus;
+import com.tencent.mps.tsr.api.TSRLogger;
+import com.tencent.mps.tsr.api.TSRPass;
+import com.tencent.mps.tsr.api.TSRSdk;
+import com.tencent.mps.tsr.api.TSRSdk.TSRSdkLicenseStatus;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     // SurfaceTexture bound to MediaPlayer
     private SurfaceTexture mSurfaceTexture;
     // Super-resolution pass
-    private TsrPass mTsrPass;
+    private TSRPass mTsrPass;
     // Conversion of textureOES to texture2D
     private TexOESToTex2DPass mTexOESToTex2DPass;
     // Bilinear rendering pass
@@ -95,30 +95,26 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     // MediaPlayer
     private MediaPlayer mMediaPlayer;
     // TsrLogger
-    private final TsrLogger mTsrLogger = new TsrLogger() {
+    private final TSRLogger mTsrLogger = new TSRLogger() {
         @Override
-        public void v(String tag, String msg) {
-            Log.v(tag, msg);
-        }
-
-        @Override
-        public void d(String tag, String msg) {
-            Log.d(tag, msg);
-        }
-
-        @Override
-        public void i(String tag, String msg) {
-            Log.i(tag, msg);
-        }
-
-        @Override
-        public void e(String tag, String msg) {
-            Log.e(tag, msg);
-        }
-
-        @Override
-        public void w(String tag, String msg) {
-            Log.w(tag, msg);
+        public void logWithLevel(int logLevel, String tag, String msg) {
+            switch (logLevel) {
+                case Log.VERBOSE:
+                    Log.v(tag, msg);
+                    break;
+                case Log.DEBUG:
+                    Log.d(tag, msg);
+                    break;
+                case Log.INFO:
+                    Log.i(tag, msg);
+                    break;
+                case Log.WARN:
+                    Log.w(tag, msg);
+                    break;
+                case Log.ERROR:
+                    Log.e(tag, msg);
+                    break;
+            }
         }
     };
 
@@ -238,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
             mMediaPlayer.stop();
             mMediaPlayer.release();
         }
-        TsrSdk.getInstance().release();
+        TSRSdk.getInstance().release();
     }
 
     private void initViewAndMediaPlayer() {
@@ -318,8 +314,8 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
             copyAssetsFileToSDCard(context);
         }
 
-        SdkLicenseStatus status = TsrSdk.getInstance().init(mAppId, mLicensePath, mTsrLogger);
-        if (status == SdkLicenseStatus.AVAILABLE) {
+        TSRSdkLicenseStatus status = TSRSdk.getInstance().init(mAppId, mLicensePath, mTsrLogger);
+        if (status == TSRSdkLicenseStatus.AVAILABLE) {
             Log.i(TAG, "Verify sdk license success: " + status.toString());
             createTsrPassAndAddView(context);
         } else {
@@ -336,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
     private void createTsrPassAndAddView(Context context) {
         // Create TsrPass
-        mTsrPass = new TsrPass();
+        mTsrPass = new TSRPass();
 
         mGLSurfaceView = new GLSurfaceView(context);
         mGLSurfaceView.setEGLContextClientVersion(3);
