@@ -1,14 +1,14 @@
 # 超分辩率
 ## 播放器场景
-终端播放器集成超分辨率功能，提高播放清晰度。
+终端播放器集成超分辨率能力，提高播放清晰度。
 
 <img src=./docs/scenario_play.png/>
 
-720P超分(720_tsr_1080)、720P线性拉伸(720_blerp_1080)、1080P原图(1080) 的[效果对比](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/icat-van.html)
+540P图像双线性放大1.5倍（test540\_1.5\_bilerp）和超分放大1.5倍（test540\_1.5\_tsr）的[效果对比](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/icat-test540.html)
 ## 监控场景
 受益于播放端的超分功能，可以降低视频监控上行的带宽和存储。
 
-<img src=./docs/scenario1.png width=60% />
+<img src=./docs/scenario-monitor.png width=60% />
 
 
 ## 性能
@@ -34,4 +34,4 @@ Android AAR约0.6M（含arm64-v8a和armeabi-v7a）。iOS Framework约1.6M。
 ## 接入使用
 <img src=./docs/integrate1.png width=40% />
 
-接入指南和体验Demo请[参考](README.md)
+接入指南和体验Demo请[参考](接入指南.md)
