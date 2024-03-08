@@ -78,7 +78,7 @@ public class MediaRecorder {
         //帧率
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate);
         //关键帧间隔
-        mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 5);
+        mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
         //颜色格式（RGB\YUV）
         //从surface当获取
         mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
@@ -182,7 +182,7 @@ public class MediaRecorder {
                     bufferInfo.size = 0;
                 }
 
-                if (bufferInfo.size != 0) {
+                if (bufferInfo.size != 0 && bufferInfo.presentationTimeUs != 0) {
                     //写到mp4
                     //根据偏移定位
                     outputBuffer.position(bufferInfo.offset);
