@@ -30,7 +30,6 @@ public class TapHelper implements OnTouchListener {
             case MotionEvent.ACTION_UP:
                 mDownX = motionEvent.getX();
                 mDownY = motionEvent.getY();
-                Log.i(TAG, "onTouch y= " + mDownY);
                 break;
         }
         return true;

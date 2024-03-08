@@ -76,6 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
                         return;
                     }
                     intent.putExtra("videoUri", mVideoUri.toString());
+                    intent.putExtra("fileName", mFileName);
                 }
                 intent.putExtra("op_type", mVideoRecord);
                 startActivity(intent);

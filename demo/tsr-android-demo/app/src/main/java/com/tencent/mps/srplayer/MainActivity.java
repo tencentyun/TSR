@@ -114,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     private boolean mIsRecordVideo;
     // Video frame rate
     private int mFrameRate;
+    // Video rotation
+    private int mRotation;
     private Context mContext = this;
     // TsrLogger
     private final TSRLogger mTSRLogger = new TSRLogger() {
@@ -192,10 +194,11 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
         if (mIsRecordVideo) {
             mFilePath = mContext.getExternalFilesDir("dump_video/") + "/" +
-                    mFileName.split("\\.")[0]+ "_sr" + mSrRatio + "x.mp4";
+                    mFileName.split("\\.")[0]+ "_sr" + mSrRatio  + "x_" +
+                    System.currentTimeMillis() + ".mp4";
             mMediaRecorder = new MediaRecorder(mContext, mFilePath,
-                    (int) (mFrameWidth * mSrRatio), (int) (mFrameHeight * mSrRatio), mFrameRate,
-                    mBitrateMbps, mCodecType, EGL14.eglGetCurrentContext());
+                    (int) (mFrameWidth * mSrRatio), (int) (mFrameHeight * mSrRatio), mRotation,
+                    mFrameRate, mBitrateMbps, mCodecType, EGL14.eglGetCurrentContext());
             mMediaRecorder.setOnRecordFinishListener(new MediaRecorder.OnRecordFinishListener() {
                 @Override
                 public void onRecordFinish(String path) {
@@ -226,10 +229,10 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
         if (mCompareTexDrawer != null) {
-            mCompareTexDrawer.onSurfaceChanged(width, height);
+            mCompareTexDrawer.onSurfaceChanged(width, height, mRotation);
         }
         if (mVideoFrameDrawer != null) {
-            mVideoFrameDrawer.onSurfaceChanged(width, height);
+            mVideoFrameDrawer.onSurfaceChanged(width, height, mRotation);
         }
     }
 
@@ -294,6 +297,9 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
             mMediaPlayer.stop();
             mMediaPlayer.release();
         }
+        if (mMediaRecorder != null) {
+            mMediaRecorder = null;
+        }
         TSRSdk.getInstance().release();
     }
 
@@ -340,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
             if (uriString != null) {
                 Uri videoUri = Uri.parse(uriString);
                 if (videoUri != null) {
+                    mFileName = getIntent().getStringExtra("fileName");
                     mMediaPlayer.setDataSource(mContext, videoUri);
                     retriever.setDataSource(mContext, videoUri);
                 }
@@ -366,6 +373,9 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
         Log.i(TAG, "video frame rate = " + mFrameRate);
 
+        mRotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+        Log.i(TAG, "rotation = " + mRotation);
+
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setLooping(false);
         mMediaPlayer.prepareAsync();
@@ -377,12 +387,8 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
                 Log.i(TAG, "width = " + mFrameWidth + ", height = " + mFrameHeight);
 
                 if (mFrameWidth > mFrameHeight) {
-                    Log.i(TAG, "width =hello");
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                } else {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 }
-
                 offlineVerifyLicense();
             }
         });

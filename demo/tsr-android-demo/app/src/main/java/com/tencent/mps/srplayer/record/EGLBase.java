@@ -30,7 +30,8 @@ public class EGLBase {
      * @param surface MediaCodec创建的surface，我们需要将其贴到我们的虚拟环境
      *
      */
-    public EGLBase(Context context, int width, int height, Surface surface, EGLContext eglContext){
+    public EGLBase(Context context, int width, int height, int rotation, Surface surface,
+                   EGLContext eglContext){
 
         createEGL(eglContext);
         //把Surface贴到  mEglDisplay ，发生关系
@@ -48,7 +49,7 @@ public class EGLBase {
         mVideoFrameDrawer = new VideoFrameDrawer();
         try {
             mVideoFrameDrawer.createOnGLThread(context);
-            mVideoFrameDrawer.onSurfaceChanged(width, height);
+            mVideoFrameDrawer.onSurfaceChanged(width, height, rotation);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,9 +63,6 @@ public class EGLBase {
 
         //初始化显示器
         int[] version = new int[2];
-        // 12.1020203
-        //major：主版本 记录在 version[0]
-        //minor : 子版本 记录在 version[1]
         if (!EGL14.eglInitialize(mEglDisplay, version, 0, version, 1)) {
             throw new RuntimeException("eglInitialize failed");
         }

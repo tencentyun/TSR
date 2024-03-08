@@ -138,15 +138,63 @@ public class VideoFrameDrawer {
         GlUtils.checkGLError(TAG, "VideoFrameDrawer");
     }
 
-    public void onSurfaceChanged(int surfaceWidth, int surfaceHeight) {
-        ByteBuffer textureByteBuffer = ByteBuffer.allocateDirect(mTextureCoors.length * 4);
-        textureByteBuffer.order(ByteOrder.nativeOrder());
+    public void onSurfaceChanged(int surfaceWidth, int surfaceHeight, int rotation) {
+        resolveRotate(rotation);
 
-        mTextureBuffer = textureByteBuffer.asFloatBuffer();
-        mTextureBuffer.put(mTextureCoors);
-        mTextureBuffer.position(0);
+        ByteBuffer vertexByteBuffer = ByteBuffer.allocateDirect(mVertexCoors.length * 4);
+        vertexByteBuffer.order(ByteOrder.nativeOrder());
+
+        mVertexBuffer = vertexByteBuffer.asFloatBuffer();
+        mVertexBuffer.put(mVertexCoors);
+        mVertexBuffer.position(0);
 
         mWidth = surfaceWidth;
         mHeight = surfaceHeight;
+    }
+
+    private void resolveRotate(int rotation) {
+        float x;
+        float y;
+        switch (rotation) {
+            case 90:
+                x = mVertexCoors[0];
+                y = mVertexCoors[1];
+                mVertexCoors[0] = mVertexCoors[4];
+                mVertexCoors[1] = mVertexCoors[5];
+                mVertexCoors[4] = mVertexCoors[6];
+                mVertexCoors[5] = mVertexCoors[7];
+                mVertexCoors[6] = mVertexCoors[2];
+                mVertexCoors[7] = mVertexCoors[3];
+                mVertexCoors[2] = x;
+                mVertexCoors[3] = y;
+                break;
+            case 180:
+                swap(mVertexCoors, 0, 6);
+                swap(mVertexCoors, 1, 7);
+                swap(mVertexCoors, 2, 4);
+                swap(mVertexCoors, 3, 5);
+                break;
+            case 270:
+                x = mVertexCoors[0];
+                y = mVertexCoors[1];
+                mVertexCoors[0] = mVertexCoors[2];
+                mVertexCoors[1] = mVertexCoors[3];
+                mVertexCoors[2] = mVertexCoors[6];
+                mVertexCoors[3] = mVertexCoors[7];
+                mVertexCoors[6] = mVertexCoors[4];
+                mVertexCoors[7] = mVertexCoors[5];
+                mVertexCoors[4] = x;
+                mVertexCoors[5] = y;
+                break;
+            case 0:
+            default:
+                break;
+        }
+    }
+
+    private void swap(float []nums, int i, int j) {
+        float tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 }

@@ -33,6 +33,7 @@ public class MediaRecorder {
     private int mFrameRate;
     private int mBitrateMbps;
     private String mCodecType;
+    private int mRotation;
 
     /**
      *
@@ -42,14 +43,15 @@ public class MediaRecorder {
      * @param height 视频高
      * 还可以让人家传递帧率 fps、码率等参数
      */
-    public MediaRecorder(Context context, String path, int width, int height, int frameRate,
-                         int bitrateMbps, String codecType, EGLContext eglContext){
+    public MediaRecorder(Context context, String path, int width, int height, int rotation,
+                         int frameRate, int bitrateMbps, String codecType, EGLContext eglContext){
         mContext = context.getApplicationContext();
         mPath = path;
         mWidth = width;
         mHeight = height;
         mFrameRate = frameRate;
         mBitrateMbps = bitrateMbps;
+        mRotation = rotation;
         mEglContext = eglContext;
         if ("H265".equals(codecType)) {
             mCodecType = MediaFormat.MIMETYPE_VIDEO_HEVC;
@@ -68,15 +70,15 @@ public class MediaRecorder {
          * 配置MediaCodec 编码器
          */
         //视频格式
-        // 类型（avc高级编码 h264） 编码出的宽、高
-        MediaFormat mediaFormat = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, mWidth, mHeight);
+        //编码出的宽、高
+        MediaFormat mediaFormat = MediaFormat.createVideoFormat(mCodecType, mWidth, mHeight);
         //参数配置
         // 20mbs码率
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, mBitrateMbps * 1000 * 1000);
         //帧率
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate);
         //关键帧间隔
-        mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 20);
+        mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 5);
         //颜色格式（RGB\YUV）
         //从surface当获取
         mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
@@ -109,7 +111,8 @@ public class MediaRecorder {
             @Override
             public void run() {
                 //创建我们的子线程，用于把预览的图像存储到虚拟Diaplay中去。
-                mEglBase = new EGLBase(mContext, mWidth, mHeight, mInputSurface, mEglContext);
+                mEglBase = new EGLBase(mContext, mWidth, mHeight, mRotation, mInputSurface,
+                        mEglContext);
                 //启动编码器
                 mMediaCodec.start();
                 isStart = true;
@@ -118,7 +121,7 @@ public class MediaRecorder {
     }
 
 
-    public void encodeFrame(final int textureId,final long timestamp) {
+    public void encodeFrame(final int textureId, final long timestamp) {
         if (!isStart){
             return;
         }
@@ -129,7 +132,6 @@ public class MediaRecorder {
                 mEglBase.draw(textureId, timestamp);
                 //从编码器的输出缓冲区获取编码后的数据就ok了
                 getCodec(false);
-
             }
         });
     }
@@ -159,7 +161,6 @@ public class MediaRecorder {
                 // 相当于保证mediacodec中所有的待编码的数据都编码完成了，不断地重试 取出编码器中的编码好的数据
                 // 标记不是停止 ，我们退出 ，下一轮接收到更多数据再来取输出编码后的数据
                 if (!endOfStream) {
-                    //不写这个 会卡太久了，没有必要 你还是在继续录制的，还能调用这个方法的！
                     break;
                 }
                 //否则继续
@@ -169,7 +170,6 @@ public class MediaRecorder {
                 //配置封装器
                 // 增加一路指定格式的媒体流 视频
                 index = mMediaMuxer.addTrack(outputFormat);
-
                 mMediaMuxer.start();
 
             } else if (status == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
@@ -215,6 +215,7 @@ public class MediaRecorder {
                 mMediaMuxer = null;
                 mEglBase.release();
                 mEglBase = null;
+                mInputSurface.release();
                 mInputSurface = null;
                 mHandler.getLooper().quitSafely();
                 mHandler = null;

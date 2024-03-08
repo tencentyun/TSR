@@ -60,20 +60,30 @@ public class CompareTexDrawer {
     private int mViewportInfoLocation = -1;
 
     /**
-     * uniform lineY
+     * uniform linePos
      */
-    private int mLineXLocation = -1;
+    private int mLineLocation = -1;
+
+    /**
+     * uniform rotation
+     */
+    private int mRotationLocation = -1;
 
     /**
      * X pos
      */
     private volatile float mTouchXPos = 0;
+    /**
+     * Y pos
+     */
+    private volatile float mTouchYPos = 0;
 
     private FloatBuffer mVertexBuffer;
     private FloatBuffer mTextureBuffer;
 
     int mViewportWidth;
     int mViewportHeight;
+    int mRotation;
 
     public CompareTexDrawer(){
 
@@ -121,7 +131,8 @@ public class CompareTexDrawer {
             mTexturePosHandler = GLES20.glGetAttribLocation(mProgram, "aCoordinate");
 
             mViewportInfoLocation = GLES20.glGetUniformLocation(mProgram, "ViewportInfo");
-            mLineXLocation = GLES20.glGetUniformLocation(mProgram, "lineX");
+            mLineLocation = GLES20.glGetUniformLocation(mProgram, "linePos");
+            mRotationLocation = GLES20.glGetUniformLocation(mProgram, "rotation");
             GlUtils.checkGLError(TAG, "CompareImgDrawer");
         }
         GLES20.glUseProgram(mProgram);
@@ -151,15 +162,22 @@ public class CompareTexDrawer {
             float viewportHeightInverse = (float) (1.0 / mViewportHeight);
             float[] viewportInfo = new float[] {viewportWidthInverse, viewportHeightInverse, mViewportWidth,
                     mViewportHeight};
-            int viewportInfoLocation = GLES20.glGetUniformLocation(mProgram, "ViewportInfo");
-            GLES30.glUniform4fv(viewportInfoLocation, 1, viewportInfo, 0);
+            GLES30.glUniform4fv(mViewportInfoLocation, 1, viewportInfo, 0);
         }
 
-        if (mLineXLocation > -1) {
+        if (mLineLocation > -1) {
             if (TapHelper.getInstance().getDownX() >= 0) {
                 mTouchXPos = TapHelper.getInstance().getDownX();
             }
-            GLES30.glUniform1f(mLineXLocation, mTouchXPos);
+            if (TapHelper.getInstance().getDownY() >= 0) {
+                mTouchYPos = TapHelper.getInstance().getDownY();
+            }
+            float[] lineLocationInfo = new float[] {mTouchXPos, mTouchYPos};
+            GLES30.glUniform2fv(mLineLocation, 1, lineLocationInfo, 0);
+        }
+
+        if (mRotationLocation > -1) {
+            GLES30.glUniform1i(mRotationLocation, mRotation);
         }
 
         GlUtils.checkGLError(TAG, "CompareImgDrawer");
@@ -176,17 +194,68 @@ public class CompareTexDrawer {
         GlUtils.checkGLError(TAG, "CompareImgDrawer");
     }
 
-    public void onSurfaceChanged(int surfaceWidth, int surfaceHeight) {
-        ByteBuffer textureByteBuffer = ByteBuffer.allocateDirect(mTextureCoors.length * 4);
-        textureByteBuffer.order(ByteOrder.nativeOrder());
+    public void onSurfaceChanged(int surfaceWidth, int surfaceHeight, int rotation) {
+        resolveRotate(rotation);
 
-        mTextureBuffer = textureByteBuffer.asFloatBuffer();
-        mTextureBuffer.put(mTextureCoors);
-        mTextureBuffer.position(0);
+        ByteBuffer vertexByteBuffer = ByteBuffer.allocateDirect(mVertexCoors.length * 4);
+        vertexByteBuffer.order(ByteOrder.nativeOrder());
+
+        mVertexBuffer = vertexByteBuffer.asFloatBuffer();
+        mVertexBuffer.put(mVertexCoors);
+        mVertexBuffer.position(0);
 
         mViewportWidth = surfaceWidth;
         mViewportHeight = surfaceHeight;
 
         mTouchXPos = mViewportWidth / 2.0f;
+        mTouchYPos = mViewportHeight / 2.0f;
+
+        mRotation = rotation;
+    }
+
+    private void resolveRotate(int rotation) {
+        float x;
+        float y;
+        switch (rotation) {
+            case 90:
+                x = mVertexCoors[0];
+                y = mVertexCoors[1];
+                mVertexCoors[0] = mVertexCoors[4];
+                mVertexCoors[1] = mVertexCoors[5];
+                mVertexCoors[4] = mVertexCoors[6];
+                mVertexCoors[5] = mVertexCoors[7];
+                mVertexCoors[6] = mVertexCoors[2];
+                mVertexCoors[7] = mVertexCoors[3];
+                mVertexCoors[2] = x;
+                mVertexCoors[3] = y;
+                break;
+            case 180:
+                swap(mVertexCoors, 0, 6);
+                swap(mVertexCoors, 1, 7);
+                swap(mVertexCoors, 2, 4);
+                swap(mVertexCoors, 3, 5);
+                break;
+            case 270:
+                x = mVertexCoors[0];
+                y = mVertexCoors[1];
+                mVertexCoors[0] = mVertexCoors[2];
+                mVertexCoors[1] = mVertexCoors[3];
+                mVertexCoors[2] = mVertexCoors[6];
+                mVertexCoors[3] = mVertexCoors[7];
+                mVertexCoors[6] = mVertexCoors[4];
+                mVertexCoors[7] = mVertexCoors[5];
+                mVertexCoors[4] = x;
+                mVertexCoors[5] = y;
+                break;
+            case 0:
+            default:
+                break;
+        }
+    }
+
+    private void swap(float []nums, int i, int j) {
+        float tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 }
