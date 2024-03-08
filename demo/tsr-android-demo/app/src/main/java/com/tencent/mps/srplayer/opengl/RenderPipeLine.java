@@ -1,26 +1,19 @@
 package com.tencent.mps.srplayer.opengl;
 
 import android.opengl.GLES20;
-import android.opengl.GLES30;
-import android.util.Pair;
+
 import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 一个绘制到平面上的可定制渲染管线。<br>
- * 使用方可通过{@link RenderPipeLine#RenderPipeLine(List, String, String)} 的{@code fragmentShader} 参数指定片段着色器，
+ * 使用方可通过{@link RenderPipeLine#RenderPipeLine(String, String)} 的{@code fragmentShader} 参数指定片段着色器，
  * 决定如何渲染每一个像素。
  */
 public class RenderPipeLine {
-
-    /**
-     * 存储纹理和Uniform变量位置的映射
-     */
-    private final List<Pair<Texture, Integer>> mInputTextures = new ArrayList<>();
 
     /**
      * OpenGL的渲染器和程序对象
@@ -31,9 +24,9 @@ public class RenderPipeLine {
      */
     private final int mVertexBuffer;
     /**
-     * （超分）Viewport在shader中uniform变量的位置
+     * 存储纹理uniform
      */
-    private final int mViewportInfoLocation;
+    private final int mInputTextureLocation;
     /**
      * 顶点坐标位置
      */
@@ -43,14 +36,12 @@ public class RenderPipeLine {
      */
     private int inTcLocation;
 
-
     /**
      * 构造一个渲染管线实例。
-     * @param inputTextures  该渲染管线的输入纹理，纹理的数量需要和{@code fragmentShader}中tex纹理变量数量一致。
-     *                       被传入的{@link Texture}对象不需要手动调用{@link Texture#release()}。
+     *
      * @param fragmentShader 着色器代码，其中的纹理需要命名为tex0、tex1、tex2...
      */
-    public RenderPipeLine(@NonNull List<Texture> inputTextures, @NonNull String vertexShader, @NonNull String fragmentShader) {
+    public RenderPipeLine(@NonNull String vertexShader, @NonNull String fragmentShader) {
         mShader = new GlShader(vertexShader, fragmentShader);
         mShader.useProgram();
 
@@ -69,7 +60,6 @@ public class RenderPipeLine {
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVertexBuffer);
 
         // 矩形平面的顶点和纹理坐标数据
-        // 顶点顺序: 左下, 左上, 右下, 右上
         float[] RECTANGLE_VERTEX_DATA = {
                 -1.0f, 1.0f, 0.0f, 1.0f,
                 1.0f,  1.0f, 1.0f, 1.0f,
@@ -84,24 +74,18 @@ public class RenderPipeLine {
         GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, RECTANGLE_VERTEX_DATA.length * 4, fb, GLES20.GL_STATIC_DRAW);
 
         // 获取Uniform变量位置
-        for (int i = 0; i < inputTextures.size(); i++) {
-            String uniformLocation = "tex" + i;
-            mInputTextures.add(new Pair<>(inputTextures.get(0), mShader.getUniformLocation(uniformLocation)));
-        }
-        // 获取Uniform变量的ViewportInfo位置
-        mViewportInfoLocation = mShader.getUniformLocation("ViewportInfo");
+        mInputTextureLocation = mShader.getUniformLocation("uTexture");
     }
 
     /**
      * 将该管线渲染到渲染状态上。
      */
-    public void render(RenderState renderState){
+    public void render(RenderState renderState, int textureId, int textureType){
         mShader.useProgram();
-
         // 绑定帧缓冲
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, renderState.getFrameBufferId());
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVertexBuffer);
-
+        GlUtils.checkNoGLES2Error("Bind framebuffer failed!");
         // 清空颜色缓冲
         GLES20.glClearColor(0 /* red */, 0 /* green */, 0 /* blue */, 0 /* alpha */);
 
@@ -125,30 +109,19 @@ public class RenderPipeLine {
         GLES20.glVertexAttribPointer(inTcLocation, 2, GLES20.GL_FLOAT, false, 4 * 4, 2 * 4);
         GLES20.glEnableVertexAttribArray(inTcLocation);
 
-        // 设置Uniform变量ViewportInfo
-        if (mViewportInfoLocation > -1) {
-            float viewportWidth = mInputTextures.get(0).first.getWidth();
-            float viewportHeight = mInputTextures.get(0).first.getHeight();
-            float viewportWidthInverse = (float) (1.0 / viewportWidth);
-            float viewportHeightInverse = (float) (1.0 / viewportHeight);
-            float[] viewportInfo = new float[] {viewportWidthInverse, viewportHeightInverse, viewportWidth, viewportHeight};
-            int viewportInfoLocation = mShader.getUniformLocation("ViewportInfo");
-            GLES30.glUniform4fv(viewportInfoLocation, 1, viewportInfo, 0);
-        }
-
         // 激活纹理单元 & 绑定纹理
-        for (int i = 0; i < mInputTextures.size(); i++) {
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + i);
-            Texture texture = mInputTextures.get(i).first;
-            GLES20.glBindTexture(texture.getTarget(), texture.getTextureId());
-            GLES20.glUniform1i(mInputTextures.get(i).second, i);
-        }
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(textureType, textureId);
+        GLES20.glUniform1i(mInputTextureLocation, 0);
+
+        GlUtils.checkNoGLES2Error("Pass uniform failed!");
 
         // 绘制
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
 
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+        GlUtils.checkNoGLES2Error("DrawArrays failed!");
     }
 
     /**
@@ -160,9 +133,5 @@ public class RenderPipeLine {
             mShader.release();
             mShader = null;
         }
-        for (Pair<Texture, Integer> texture: mInputTextures) {
-            texture.first.release();
-        }
-        mInputTextures.clear();
     }
 }

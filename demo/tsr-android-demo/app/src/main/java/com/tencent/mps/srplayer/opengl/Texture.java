@@ -2,18 +2,10 @@ package com.tencent.mps.srplayer.opengl;
 
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+
 import androidx.annotation.NonNull;
 
 public class Texture {
-    public enum Type {
-        TEXTURE_2D,
-        TEXTURE_OSE
-    }
-
-    /**
-     * 纹理类型
-     */
-    private final Type mType;
 
     /**
      * 该纹理的纹理ID
@@ -30,6 +22,12 @@ public class Texture {
      * 纹理对象的高
      */
     private int mHeight;
+    /**
+     * 纹理对象的类型（OES或2D）
+     */
+    private int mType;
+
+
 
     /**
      * 构造一个纹理。
@@ -41,35 +39,33 @@ public class Texture {
      * @param width     该纹理的宽。
      * @param height    该纹理的高。
      */
-    public Texture(boolean external, Type type, int textureId, int width, int height) {
-        mType = type;
+    public Texture(boolean external, int type, int textureId, int width, int height) {
         mTextureId = textureId;
         mWidth = width;
         mHeight = height;
-
-        int target = getTarget();
+        mType = type;
 
         if (!external) {
-            mTextureId = GlUtils.generateTexture(target);
+            mTextureId = GlUtils.generateTexture(type);
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(target, mTextureId);
+            GLES20.glBindTexture(type, mTextureId);
 
             // 为纹理对象分配内存空间
             int PIXEL_FORMAT = GLES20.GL_RGBA;
             GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, PIXEL_FORMAT, width, height, 0, PIXEL_FORMAT,
                     GLES20.GL_UNSIGNED_BYTE, null);
 
-            GLES20.glBindTexture(target, 0);
+            GLES20.glBindTexture(type, 0);
         }
     }
 
     /**
-     * 构造一个类型为{@link Type#TEXTURE_2D} 的内部纹理。
+     * 构造一个类型为TEXTURE_2D的内部纹理。
      * @param width  该纹理的宽。
      * @param height 该纹理的高。
      */
     public Texture(int width, int height) {
-        this(false, Type.TEXTURE_2D, 0, width, height);
+        this(false, GLES20.GL_TEXTURE_2D, 0, width, height);
     }
 
     /**
@@ -93,15 +89,8 @@ public class Texture {
         return mTextureId;
     }
 
-    /**
-     * 返回纹理对象的纹理目标。<br>
-     * <br>
-     * {@link GLES20#GL_TEXTURE_2D}
-     * {@link GLES11Ext#GL_TEXTURE_EXTERNAL_OES}
-     */
-    public int getTarget() {
-        return mType == Type.TEXTURE_2D ?
-                GLES20.GL_TEXTURE_2D : GLES11Ext.GL_TEXTURE_EXTERNAL_OES;
+    public int getType() {
+        return mType;
     }
 
     /**
@@ -120,7 +109,6 @@ public class Texture {
     @Override
     public String toString() {
         return "Texture{"
-                + "mType=" + mType
                 + ", mTextureId=" + mTextureId
                 + ", mWidth=" + mWidth
                 + ", mHeight=" + mHeight

@@ -11,4 +11,9 @@
         <item>1.7</item>
         <item>2.0</item>
     </string-array>
+
+    <string-array name="codecs">
+        <item>H264</item>
+        <item>H265</item>
+    </string-array>
 </resources>

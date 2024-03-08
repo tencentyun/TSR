@@ -14,17 +14,21 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
+
 import java.util.Objects;
 
 public class SettingsActivity extends AppCompatActivity {
     private Uri mVideoUri;
     private String mFileName;
     private boolean mVideoChooseLocal = true;
-    private static PreferenceCategory mLocalVideoChoosePreferenceCategory;
+    private boolean mVideoRecord;
+    private static PreferenceCategory mExportVideoPreferenceCategory;
+    private static PreferenceCategory mPlayVideoPreferenceCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,21 +49,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         LinearLayout localVideoLayout = findViewById(R.id.choose_local_video_layout);
         localVideoLayout.setVisibility(View.VISIBLE);
-
-        // 配置视频选择类型
-        RadioGroup videoChooseRadioGroup = findViewById(R.id.choose_type);
-        videoChooseRadioGroup.setOnCheckedChangeListener((group, checkedID) -> {
-            RadioButton btn = findViewById(checkedID);
-            if (btn.getId() == R.id.local_video) {
-                mVideoChooseLocal = true;
-                localVideoLayout.setVisibility(View.VISIBLE);
-                mLocalVideoChoosePreferenceCategory.setVisible(false);
-            } else {
-                mVideoChooseLocal = false;
-                localVideoLayout.setVisibility(View.GONE);
-                mLocalVideoChoosePreferenceCategory.setVisible(true);
-            }
-        });
 
         // 配置开始按钮
         Button startPlayButton = findViewById(R.id.start_play_button);
@@ -88,6 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                     intent.putExtra("videoUri", mVideoUri.toString());
                 }
+                intent.putExtra("op_type", mVideoRecord);
                 startActivity(intent);
             }
         });
@@ -105,6 +95,36 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "选择文件"), 1);
             }
         });
+
+        // 配置视频操作类型
+        RadioGroup videoOpRadioGroup = findViewById(R.id.op_type);
+        videoOpRadioGroup.setOnCheckedChangeListener((group, checkedID) -> {
+            RadioButton btn = findViewById(checkedID);
+            if (btn.getId() == R.id.play_sr_video) {
+                mVideoRecord = false;
+                mPlayVideoPreferenceCategory.setVisible(true);
+                mExportVideoPreferenceCategory.setVisible(false);
+                startPlayButton.setText(R.string.start_play);
+            } else {
+                mVideoRecord = true;
+                mPlayVideoPreferenceCategory.setVisible(false);
+                mExportVideoPreferenceCategory.setVisible(true);
+                startPlayButton.setText(R.string.start_export);
+            }
+        });
+
+        // 配置视频选择类型
+        RadioGroup videoChooseRadioGroup = findViewById(R.id.choose_type);
+        videoChooseRadioGroup.setOnCheckedChangeListener((group, checkedID) -> {
+            RadioButton btn = findViewById(checkedID);
+            if (btn.getId() == R.id.local_video) {
+                mVideoChooseLocal = true;
+                localVideoLayout.setVisibility(View.VISIBLE);
+            } else {
+                mVideoChooseLocal = false;
+                localVideoLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -112,8 +132,16 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            mLocalVideoChoosePreferenceCategory = findPreference("choose_app_video");
-            mLocalVideoChoosePreferenceCategory.setVisible(false);
+
+            mExportVideoPreferenceCategory = findPreference("export_config");
+            if (mExportVideoPreferenceCategory != null) {
+                mExportVideoPreferenceCategory.setVisible(false);
+            }
+
+            mPlayVideoPreferenceCategory = findPreference("play_config");
+            if (mPlayVideoPreferenceCategory != null) {
+                mPlayVideoPreferenceCategory.setVisible(true);
+            }
         }
     }
 

@@ -35,7 +35,7 @@ public class RenderState {
         // 将渲染目标添加到帧缓冲上
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBufferId);
         GLES20.glFramebufferTexture2D(
-                GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, renderTarget.getTextureId(),
+                GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, renderTarget.getType(), renderTarget.getTextureId(),
                 0);
 
         // 检查帧缓冲的状态。
