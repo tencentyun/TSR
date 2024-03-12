@@ -182,7 +182,7 @@ public class MediaRecorder {
                     bufferInfo.size = 0;
                 }
 
-                if (bufferInfo.size != 0 && bufferInfo.presentationTimeUs != 0) {
+                if (bufferInfo.size != 0) {
                     //写到mp4
                     //根据偏移定位
                     outputBuffer.position(bufferInfo.offset);
@@ -202,6 +202,9 @@ public class MediaRecorder {
     }
 
     public void stop() {
+        if (!isStart) {
+            return;
+        }
         isStart = false;
         mHandler.post(new Runnable() {
             @Override
@@ -221,7 +224,7 @@ public class MediaRecorder {
                 mHandler = null;
 
                 //录制完成，通过回调借口回调出去 并把录制的视频地址传出去
-                if (null != mListener){
+                if (null != mListener) {
                     mListener.onRecordFinish(mPath);
                 }
             }

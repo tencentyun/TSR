@@ -20,6 +20,7 @@ public class EGLBase {
     private EGLConfig mEglConfig;
     private EGLContext mEglContext;
     private VideoFrameDrawer mVideoFrameDrawer;
+    private long mLastTimestamp;
 
 
     /**
@@ -110,6 +111,17 @@ public class EGLBase {
         if (!EGL14.eglMakeCurrent(mEglDisplay,mEglSurface,mEglSurface,mEglContext)) {
             throw  new RuntimeException("eglMakeCurrent 失败！");
         }
+
+        if (timestamp == 0) {
+            timestamp = System.nanoTime();
+        }
+
+        if (timestamp <= mLastTimestamp) {
+            return;
+        }
+
+        mLastTimestamp = timestamp;
+
         //画画
         mVideoFrameDrawer.draw(textureId);
         //刷新eglsurface的时间戳
@@ -128,7 +140,4 @@ public class EGLBase {
         EGL14.eglReleaseThread();
         EGL14.eglTerminate(mEglDisplay);
     }
-
-
-
 }
