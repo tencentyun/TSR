@@ -31,7 +31,13 @@ Android AAR约0.6M（含arm64-v8a和armeabi-v7a）。iOS Framework约1.6M。
 ## 优势
 适应手机终端算力、能耗、机型兼容、包体增量的限制，以极高性能和极低功耗实现终端上最佳的超分辨率质量。
 
-## 接入使用
+## 体验Demo
+用手机系统浏览器打开，下载安装    
+Android    <img src=./docs/android-demo-qrcode.png width=16% /> 
+iOS   <img src=./docs/ios-demo-qrcode.png width=16% />
+
+
+## 接入SDK
 <img src=./docs/integrate1.png width=40% />
 
-接入指南和体验Demo请[参考](接入指南.md)
+参考[接入指南](接入指南.md)
