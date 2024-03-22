@@ -18,6 +18,7 @@ import android.opengl.GLES11Ext;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     // Drawer for rendering frames on screen
     private VideoFrameDrawer mVideoFrameDrawer;
     // Flag indicating if there is a new frame
-    private boolean updateTexture;
+    private volatile boolean updateTexture;
     // SurfaceTexture bound to MediaPlayer
     private SurfaceTexture mSurfaceTexture;
     // Super-resolution pass
@@ -244,7 +245,14 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
             return;
         }
 
-        mSurfaceTexture.updateTexImage();
+        boolean newFrame = false;
+        synchronized (this) {
+            if (updateTexture) {
+                mSurfaceTexture.updateTexImage();
+                updateTexture = false;
+                newFrame = true;
+            }
+        }
 
         /* Step 2: (Optional) If the type of your input texture is TextureOES, you must Convert TextureOES to Texture2D.*/
         int tex2dId = mTexOESToTex2DPass.render(mInputTexture.getTextureId(), mInputTexture.getType());
@@ -255,7 +263,9 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
         /* Step 4: Use the TSRPass's output texture to do your own render. */
         if (mMediaRecorder != null) {
-            mMediaRecorder.encodeFrame(srTextureId, mSurfaceTexture.getTimestamp());
+            if (newFrame) {
+                mMediaRecorder.encodeFrame(srTextureId, mSurfaceTexture.getTimestamp());
+            }
         } else {
             if (mIsCompareLerp) {
                 int bilinearTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D);
@@ -397,9 +407,15 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                if (mMediaRecorder != null) {
-                    mMediaRecorder.stop();
-                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 退出操作
+                        if (mMediaRecorder != null) {
+                            mMediaRecorder.stop();
+                        }
+                    }
+                }, 2000);  // delay 2000ms
             }
         });
     }

@@ -47,8 +47,8 @@ public class MediaRecorder {
                          int frameRate, int bitrateMbps, String codecType, EGLContext eglContext){
         mContext = context.getApplicationContext();
         mPath = path;
-        mWidth = width;
-        mHeight = height;
+        mWidth = width / 16 * 16;
+        mHeight = height / 16 * 16;
         mFrameRate = frameRate;
         mBitrateMbps = bitrateMbps;
         mRotation = rotation;
@@ -73,10 +73,12 @@ public class MediaRecorder {
         //编码出的宽、高
         MediaFormat mediaFormat = MediaFormat.createVideoFormat(mCodecType, mWidth, mHeight);
         //参数配置
-        // 20mbs码率
+        //码率
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, mBitrateMbps * 1000 * 1000);
         //帧率
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate);
+        //捕获率
+        mediaFormat.setInteger(MediaFormat.KEY_CAPTURE_RATE, mFrameRate);
         //关键帧间隔
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
         //颜色格式（RGB\YUV）
