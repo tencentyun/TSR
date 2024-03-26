@@ -2,7 +2,6 @@ package com.tencent.mps.srplayer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
@@ -11,7 +10,6 @@ import android.graphics.SurfaceTexture.OnFrameAvailableListener;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.opengl.EGL14;
 import android.opengl.GLES11Ext;
@@ -22,7 +20,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
@@ -46,6 +43,7 @@ import com.tencent.mps.tsr.api.TSRSdk;
 import com.tencent.mps.tsr.api.TSRSdk.TSRSdkLicenseStatus;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -67,14 +65,8 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     private static final long TIME_EXIT = 2000;
     // Double swipe to exit
     private long mBackPressed;
-    // View for playing videos
-    private GLSurfaceView mGLSurfaceView;
-    // Button for controlling play and pause of video
-    private Button mPlayControlButton;
     // Flag indicating if the video is currently paused
     private boolean mIsPause;
-    // Drawer for rendering frames on screen
-    private VideoFrameDrawer mVideoFrameDrawer;
     // Flag indicating if there is a new frame
     private volatile boolean updateTexture;
     // SurfaceTexture bound to MediaPlayer
@@ -87,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     private OffScreenRenderPass mBilinearRenderPass;
     // Comparing two textures
     private CompareTexDrawer mCompareTexDrawer;
+    // Drawer for rendering frames on screen
+    private VideoFrameDrawer mVideoFrameDrawer;
+
     // Width of the original video frame
     private int mFrameWidth;
     // Height of the original video frame
@@ -95,10 +90,6 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     private boolean mIsCompareLerp;
     // Super-resolution ratio
     private float mSrRatio;
-    // Export video bitrate
-    private int mBitrateMbps;
-    // Export video codec type;
-    private String mCodecType;
     // Flag indicating if full-screen rendering is enabled
     private boolean mIsFullScreenRender;
     // MediaPlayer
@@ -113,33 +104,35 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     private MediaRecorder mMediaRecorder;
     // Is record video?
     private boolean mIsRecordVideo;
+    // Export video bitrate
+    private int mBitrateMbps;
+    // Export video codec type;
+    private String mCodecType;
     // Video frame rate
     private int mFrameRate;
     // Video rotation
     private int mRotation;
-    private Context mContext = this;
+    // Is turn on SR?
+    private boolean mIsSROn;
+    private final Context mContext = this;
     // TsrLogger
-    private final TSRLogger mTSRLogger = new TSRLogger() {
-
-        @Override
-        public void logWithLevel(int logLevel, String tag, String msg) {
-            switch (logLevel) {
-                case Log.VERBOSE:
-                    Log.v(tag, msg);
-                    break;
-                case Log.DEBUG:
-                    Log.d(tag, msg);
-                    break;
-                case Log.INFO:
-                    Log.i(tag, msg);
-                    break;
-                case Log.WARN:
-                    Log.w(tag, msg);
-                    break;
-                case Log.ERROR:
-                    Log.e(tag, msg);
-                    break;
-            }
+    private final TSRLogger mTSRLogger = (logLevel, tag, msg) -> {
+        switch (logLevel) {
+            case Log.VERBOSE:
+                Log.v(tag, msg);
+                break;
+            case Log.DEBUG:
+                Log.d(tag, msg);
+                break;
+            case Log.INFO:
+                Log.i(tag, msg);
+                break;
+            case Log.WARN:
+                Log.w(tag, msg);
+                break;
+            case Log.ERROR:
+                Log.e(tag, msg);
+                break;
         }
     };
 
@@ -189,9 +182,11 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
         mBilinearRenderPass = new OffScreenRenderPass(GLES30.GL_TEXTURE_2D, (int) (mFrameWidth * mSrRatio),
                 (int) (mFrameHeight * mSrRatio), "shaders/videoTex2D.frag");
 
-        /*-------------------------------- Step 1: create the TSRPass. -------------------------------------------*/
-        mTSRPass.init(mTexOESToTex2DPass.getOutputTexture().getWidth(),
-                mTexOESToTex2DPass.getOutputTexture().getHeight(), mSrRatio);
+        if (mIsSROn) {
+            /*-------------------------------- Step 1: create the TSRPass. -------------------------------------------*/
+            mTSRPass.init(mTexOESToTex2DPass.getOutputTexture().getWidth(),
+                    mTexOESToTex2DPass.getOutputTexture().getHeight(), mSrRatio);
+        }
 
         if (mIsRecordVideo) {
             mFilePath = mContext.getExternalFilesDir("dump_video/") + "/" +
@@ -200,24 +195,11 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
             mMediaRecorder = new MediaRecorder(mContext, mFilePath,
                     (int) (mFrameWidth * mSrRatio), (int) (mFrameHeight * mSrRatio), mRotation,
                     mFrameRate, mBitrateMbps, mCodecType, EGL14.eglGetCurrentContext());
-            mMediaRecorder.setOnRecordFinishListener(new MediaRecorder.OnRecordFinishListener() {
-                @Override
-                public void onRecordFinish(String path) {
-                    ProgressDialogUtils.hideProgressDialog();
-                    FileUtils.saveVideoToAlbum(mContext, mFilePath);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            DialogUtils.showSimpleConfirmDialog(mContext, mContext.getResources().getString(R.string.dump_done),
-                                    new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                }
-                            });
-                        }
-                    });
-                }
+            mMediaRecorder.setOnRecordFinishListener(path -> {
+                ProgressDialogUtils.hideProgressDialog();
+                FileUtils.saveVideoToAlbum(mContext, mFilePath);
+                runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext, mContext.getResources().getString(R.string.dump_done),
+                        (dialogInterface, i) -> finish()));
             });
             try {
                 mMediaRecorder.start();
@@ -239,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
     @Override
     public void onDrawFrame(GL10 gl10) {
-        if (mTexOESToTex2DPass == null || mTSRPass == null || mBilinearRenderPass == null
+        if (mTexOESToTex2DPass == null || mBilinearRenderPass == null
                 || mCompareTexDrawer == null) {
             Log.w(TAG, "pass or drawer is null!");
             return;
@@ -257,23 +239,28 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
         /* Step 2: (Optional) If the type of your input texture is TextureOES, you must Convert TextureOES to Texture2D.*/
         int tex2dId = mTexOESToTex2DPass.render(mInputTexture.getTextureId(), mInputTexture.getType());
 
-        /* Step 3: Pass the input texture's id to TSRPass#render(int), and get the output texture's id. The output
+        if (mIsSROn) {
+            /* Step 3: Pass the input texture's id to TSRPass#render(int), and get the output texture's id. The output
         texture is the result of super-resolution.*/
-        int srTextureId = mTSRPass.render(tex2dId);
+            int srTextureId = mTSRPass.render(tex2dId);
 
-        /* Step 4: Use the TSRPass's output texture to do your own render. */
-        if (mMediaRecorder != null) {
-            if (newFrame) {
-                mMediaRecorder.encodeFrame(srTextureId, mSurfaceTexture.getTimestamp());
+            /* Step 4: Use the TSRPass's output texture to do your own render. */
+            if (mMediaRecorder != null) {
+                if (newFrame) {
+                    mMediaRecorder.encodeFrame(srTextureId, mSurfaceTexture.getTimestamp());
+                }
+            } else {
+                if (mIsCompareLerp) {
+                    int bilinearTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D);
+                    mCompareTexDrawer.draw(srTextureId, bilinearTextureId);
+                } else {
+                    mVideoFrameDrawer.draw(srTextureId);
+                }
             }
         } else {
-            if (mIsCompareLerp) {
-                int bilinearTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D);
-                mCompareTexDrawer.draw(srTextureId, bilinearTextureId);
-            } else {
-                mVideoFrameDrawer.draw(srTextureId);
-            }
+            mVideoFrameDrawer.draw(tex2dId);
         }
+
     }
 
     @Override
@@ -315,8 +302,15 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
     private void initViewAndMediaPlayer() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mFileName = "girl-544x960.mp4";
-        mSrRatio = Float.parseFloat(sharedPreferences.getString(mContext.getString(R.string.sr_ratio), "2.0"));
+        mFileName = sharedPreferences.getString(mContext.getString(R.string.video_title), "");
+        String srRatio = sharedPreferences.getString(mContext.getString(R.string.sr_ratio), "2.0");
+        if ("OFF".equals(srRatio)) {
+            mIsSROn = false;
+            mSrRatio = 1.0f;
+        } else {
+            mIsSROn = true;
+            mSrRatio = Float.parseFloat(srRatio);
+        }
         mIsFullScreenRender = sharedPreferences.getBoolean(mContext.getString(R.string.full_screen_config), false);
         mIsCompareLerp = sharedPreferences.getBoolean(mContext.getString(R.string.compare_lerp), false);
         mCodecType = sharedPreferences.getString(mContext.getString(R.string.codec_type), "H264");
@@ -330,20 +324,17 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
             }
 
             // Init playControllerButton
-            mPlayControlButton = findViewById(R.id.playControlButton);
-            mPlayControlButton.setText(R.string.pause_video);
-            mPlayControlButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mIsPause) {
-                        mIsPause = false;
-                        mMediaPlayer.start();
-                        mPlayControlButton.setText(R.string.pause_video);
-                    } else {
-                        mIsPause = true;
-                        mMediaPlayer.pause();
-                        mPlayControlButton.setText(R.string.play_video);
-                    }
+            Button playControlButton = findViewById(R.id.playControlButton);
+            playControlButton.setText(R.string.pause_video);
+            playControlButton.setOnClickListener(view -> {
+                if (mIsPause) {
+                    mIsPause = false;
+                    mMediaPlayer.start();
+                    playControlButton.setText(R.string.pause_video);
+                } else {
+                    mIsPause = true;
+                    mMediaPlayer.pause();
+                    playControlButton.setText(R.string.play_video);
                 }
             });
         }
@@ -364,59 +355,59 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
                 AssetFileDescriptor afd = mContext.getAssets().openFd(mFileName);
                 mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
                 retriever.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+                afd.close();
             }
         } catch (IOException e) {
             Log.e(TAG, "open source failed: " + e.getMessage());
             return;
         }
-        //获取视频时长，单位：毫秒(ms)
-        String duration_s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long duration = Long.valueOf(duration_s);
 
-        //获取视频帧数
-        String count_s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
-        long count = Long.valueOf(count_s);
+        if (mIsRecordVideo) {
+            //获取视频时长，单位：毫秒(ms)
+            String duration_s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            if (duration_s != null) {
+                long duration = Long.parseLong(duration_s);
 
-        //计算帧率
-        long dt = duration / count; // 平均每帧的时间间隔
-        mFrameRate = (int) (1000 / dt); // 帧率
+                //获取视频帧数
+                String count_s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
+                if (count_s != null) {
+                    long count = Long.parseLong(count_s);
 
-        Log.i(TAG, "video frame rate = " + mFrameRate);
+                    //计算帧率
+                    long dt = duration / count; // 平均每帧的时间间隔
+                    mFrameRate = (int) (1000 / dt); // 帧率
 
-        mRotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+                    Log.i(TAG, "video frame rate = " + mFrameRate);
+                }
+            }
+        }
+
+        mRotation = Integer.parseInt(Objects.requireNonNull(retriever.extractMetadata(
+                MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)));
         Log.i(TAG, "rotation = " + mRotation);
 
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setLooping(false);
         mMediaPlayer.prepareAsync();
-        mMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                mFrameWidth = mMediaPlayer.getVideoWidth();
-                mFrameHeight = mMediaPlayer.getVideoHeight();
-                Log.i(TAG, "width = " + mFrameWidth + ", height = " + mFrameHeight);
+        mMediaPlayer.setOnPreparedListener(mediaPlayer -> {
+            mFrameWidth = mMediaPlayer.getVideoWidth();
+            mFrameHeight = mMediaPlayer.getVideoHeight();
+            Log.i(TAG, "width = " + mFrameWidth + ", height = " + mFrameHeight);
 
-                if (mFrameWidth > mFrameHeight) {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                }
-                offlineVerifyLicense();
+            if (mFrameWidth > mFrameHeight) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
+            offlineVerifyLicense();
         });
 
         // 绑定播放结束事件
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 退出操作
-                        if (mMediaRecorder != null) {
-                            mMediaRecorder.stop();
-                        }
-                    }
-                }, 2000);  // delay 2000ms
-            }
+        mMediaPlayer.setOnCompletionListener(mediaPlayer -> {
+            new Handler().postDelayed(() -> {
+                // 退出操作
+                if (mMediaRecorder != null) {
+                    mMediaRecorder.stop();
+                }
+            }, 2000);  // delay 2000ms
         });
     }
 
@@ -427,42 +418,38 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
         TSRSdkLicenseStatus status = TSRSdk.getInstance().init(mAppId, mLicensePath, mTSRLogger);
         if (status == TSRSdkLicenseStatus.AVAILABLE) {
-            Log.i(TAG, "Verify sdk license success: " + status.toString());
+            Log.i(TAG, "Verify sdk license success: " + status);
             createTsrPassAndAddView();
         } else {
-            Log.i(TAG, "Verify sdk license failed: " + status.toString());
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(mContext, "Verify sdk license failed: " + status.toString(), Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+            Log.i(TAG, "Verify sdk license failed: " + status);
+            runOnUiThread(() -> {
+                Toast.makeText(mContext, "Verify sdk license failed: " + status, Toast.LENGTH_SHORT).show();
+                finish();
             });
         }
     }
 
     private void createTsrPassAndAddView() {
-        // Create TsrPassAndroid
-        mTSRPass = new TSRPass();
+        if (mIsSROn) {
+            // Create TsrPassAndroid
+            mTSRPass = new TSRPass();
+        }
 
-        mGLSurfaceView = new GLSurfaceView(mContext);
-        mGLSurfaceView.setEGLContextClientVersion(3);
-        mGLSurfaceView.setRenderer(MainActivity.this);
+        GLSurfaceView glSurfaceView = new GLSurfaceView(mContext);
+        glSurfaceView.setEGLContextClientVersion(3);
+        glSurfaceView.setRenderer(MainActivity.this);
 
         if (!mIsFullScreenRender) {
-            mGLSurfaceView.setLayoutParams(new LayoutParams((int) (mFrameWidth * mSrRatio),
+            glSurfaceView.setLayoutParams(new LayoutParams((int) (mFrameWidth * mSrRatio),
                     (int) (mFrameHeight * mSrRatio)));
         }
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                FrameLayout frameLayout = findViewById(R.id.video_view);
-                frameLayout.addView(mGLSurfaceView);
-                frameLayout.setOnTouchListener(TapHelper.getInstance());
+        runOnUiThread(() -> {
+            FrameLayout frameLayout = findViewById(R.id.video_view);
+            frameLayout.addView(glSurfaceView);
+            frameLayout.setOnTouchListener(TapHelper.getInstance());
 
-                mMediaPlayer.start();
-            }
+            mMediaPlayer.start();
         });
     }
 }

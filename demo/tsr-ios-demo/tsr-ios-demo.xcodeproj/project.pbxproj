@@ -21,6 +21,12 @@
 		4D24119B2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */; };
 		4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D2411A72B60C1F800720192 /* girl-544x960.mp4 */; };
 		4D2411AA2B60C21100720192 /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411A92B60C21100720192 /* shader.metal */; };
+		4DF5FCD02BB2779000A333C6 /* 720P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */; };
+		4DF5FCD12BB2779000A333C6 /* 540P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */; };
+		4DF5FCD22BB2779000A333C6 /* 4K.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */; };
+		4DF5FCD32BB2779000A333C6 /* 576P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */; };
+		4DF5FCD42BB2779000A333C6 /* 864P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */; };
+		4DF5FCD52BB2779000A333C6 /* 1080P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +83,12 @@
 		4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tsr_ios_demoUITestsLaunchTests.m; sourceTree = "<group>"; };
 		4D2411A72B60C1F800720192 /* girl-544x960.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "girl-544x960.mp4"; sourceTree = "<group>"; };
 		4D2411A92B60C21100720192 /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
+		4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720P.mp4; sourceTree = "<group>"; };
+		4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 540P.mp4; sourceTree = "<group>"; };
+		4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4K.mp4; sourceTree = "<group>"; };
+		4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 576P.mp4; sourceTree = "<group>"; };
+		4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 864P.mp4; sourceTree = "<group>"; };
+		4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1080P.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +140,12 @@
 		4D2411712B60C1D000720192 /* tsr-ios-demo */ = {
 			isa = PBXGroup;
 			children = (
+				4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */,
+				4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */,
+				4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */,
+				4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */,
+				4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */,
+				4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */,
 				4D2411A92B60C21100720192 /* shader.metal */,
 				4D2411A72B60C1F800720192 /* girl-544x960.mp4 */,
 				4D2411722B60C1D000720192 /* AppDelegate.h */,
@@ -277,10 +295,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DF5FCD22BB2779000A333C6 /* 4K.mp4 in Resources */,
+				4DF5FCD32BB2779000A333C6 /* 576P.mp4 in Resources */,
 				4D2411822B60C1D200720192 /* LaunchScreen.storyboard in Resources */,
 				4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */,
+				4DF5FCD12BB2779000A333C6 /* 540P.mp4 in Resources */,
+				4DF5FCD52BB2779000A333C6 /* 1080P.mp4 in Resources */,
+				4DF5FCD42BB2779000A333C6 /* 864P.mp4 in Resources */,
 				4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */,
 				4D24117D2B60C1D000720192 /* Main.storyboard in Resources */,
+				4DF5FCD02BB2779000A333C6 /* 720P.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

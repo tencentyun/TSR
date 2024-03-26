@@ -1,19 +1,19 @@
 //
-//  VideoPlayViewController.h
+//  ViewController.h
 //  demo
 //
 //
 
-// VideoPlayViewController.h
+// ViewController.h
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MetalKit/MetalKit.h>
 #import <tsr_client/TsrPass.h>
 
-#define LICENSE_NAME @""
+#define LICENSE_NAME @"auth_39_IOS.crt"
 #define APPID -1
 
-@interface VideoPlayViewController : UIViewController<MTKViewDelegate> 
+@interface VideoPlayViewController : UIViewController<MTKViewDelegate>
 
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) AVPlayerItemVideoOutput *videoOutput;
@@ -21,9 +21,7 @@
 @property (nonatomic, strong) UIButton *playPauseButton;
 @property (nonatomic, strong) UIButton *srSwitchButton;
 @property (nonatomic, strong) UILabel *infoLabel;
-@property (nonatomic, strong) MTKView *mtkView;
 
-@property (nonatomic, strong) id<MTLDevice> device;
 @property (nonatomic, strong) id<MTLCommandQueue> commandQueue;
 @property (nonatomic, strong) id<MTLRenderPipelineState> pipelineState;
 @property (nonatomic, strong) id<MTLTexture> in_texture;
@@ -31,12 +29,9 @@
 
 @property (nonatomic, strong) TSRPass* tsr_pass;
 
-@property (nonatomic, strong) NSURL *videoURL;
-
 @property (nonatomic, assign) BOOL isVideoLandscape;
 @property (nonatomic, assign) BOOL isTsrOn;
-@property (nonatomic, assign) float srRatio;
-@property (nonatomic, assign) CGSize videoSize;
+@property (nonatomic, assign) BOOL isUseTsr;
 
 - (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio;
 

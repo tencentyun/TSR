@@ -26,7 +26,7 @@
     <string name="play_sr_video">播放超分视频</string>
     <string name="export_sr_video">导出超分视频</string>
 
-    <string name="full_screen_on">将全屏绘制纹理，绘制的大小可能与纹理原本大小不一致</string>
+    <string name="full_screen_on">将全屏绘制纹理</string>
     <string name="full_screen_off">将按照纹理的原大小绘制</string>
     <string name="compare_lerp_on">会将SR超分后的图像与线性放大的图像对比</string>
     <string name="compare_lerp_off">只绘制SR超分后的图像</string>

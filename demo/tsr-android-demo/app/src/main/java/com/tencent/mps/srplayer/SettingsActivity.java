@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -25,20 +24,20 @@ import java.util.Objects;
 public class SettingsActivity extends AppCompatActivity {
     private Uri mVideoUri;
     private String mFileName;
-    private boolean mVideoChooseLocal = true;
+    private boolean mVideoChooseLocal;
     private boolean mVideoRecord;
-    private static PreferenceCategory mExportVideoPreferenceCategory;
-    private static PreferenceCategory mPlayVideoPreferenceCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
 
+        SettingsFragment settingsFragment = new SettingsFragment();
+
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.settings, new SettingsFragment())
+                    .replace(R.id.settings, settingsFragment)
                     .commit();
         }
 
@@ -48,53 +47,47 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         LinearLayout localVideoLayout = findViewById(R.id.choose_local_video_layout);
-        localVideoLayout.setVisibility(View.VISIBLE);
+        localVideoLayout.setVisibility(View.GONE);
 
         // 配置开始按钮
         Button startPlayButton = findViewById(R.id.start_play_button);
-        startPlayButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+        startPlayButton.setOnClickListener(view -> {
+            Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
 
-                if (mVideoChooseLocal) {
-                    if (mVideoUri == null) {
-                        Toast.makeText(getApplicationContext(), R.string.video_choose_hint, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if (mFileName != null) {
-                        String[] fileNameSplit = mFileName.split("\\.");
-                        if (!Objects.equals(fileNameSplit[fileNameSplit.length - 1], "mp4") &&
-                                !Objects.equals(fileNameSplit[fileNameSplit.length - 1], "3gp") &&
-                                !Objects.equals(fileNameSplit[fileNameSplit.length - 1], "webm")) {
-                            Toast.makeText(getApplicationContext(), R.string.video_format_not_support, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.video_choose_hint, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    intent.putExtra("videoUri", mVideoUri.toString());
-                    intent.putExtra("fileName", mFileName);
+            if (mVideoChooseLocal) {
+                if (mVideoUri == null) {
+                    Toast.makeText(getApplicationContext(), R.string.video_choose_hint, Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                intent.putExtra("op_type", mVideoRecord);
-                startActivity(intent);
+
+                if (mFileName != null) {
+                    String[] fileNameSplit = mFileName.split("\\.");
+                    if (!Objects.equals(fileNameSplit[fileNameSplit.length - 1], "mp4") &&
+                            !Objects.equals(fileNameSplit[fileNameSplit.length - 1], "3gp") &&
+                            !Objects.equals(fileNameSplit[fileNameSplit.length - 1], "webm")) {
+                        Toast.makeText(getApplicationContext(), R.string.video_format_not_support, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.video_choose_hint, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                intent.putExtra("videoUri", mVideoUri.toString());
+                intent.putExtra("fileName", mFileName);
             }
+            intent.putExtra("op_type", mVideoRecord);
+            startActivity(intent);
         });
 
         TextView chooseVideoButton = findViewById(R.id.choose_button);
         chooseVideoButton.setText(R.string.video_choose);
-        chooseVideoButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
+        chooseVideoButton.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-                /* 使用Intent.ACTION_GET_CONTENT这个Action */
-                startActivityForResult(Intent.createChooser(intent, "选择文件"), 1);
-            }
+            /* 使用Intent.ACTION_GET_CONTENT这个Action */
+            startActivityForResult(Intent.createChooser(intent, "选择文件"), 1);
         });
 
         // 配置视频操作类型
@@ -103,13 +96,13 @@ public class SettingsActivity extends AppCompatActivity {
             RadioButton btn = findViewById(checkedID);
             if (btn.getId() == R.id.play_sr_video) {
                 mVideoRecord = false;
-                mPlayVideoPreferenceCategory.setVisible(true);
-                mExportVideoPreferenceCategory.setVisible(false);
+                settingsFragment.onPlayVideoPreferenceCategoryVisibilityChanged(true);
+                settingsFragment.onExportVideoPreferenceCategoryVisibilityChanged(false);
                 startPlayButton.setText(R.string.start_play);
             } else {
                 mVideoRecord = true;
-                mPlayVideoPreferenceCategory.setVisible(false);
-                mExportVideoPreferenceCategory.setVisible(true);
+                settingsFragment.onPlayVideoPreferenceCategoryVisibilityChanged(false);
+                settingsFragment.onExportVideoPreferenceCategoryVisibilityChanged(true);
                 startPlayButton.setText(R.string.start_export);
             }
         });
@@ -120,15 +113,20 @@ public class SettingsActivity extends AppCompatActivity {
             RadioButton btn = findViewById(checkedID);
             if (btn.getId() == R.id.local_video) {
                 mVideoChooseLocal = true;
+                settingsFragment.onLocalVideoChoosePreferenceCategoryVisibilityChanged(false);
                 localVideoLayout.setVisibility(View.VISIBLE);
             } else {
                 mVideoChooseLocal = false;
+                settingsFragment.onLocalVideoChoosePreferenceCategoryVisibilityChanged(true);
                 localVideoLayout.setVisibility(View.GONE);
             }
         });
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
+        private PreferenceCategory mExportVideoPreferenceCategory;
+        private PreferenceCategory mPlayVideoPreferenceCategory;
+        private PreferenceCategory mLocalVideoChoosePreferenceCategory;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -137,11 +135,37 @@ public class SettingsActivity extends AppCompatActivity {
             mExportVideoPreferenceCategory = findPreference("export_config");
             if (mExportVideoPreferenceCategory != null) {
                 mExportVideoPreferenceCategory.setVisible(false);
+                onExportVideoPreferenceCategoryVisibilityChanged(false);
             }
 
             mPlayVideoPreferenceCategory = findPreference("play_config");
             if (mPlayVideoPreferenceCategory != null) {
                 mPlayVideoPreferenceCategory.setVisible(true);
+                onPlayVideoPreferenceCategoryVisibilityChanged(true);
+            }
+
+            mLocalVideoChoosePreferenceCategory = findPreference("choose_app_video");
+            if (mLocalVideoChoosePreferenceCategory != null) {
+                mLocalVideoChoosePreferenceCategory.setVisible(true);
+                onLocalVideoChoosePreferenceCategoryVisibilityChanged(true);
+            }
+        }
+
+        public void onPlayVideoPreferenceCategoryVisibilityChanged(boolean isVisible) {
+            if (mPlayVideoPreferenceCategory != null) {
+                mPlayVideoPreferenceCategory.setVisible(isVisible);
+            }
+        }
+
+        public void onExportVideoPreferenceCategoryVisibilityChanged(boolean isVisible) {
+            if (mExportVideoPreferenceCategory != null) {
+                mExportVideoPreferenceCategory.setVisible(isVisible);
+            }
+        }
+
+        public void onLocalVideoChoosePreferenceCategoryVisibilityChanged(boolean isVisible) {
+            if (mLocalVideoChoosePreferenceCategory != null) {
+                mLocalVideoChoosePreferenceCategory.setVisible(isVisible);
             }
         }
     }
@@ -164,14 +188,14 @@ public class SettingsActivity extends AppCompatActivity {
     @SuppressLint("Range")
     private String getFileName(Uri uri) {
         String fileName = null;
-        if (uri.getScheme().equals("content")) {
+        if ("content".equals(uri.getScheme())) {
             try (Cursor cursor = getContentResolver().query(uri, new String[]{OpenableColumns.DISPLAY_NAME}, null, null,
                     null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
             }
-        } else if (uri.getScheme().equals("file")) {
+        } else if ("file".equals(uri.getScheme())) {
             fileName = uri.getLastPathSegment();
         }
         return fileName;
