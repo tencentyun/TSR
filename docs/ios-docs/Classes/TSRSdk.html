@@ -62,6 +62,8 @@
 		
 		<option value="//api/name/initWithAppId:licenseURL:tsrLogger:">- initWithAppId:licenseURL:tsrLogger:</option>
 		
+		<option value="//api/name/initWithAppId:sdkLicenseVerifyResultCallback:tsrLogger:">- initWithAppId:sdkLicenseVerifyResultCallback:tsrLogger:</option>
+		
 		<option value="//api/name/reset">- reset</option>
 		
 	</optgroup>
@@ -99,7 +101,7 @@
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
 						<p>TSRSdk is a class responsible for managing and verifying the license of the super-resolution SDK.
-The class provides methods for initializing the SDK with offline license verification,
+The class provides methods for initializing the SDK with online license verification,
 and releasing the resources when the SDK is no longer needed. It also allows setting a custom
 logger for logging purposes.</p>
 
@@ -107,24 +109,33 @@ logger for logging purposes.</p>
 
 
 <ol>
-<li>Obtain the instance of TSRSdk.</li>
-<li>Initialize the SDK with the <a href="#//api/name/initWithAppId:licenseURL:tsrLogger:">initWithAppId:licenseURL:tsrLogger:</a> method.</li>
-<li>Perform super-resolution rendering using the <a href="../Classes/TSRPass.html">TSRPass</a> class.</li>
-<li>Call <a href="#//api/name/reset">reset</a> when the SDK is no longer needed to release resources.</li>
+<li>Get an instance of TSRSdk using the getInstance method.</li>
+<li>Initialize the TSRSdk object with online license verification using the initWithAppId:sdkLicenseVerifyResultCallback:tsrLogger: methods.</li>
+<li>Perform super-resolution rendering using the TSRPass class.</li>
+<li>Release resources when the TSRSdk object is no longer needed by calling the reset method.</li>
 </ol>
 
 
-<p>Example for offline verification:</p>
+<p>Example for online verification:</p>
 
 
-<p><a href="../Constants/TSRSdkLicenseStatus.html">TSRSdkLicenseStatus</a> status = [TSRSdk.getInstance initWithAppId:appId licenseURL:licenseURL tsrLogger:tsrLogger];<br>
-if (status == TSRSdkLicenseStatusAvailable) {<br>
-// Perform super-resolution rendering using <a href="../Classes/TSRPass.html">TSRPass</a> class.<br>
-} else {<br>
-// Do something when the verification of sdk&rsquo;s license failed.<br>
-}<br>
-// Release resources when the TSRSdk object is no longer needed.<br>
-tsrSdk.<a href="#//api/name/reset">reset</a>();<br></p>
+<pre>
+<code>
+- (void)onTSRSdkLicenseVerifyResult:(TSRSdkLicenseStatus)status {
+if (status == TSRSdkLicenseStatusAvailable) {
+// Creating TSRPass for super-resolution rendering
+} else {
+// Do something when the verification of sdk's license failed.
+}
+}
+
+// Init TSRSdk and verify the online license
+[TSRSdk.getInstance initWithAppId:APPID sdkLicenseVerifyResultCallback:self tsrLogger:[[Logger alloc] init]];
+// Release resources when the TSRSdk object is no longer needed.
+[TSRSdk.getInstance reset];
+</code>
+</pre>
+
 					</div>
 					
 					
@@ -136,12 +147,12 @@ tsrSdk.<a href="#//api/name/reset">reset</a>();<br></p>
 						
 
 						
-						
+						<h2 class="task-title">Other Methods</h2>
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/initWithAppId:licenseURL:tsrLogger:" title="initWithAppId:licenseURL:tsrLogger:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithAppId:licenseURL:tsrLogger:">&ndash;&nbsp;initWithAppId:licenseURL:tsrLogger:</a></code>
+	<a name="//api/name/initWithAppId:sdkLicenseVerifyResultCallback:tsrLogger:" title="initWithAppId:sdkLicenseVerifyResultCallback:tsrLogger:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithAppId:sdkLicenseVerifyResultCallback:tsrLogger:">&ndash;&nbsp;initWithAppId:sdkLicenseVerifyResultCallback:tsrLogger:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -151,13 +162,13 @@ tsrSdk.<a href="#//api/name/reset">reset</a>();<br></p>
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Initializes the TSRSdk with offline license verification. This method only can be executed once before the
-<a href="#//api/name/reset">reset</a>() is executed.</p>
+				<p>Initializes the TSRSdk with online license verification. This method only can be executed once before the
+<a href="#//api/name/reset">reset</a> is executed.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (TSRSdkLicenseStatus)initWithAppId:(long)<em>appId</em> licenseURL:(NSURL *)<em>licenseUrl</em> tsrLogger:(id&lt;TSRLogger&gt;)<em>tsrLogger</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (void)initWithAppId:(long)<em>appId</em> sdkLicenseVerifyResultCallback:(id&lt;TSRSdkLicenseVerifyResultCallback&gt;)<em>sdkLicenseVerifyResultCallback</em> tsrLogger:(id&lt;TSRLogger&gt;)<em>tsrLogger</em></code></div>
 
 		    
 			
@@ -171,8 +182,8 @@ tsrSdk.<a href="#//api/name/reset">reset</a>();<br></p>
 					</tr>
 				
 					<tr>
-						<th scope="row" class="argument-name"><code>licenseUrl</code></th>
-						<td><p>The url of the license</p></td>
+						<th scope="row" class="argument-name"><code>sdkLicenseVerifyResultCallback</code></th>
+						<td><p>SdkLicenseVerifyResultCallback is an interface for handling the result of SDK license verification.</p></td>
 					</tr>
 				
 					<tr>
@@ -185,19 +196,14 @@ tsrSdk.<a href="#//api/name/reset">reset</a>();<br></p>
 			
 
 			
-			<div class="method-subsection return">
-				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The result of the verification of sdk&rsquo;s license.</p>
-			</div>
-			
 
 			
 
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Initializes the TSRSdk with offline license verification. This method only can be executed once before the
-<a href="#//api/name/reset">reset</a>() is executed.</p>
+				<p>Initializes the TSRSdk with online license verification. This method only can be executed once before the
+<a href="#//api/name/reset">reset</a> is executed.</p>
 			</div>
 			
 
@@ -285,6 +291,17 @@ After calling this method, you must re-initialize the TSRSdk instance using the 
 </div>
 						</div>
 						
+
+						
+	
+			
+		    
+
+			
+	</div>
+</div>
+						</div>
+						
 					</div>
 					
 					
@@ -297,7 +314,7 @@ After calling this method, you must re-initialize the TSRSdk instance using the 
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2024 Tencent. All rights reserved. Updated: 2024-02-23</p>
+						<p class="copyright">Copyright &copy; 2024 Tencent. All rights reserved. Updated: 2024-04-08</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>

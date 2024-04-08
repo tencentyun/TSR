@@ -87,21 +87,25 @@
                             
                             &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusUnknown</a>,<br>
                             
-                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusInternalError</a>,<br>
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusInternalErr</a>,<br>
                             
-                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusSignNotMatched</a>,<br>
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusAppInfoNotMatched</a>,<br>
                             
-                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusSignMatched</a>,<br>
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusTrials</a>,<br>
                             
-                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusInvalidError</a>,<br>
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusErrorInvalid</a>,<br>
                             
-                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusExpires</a>,<br>
-                            
-                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusLimitCount</a>,<br>
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusDeviceCountExceeded</a>,<br>
                             
                             &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusNoAvailableAuth</a>,<br>
                             
-                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusTrials</a>,<br>
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusExpires</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusSdkFeatureNotMatched</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusSignNotMatched</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusDevidNotMatched</a>,<br>
                             
                             &nbsp;&nbsp; <a href="">TSRSdkLicenseStatusUnavailable</a>,<br>
                             
@@ -119,7 +123,7 @@
 <dd>
 
 
-<p>License status is unknown.</p>
+<p>init status</p>
 
 
 
@@ -132,11 +136,11 @@
 	
 </dd>
                             
-                            <dt><a name="" title="TSRSdkLicenseStatusInternalError"></a><code>TSRSdkLicenseStatusInternalError</code></dt>
+                            <dt><a name="" title="TSRSdkLicenseStatusInternalErr"></a><code>TSRSdkLicenseStatusInternalErr</code></dt>
 <dd>
 
 
-<p>Internal operating logic error.</p>
+<p>internal operating logic error</p>
 
 
 
@@ -149,96 +153,13 @@
 	
 </dd>
                             
-                            <dt><a name="" title="TSRSdkLicenseStatusSignNotMatched"></a><code>TSRSdkLicenseStatusSignNotMatched</code></dt>
+                            <dt><a name="" title="TSRSdkLicenseStatusAppInfoNotMatched"></a><code>TSRSdkLicenseStatusAppInfoNotMatched</code></dt>
 <dd>
 
 
-<p>License sign not matched.</p>
-
-
-
-
-
-    
-	<p>
-		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
-	</p>
-	
-</dd>
-                            
-                            <dt><a name="" title="TSRSdkLicenseStatusSignMatched"></a><code>TSRSdkLicenseStatusSignMatched</code></dt>
-<dd>
-
-
-<p>License sign matched.</p>
-
-
-
-
-
-    
-	<p>
-		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
-	</p>
-	
-</dd>
-                            
-                            <dt><a name="" title="TSRSdkLicenseStatusInvalidError"></a><code>TSRSdkLicenseStatusInvalidError</code></dt>
-<dd>
-
-
-<p>License server verify failed (invalid appid/sdkid, or disabled).</p>
-
-
-
-
-
-    
-	<p>
-		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
-	</p>
-	
-</dd>
-                            
-                            <dt><a name="" title="TSRSdkLicenseStatusExpires"></a><code>TSRSdkLicenseStatusExpires</code></dt>
-<dd>
-
-
-<p>License expires.</p>
-
-
-
-
-
-    
-	<p>
-		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
-	</p>
-	
-</dd>
-                            
-                            <dt><a name="" title="TSRSdkLicenseStatusLimitCount"></a><code>TSRSdkLicenseStatusLimitCount</code></dt>
-<dd>
-
-
-<p>License limit count.</p>
-
-
-
-
-
-    
-	<p>
-		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
-	</p>
-	
-</dd>
-                            
-                            <dt><a name="" title="TSRSdkLicenseStatusNoAvailableAuth"></a><code>TSRSdkLicenseStatusNoAvailableAuth</code></dt>
-<dd>
-
-
-<p>License not available for user request (online authorization).</p>
+<p>app signature or packagename(android)、bundleId(macos/ios) not matched.
+the license verification matches the app information and the SDK built-in
+information before the authorization verification can be performed.</p>
 
 
 
@@ -255,7 +176,129 @@
 <dd>
 
 
-<p>Network abort, trials.</p>
+<p>net abort, trials</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRSdkLicenseStatusErrorInvalid"></a><code>TSRSdkLicenseStatusErrorInvalid</code></dt>
+<dd>
+
+
+<p>license server verify failed
+invalid appid/sdkid， or disabled</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRSdkLicenseStatusDeviceCountExceeded"></a><code>TSRSdkLicenseStatusDeviceCountExceeded</code></dt>
+<dd>
+
+
+<p>the number of license authorized devices exceeds</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRSdkLicenseStatusNoAvailableAuth"></a><code>TSRSdkLicenseStatusNoAvailableAuth</code></dt>
+<dd>
+
+
+<p>license no available for user req
+Request authorization license online,
+no available license is available.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRSdkLicenseStatusExpires"></a><code>TSRSdkLicenseStatusExpires</code></dt>
+<dd>
+
+
+<p>license expires</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRSdkLicenseStatusSdkFeatureNotMatched"></a><code>TSRSdkLicenseStatusSdkFeatureNotMatched</code></dt>
+<dd>
+
+
+<p>license certificate policy sdk version information does not match</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRSdkLicenseStatusSignNotMatched"></a><code>TSRSdkLicenseStatusSignNotMatched</code></dt>
+<dd>
+
+
+<p>license binding certificate policy signature information does not match</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRSdk.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRSdkLicenseStatusDevidNotMatched"></a><code>TSRSdkLicenseStatusDevidNotMatched</code></dt>
+<dd>
+
+
+<p>License binding certificate policy devid information does not match</p>
 
 
 
@@ -272,7 +315,9 @@
 <dd>
 
 
-<p>License verify failed (mismatched certificate info or incorrect format or file not found).</p>
+<p>license verify failed
+The certificate information does not match, is modified,
+or the certificate format is incorrect.</p>
 
 
 
@@ -289,7 +334,7 @@
 <dd>
 
 
-<p>Verify successful.</p>
+<p>verify successful</p>
 
 
 
@@ -326,7 +371,7 @@
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2024 Tencent. All rights reserved. Updated: 2024-02-23</p>
+						<p class="copyright">Copyright &copy; 2024 Tencent. All rights reserved. Updated: 2024-04-08</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
