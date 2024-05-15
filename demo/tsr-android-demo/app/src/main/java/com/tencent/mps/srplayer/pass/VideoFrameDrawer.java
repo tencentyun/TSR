@@ -111,7 +111,7 @@ public class VideoFrameDrawer {
             mVertexPosHandler = GLES20.glGetAttribLocation(mProgram, "aPosition");
             mTexturePosHandler = GLES20.glGetAttribLocation(mProgram, "aCoordinate");
             mTextureHandler = GLES20.glGetUniformLocation(mProgram, "uTexture");
-            GlUtils.checkGLError(TAG, "CloudVideoDraw");
+            GlUtils.checkGLError(TAG, "VideoFrameDrawer");
         }
         GLES20.glUseProgram(mProgram);
     }

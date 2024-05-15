@@ -34,7 +34,7 @@
                 android:layout_centerHorizontal="true"
                 />
         <TextView
-                android:id="@+id/lerp"
+                android:id="@+id/cmp_algorithm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/right_bilinear"

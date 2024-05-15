@@ -30,7 +30,11 @@ public class OffScreenRenderPass {
      */
     private RenderState mRenderState;
 
-    public OffScreenRenderPass(int outputTextureType, int destWidth, int destHeight, String assetsFragShaderPath) {
+    public OffScreenRenderPass() {
+
+    }
+
+    public void init (int outputTextureType, int destWidth, int destHeight, String assetsFragShaderPath) {
         Log.i(TAG, "creating Texture2DRenderPass: dest resolution = "
                 + destWidth + "x" + destHeight);
         // create the target texture

@@ -28,7 +28,7 @@
                     android:value="" />
         </activity>
         <activity
-                android:name="com.tencent.mps.srplayer.MainActivity"
+                android:name="com.tencent.mps.srplayer.TsrActivity"
                 android:exported="true">
 
             <meta-data
