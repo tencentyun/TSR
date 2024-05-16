@@ -20,21 +20,27 @@
     <string name="bitrate_mbps">编码码率(Mb/s)，与保真度正相关</string>
 
     <string name="full_screen_config">是否全屏绘制</string>
-    <string name="compare_lerp">对比双线性</string>
+    <string name="compare_algorithm">对比算法</string>
+    <string name="compare_source">对比原视频</string>
     <string name="cycle_play">循环播放</string>
+
+    <string name="video_algorithm">视频处理算法</string>
 
     <string name="play_sr_video">播放超分视频</string>
     <string name="export_sr_video">导出超分视频</string>
+    <string name="export_video">导出视频</string>
 
     <string name="full_screen_on">将全屏绘制纹理</string>
     <string name="full_screen_off">将按照纹理的原大小绘制</string>
-    <string name="compare_lerp_on">会将SR超分后的图像与线性放大的图像对比</string>
-    <string name="compare_lerp_off">只绘制SR超分后的图像</string>
+    <string name="compare_mode_on">绘制超分后的图像与对比的图像</string>
+    <string name="compare_mode_off">只绘制超分后的图像</string>
     <string name="cycle_play_on">播放结束后从头开始循环播放</string>
     <string name="cycle_play_off">播放结束后停止</string>
 
-    <string name="start_play">开始播放</string>
-    <string name="start_export">开始导出</string>
+    <string name="start_play_tsr">开始播放TSR</string>
+    <string name="start_play_dlsr">开始播放Y5</string>
+    <string name="start_export_tsr">开始导出TSR</string>
+    <string name="start_export_dlsr">开始导出Y5</string>
     <string name="right_bilinear">Right: Bilinear</string>
     <string name="left_sr">Left: TSR</string>
     <string name="play_video">播放</string>

@@ -15,9 +15,9 @@ void main() {
         if (rotation == 180) {
             lineXCoord = 1.0 - lineXCoord;
         }
-        if (vCoordinate.x > lineXCoord + 0.01) {
+        if (vCoordinate.x > lineXCoord + 0.005) {
             gl_FragColor = texture2D(uTexture1, vCoordinate);
-        } else if (vCoordinate.x < lineXCoord - 0.01) {
+        } else if (vCoordinate.x < lineXCoord - 0.005) {
             gl_FragColor = texture2D(uTexture0, vCoordinate);
         } else {
             gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
@@ -27,9 +27,9 @@ void main() {
         if (rotation == 90) {
             lineYCoord = 1.0 - lineYCoord;
         }
-        if (vCoordinate.y > lineYCoord + 0.01) {
+        if (vCoordinate.y > lineYCoord + 0.005) {
             gl_FragColor = texture2D(uTexture0, vCoordinate);
-        } else if (vCoordinate.y < lineYCoord - 0.01) {
+        } else if (vCoordinate.y < lineYCoord - 0.005) {
             gl_FragColor = texture2D(uTexture1, vCoordinate);
         } else {
             gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
