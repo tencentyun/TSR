@@ -22,6 +22,8 @@
 
 ## 画面效果
 ### 标准版——超分辨率
+540P -> 1080P
+
 左：标准版超分，右：直接播放
 
 可点击链接对比查看：https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-sr-cmp/index.html
@@ -29,6 +31,8 @@
 
 ### 专业版
 #### 超分辨率
+540P -> 1080P
+
 左：专业版超分；中：标准版超分；右：直接播放
 
 可点击链接对比查看：https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-sr-cmp/index.html
