@@ -1,20 +1,15 @@
 # 超分辩率
-## 播放器场景
+## 应用场景
+### 播放器场景
 终端播放器集成超分辨率能力，提高播放清晰度。
 
 <img src=./docs/scenario_play.png />
 
 540P图像双线性放大1.5倍（test540\_1.5\_bilerp）和超分放大1.5倍（test540\_1.5\_tsr）的[效果对比](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/icat-test540.html)
-## 监控场景
+### 监控场景
 受益于播放端的超分功能，可以降低视频监控上行的带宽和存储。
 
 <img src=./docs/scenario-monitor.png width=60% />
-
-## 支持的平台
-| SDK版本     | Android   |iOS| Windows|
-| :- | :- | :- | :- |
-| 标准版   | ✅  |✅| ❓规划中|
-| 专业版   | ✅ | ❌开发中 | ❓规划中|
 
 ## 支持的算法
 | SDK版本     | 标准版超分辨率 | 专业版超分辨率 | 专业版图像增强 |
@@ -44,6 +39,12 @@
 
 可点击链接对比查看：https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-ie-cmp/index.html
 <img src=./docs/pro-ie-cmp.png />
+
+## 支持的平台
+| SDK版本     | Android   |iOS| Windows|
+| :- | :- | :- | :- |
+| 标准版   | ✅  |✅| ❓规划中|
+| 专业版   | ✅ | ❌开发中 | ❓规划中|
 
 ## 性能
 ### 标准版
