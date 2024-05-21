@@ -20,10 +20,13 @@
 
 ## 性能
 ### 标准版超分辨率
-<img src=docs/standard-sdk-performance.png width=60% />
+<img src=docs/standard-sr-performance.png width=60% />
 
 ### 专业版超分辨率
-<img src=docs/pro-sdk-performance.png width=60% />
+<img src=docs/pro-sr-performance.png width=80% />
+
+### 专业版画质增强
+<img src=docs/pro-ie-performance.png width=80% />
 
 ## SDK版本
 | SDK版本     | 标准版超分辨率 | 专业版超分辨率 | 专业版画质增强 |
