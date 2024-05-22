@@ -39,6 +39,9 @@
     
     // 初始化tsrpass
     _tsr_pass = [[TSRPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+    // Sets the parameters of the TSRPass.
+    // These three parameters are empirical values and are only for reference. You can change their values according to your own needs.
+    [_tsr_pass setParametersWithBrightness:52 saturation:52 contrast:58];
 }
 
 - (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio {
