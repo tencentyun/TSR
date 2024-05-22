@@ -309,8 +309,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
 
         /*-------------------------------- Step 1: init the TSRPass. -------------------------------------------*/
         mTSRPassStandard.init(mFrameWidth, mFrameHeight, mSrRatio);
-        // Sets the parameters of the TSRPass.
-        // These three parameters are empirical values and are only for reference. You can change their values according to your own needs.
+        // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
+        // Here we set (52, 52, 58) to slightly enhance the image.
         mTSRPassStandard.setParameters(52, 52, 58);
         mTSRPassProfessional.init(mFrameWidth, mFrameHeight, mSrRatio);
         mTIEPass.init(mFrameWidth, mFrameHeight);

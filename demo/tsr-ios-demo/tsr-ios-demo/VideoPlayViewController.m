@@ -39,8 +39,8 @@
     
     // 初始化tsrpass
     _tsr_pass = [[TSRPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
-    // Sets the parameters of the TSRPass.
-    // These three parameters are empirical values and are only for reference. You can change their values according to your own needs.
+    // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
+    // Here we set (52, 52, 58) to slightly enhance the image.
     [_tsr_pass setParametersWithBrightness:52 saturation:52 contrast:58];
 }
 
