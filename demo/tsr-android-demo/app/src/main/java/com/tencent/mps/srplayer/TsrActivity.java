@@ -313,7 +313,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         // These three parameters are empirical values and are only for reference. You can change their values according to your own needs.
         mTSRPassStandard.setParameters(52, 52, 58);
         mTSRPassProfessional.init(mFrameWidth, mFrameHeight, mSrRatio);
-        mTSRPassProfessional.setParameters(52, 52, 58);
         mTIEPass.init(mFrameWidth, mFrameHeight);
 
         startDecode();
