@@ -343,11 +343,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             }
         }
 
-        float[] transformMatrix = new float[16];
-        mSurfaceTexture.getTransformMatrix(transformMatrix);
-
         /* Step 2: (Optional) If the type of your input texture is TextureOES, you must Convert TextureOES to Texture2D.*/
-        int tex2dId = mTexOESToTex2DPass.render(mInputTexture.getTextureId(), mInputTexture.getType(), transformMatrix);
+        int tex2dId = mTexOESToTex2DPass.render(mInputTexture.getTextureId(), mInputTexture.getType());
 
         if ("直接渲染".equals(mAlgorithm)) {
             mVideoFrameDrawer.draw(tex2dId);
@@ -364,21 +361,21 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     Log.w(TAG, "mTSRPassStandard is null!");
                     break;
                 }
-                srTextureId = mTSRPassStandard.render(tex2dId, transformMatrix);
+                srTextureId = mTSRPassStandard.render(tex2dId);
                 break;
             case "专业版超分":
                 if (mTSRPassProfessional == null) {
                     Log.w(TAG, "mTSRPassProfessional is null!");
                     break;
                 }
-                srTextureId = mTSRPassProfessional.render(tex2dId, transformMatrix);
+                srTextureId = mTSRPassProfessional.render(tex2dId);
                 break;
             case "专业版增强":
                 if (mTIEPass == null) {
                     Log.w(TAG, "mTIEPass is null!");
                     break;
                 }
-                srTextureId = mTIEPass.render(tex2dId, transformMatrix);
+                srTextureId = mTIEPass.render(tex2dId);
                 break;
         }
 
@@ -397,7 +394,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     mVideoFrameDrawer.draw(srTextureId);
                     break;
                 }
-                cmpTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D, transformMatrix);
+                cmpTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D);
                 mCompareTexDrawer.draw(srTextureId, cmpTextureId);
                 break;
             case "标准版超分":
@@ -406,7 +403,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     mVideoFrameDrawer.draw(srTextureId);
                     break;
                 }
-                cmpTextureId = mTSRPassStandard.render(tex2dId, transformMatrix);
+                cmpTextureId = mTSRPassStandard.render(tex2dId);
                 mCompareTexDrawer.draw(srTextureId, cmpTextureId);
                 break;
             case "专业版超分":
@@ -415,7 +412,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     mVideoFrameDrawer.draw(srTextureId);
                     break;
                 }
-                cmpTextureId = mTSRPassProfessional.render(tex2dId, transformMatrix);
+                cmpTextureId = mTSRPassProfessional.render(tex2dId);
                 mCompareTexDrawer.draw(srTextureId, cmpTextureId);
                 break;
         }
