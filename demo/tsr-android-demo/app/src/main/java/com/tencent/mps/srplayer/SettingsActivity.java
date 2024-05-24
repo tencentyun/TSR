@@ -117,18 +117,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mSettingsFragment.getSettingsPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mSettingsFragment.getSettingsPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         if ("export_video".equals(s)) {
             if (!sharedPreferences.getBoolean("export_video", false)) {
