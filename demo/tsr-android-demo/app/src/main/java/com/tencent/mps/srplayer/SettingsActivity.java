@@ -38,8 +38,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         mSettingsFragment = new SettingsFragment();
 
         if (savedInstanceState == null) {
