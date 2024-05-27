@@ -4,12 +4,13 @@
 //
 //
 
-// ViewController.h
+// VideoPlayViewController.h
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MetalKit/MetalKit.h>
-#import <tsr_client/TsrPass.h>
+#import <tsr_client/TSRPass.h>
 #import <tsr_client/TSRSdk.h>
+#import <tsr_client/TIEPass.h>
 
 #define APPID -1
 
@@ -19,7 +20,10 @@
 @property (nonatomic, strong) AVPlayerItemVideoOutput *videoOutput;
 
 @property (nonatomic, strong) UIButton *playPauseButton;
-@property (nonatomic, strong) UIButton *srSwitchButton;
+@property (nonatomic, strong) UIButton *proSRButton;
+@property (nonatomic, strong) UIButton *proIEButton;
+@property (nonatomic, strong) UIButton *playDirectlyButton;
+@property (nonatomic, strong) UIButton *standardSRButton;
 @property (nonatomic, strong) UILabel *infoLabel;
 
 @property (nonatomic, strong) id<MTLDevice> device;
@@ -27,16 +31,18 @@
 @property (nonatomic, strong) id<MTLRenderPipelineState> pipelineState;
 @property (nonatomic, strong) id<MTLTexture> in_texture;
 @property (nonatomic, strong) id<MTLTexture> sr_texture;
+@property (nonatomic, strong) id<MTLTexture> source_texture;
 
-@property (nonatomic, strong) TSRPass* tsr_pass;
+@property (nonatomic, strong) TSRPass* tsr_pass_standard;
+@property (nonatomic, strong) TSRPass* tsr_pass_professional;
+@property (nonatomic, strong) TIEPass* tie_pass;
 
+@property (nonatomic, strong) NSString* algorithm;
 @property (nonatomic, assign) CGSize videoSize;
 @property (nonatomic, assign) float srRatio;
 @property (nonatomic, assign) BOOL isVideoLandscape;
-@property (nonatomic, assign) BOOL isTsrOn;
-@property (nonatomic, assign) BOOL isUseTsr;
 
-- (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio;
+- (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio algorithm:(NSString*)algorithm;
 
 @end
 

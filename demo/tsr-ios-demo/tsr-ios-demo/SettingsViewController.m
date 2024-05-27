@@ -11,7 +11,9 @@
 
 @interface SettingsViewController () <UIDocumentPickerDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
 @property (strong, nonatomic) UISegmentedControl *chooseTypeSegmentedControl;
+@property (strong, nonatomic) UISegmentedControl *algorithmOptionsSegmentedControl;
 @property (strong, nonatomic) UILabel *videoLocalHeaderLabel;
+@property (strong, nonatomic) UILabel *srLabel;
 @property (strong, nonatomic) UIButton *showCollectionViewButton;
 @property (strong, nonatomic) UIButton *chooseFileButton;
 @property (strong, nonatomic) UIButton *startPlayButton;
@@ -42,13 +44,13 @@
     [self.view addSubview:self.chooseTypeSegmentedControl];
     
     // 添加用于显示视频名称的标签
-    self.selectedVideoURL = [[NSBundle mainBundle] URLForResource:@"1080P" withExtension:@"mp4"];
+    self.selectedVideoURL = [[NSBundle mainBundle] URLForResource:@"girl-544x960" withExtension:@"mp4"];
     self.videoNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top + 50, self.view.bounds.size.width - 40, 50)];
-    self.videoNameLabel.text = @"Using video: 1080P";
+    self.videoNameLabel.text = @"Using video: girl-544x960";
     [self.view addSubview:self.videoNameLabel];
     
     // 初始化数据
-    self.data = @[@"4K", @"1080P", @"864P", @"720P", @"576P", @"540P"];
+    self.data = @[@"4K", @"1080P", @"864P", @"720P", @"576P", @"540P", @"girl-544x960"];
     
     // 创建并设置UICollectionViewFlowLayout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -86,28 +88,33 @@
     self.horizontalLine = [[UIView alloc]initWithFrame:CGRectMake(0, top + 150, self.view.bounds.size.width, 1)];
     self.horizontalLine.backgroundColor = [UIColor grayColor];
     [self.view addSubview:self.horizontalLine];
-
-    // 超分辨率标签
-    UILabel *srLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top + 170, self.view.bounds.size.width - 40, 50)];
-    srLabel.text = @"Super Resolution Ratio";
-    [self.view addSubview:srLabel];
-    // 添加超分辨率倍率选择器
-    NSArray *resolutionRatios = @[@"OFF", @"1.0", @"1.25", @"1.5", @"1.7", @"2.0"];
-    self.resolutionRatioControl = [[UISegmentedControl alloc] initWithItems:resolutionRatios];
-    self.resolutionRatioControl.frame = CGRectMake(left, top + 220, self.view.bounds.size.width - 40, 50);
-    self.resolutionRatioControl.selectedSegmentIndex = 4; // 默认选择2.0
-    [self.view addSubview:self.resolutionRatioControl];
     
+    // Add Super Resolution Options segmented control
+    self.algorithmOptionsSegmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Standard SR", @"Pro SR", @"Pro Image Enhance", @"Play directly"]];
+    self.algorithmOptionsSegmentedControl.frame = CGRectMake(left, top + 170, self.view.bounds.size.width - 40, 50);
+    self.algorithmOptionsSegmentedControl.selectedSegmentIndex = 0;
+    self.algorithmOptionsSegmentedControl.apportionsSegmentWidthsByContent = YES;
+    [self.algorithmOptionsSegmentedControl addTarget:self action:@selector(superResolutionOptionsChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:self.algorithmOptionsSegmentedControl];
+    
+    // 超分辨率标签
+    _srLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, top + 220, self.view.bounds.size.width - 40, 50)];
+    _srLabel.text = @"Super Resolution Ratio";
+    [self.view addSubview:_srLabel];
+    // 添加超分辨率倍率选择器
+    NSArray *resolutionRatios = @[@"1.0", @"1.25", @"1.5", @"1.7", @"2.0"];
+    self.resolutionRatioControl = [[UISegmentedControl alloc] initWithItems:resolutionRatios]; self.resolutionRatioControl.frame = CGRectMake(left, top + 270, self.view.bounds.size.width - 40, 50); self.resolutionRatioControl.selectedSegmentIndex = 4; // 默认选择2.0 
+    [self.view addSubview:self.resolutionRatioControl];
     // 分割线
-    self.horizontalLine = [[UIView alloc]initWithFrame:CGRectMake(0, top + 300, self.view.bounds.size.width, 1)];
+    self.horizontalLine = [[UIView alloc]initWithFrame:CGRectMake(0, top + 350, self.view.bounds.size.width, 1)];
     self.horizontalLine.backgroundColor = [UIColor grayColor];
     [self.view addSubview:self.horizontalLine];
-
+    
     // 添加播放视频按钮
     self.startPlayButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.startPlayButton setTitle:@"Play Video" forState:UIControlStateNormal];
     [self.startPlayButton addTarget:self action:@selector(playVideoButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    self.startPlayButton.frame = CGRectMake([UIScreen mainScreen].bounds.size.width / 2 - 50, top + 320, 100, 50);
+    self.startPlayButton.frame = CGRectMake([UIScreen mainScreen].bounds.size.width / 2 - 50, top + 370, 100, 50);
     [self.view addSubview:self.startPlayButton];
     
     // 创建并设置覆盖其他控件的视图
@@ -130,11 +137,13 @@
 - (void)playVideoButtonTapped:(id)sender {
     // 获取选中的超分辨率倍率
     NSString *selectedResolutionRatio = [self.resolutionRatioControl titleForSegmentAtIndex:self.resolutionRatioControl.selectedSegmentIndex];
-    float srRatio = [selectedResolutionRatio isEqualToString:@"OFF"] ? -1 : [selectedResolutionRatio floatValue];
+    float srRatio = [selectedResolutionRatio floatValue];
     NSLog(@"Selected resolution ratio: %@", selectedResolutionRatio);
     
+    NSString *selectedAlgorithm = [self.algorithmOptionsSegmentedControl titleForSegmentAtIndex:self.algorithmOptionsSegmentedControl.selectedSegmentIndex];
+    NSLog(@"Selected algorithm: %@", selectedAlgorithm);
     // 显示 ViewController
-    VideoPlayViewController *videoPlayVC = [[VideoPlayViewController alloc] initWithVideoURL:self.selectedVideoURL srRatio:srRatio];
+    VideoPlayViewController *videoPlayVC = [[VideoPlayViewController alloc] initWithVideoURL:self.selectedVideoURL srRatio:srRatio algorithm:selectedAlgorithm];
     videoPlayVC.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:videoPlayVC animated:YES completion:nil];
 }
@@ -153,6 +162,16 @@
             break;
         default:
             break;
+    }
+}
+
+- (void)superResolutionOptionsChanged:(UISegmentedControl *)sender {
+    if (sender.selectedSegmentIndex == 0 || sender.selectedSegmentIndex == 1) {
+        self.resolutionRatioControl.hidden = NO;
+        self.srLabel.hidden = NO;
+    } else {
+        self.resolutionRatioControl.hidden = YES;
+        self.srLabel.hidden = YES;
     }
 }
 
