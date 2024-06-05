@@ -9,13 +9,11 @@
 
 左：直接播放；中：标准版超分；右：专业版超分
 
-可点击链接对比查看：https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-sr-cmp-v/index.html
 <img src=./docs/pro-tsr-cmp.png />
 
 ### 画质增强
 左：原图；右：专业版画质增强
 
-可点击链接对比查看：https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-ie-cmp-v/index.html
 <img src=./docs/pro-ie-cmp.png />
 
 ## 性能
