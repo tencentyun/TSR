@@ -41,9 +41,9 @@
 * iOS平台：适用于 iPhone 5s及更高版本的设备，最低系统版本为iOS 12。
 
 ## 包大小
-* 标准版：Android AAR约0.6M（含arm64-v8a和armeabi-v7a）；iOS Framework 1.69MB。
+* 标准版：Android AAR约0.6M（含arm64-v8a和armeabi-v7a）；iOS Framework 0.35MB。
 
-* 专业版：Android AAR 6.46MB（含arm64-v8a和armeabi-v7a）；iOS Framework 6.88MB。
+* 专业版：Android AAR 6.9MB（含arm64-v8a和armeabi-v7a）；iOS Framework 6.03MB。
 
 ## 体验Demo
 用手机系统浏览器打开，下载安装   
@@ -55,4 +55,4 @@
 ## 接入SDK
 <img src=./docs/integrate1.png width=40% />
 
-参考[接入指南](接入指南.md)
+参考接入指南：[Android](https://github.com/tencentyun/TSR/blob/main/%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md#android) / [iOS](https://github.com/tencentyun/TSR/blob/main/%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md#ios)
