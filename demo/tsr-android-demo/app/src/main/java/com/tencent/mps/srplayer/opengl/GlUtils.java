@@ -1,12 +1,14 @@
 package com.tencent.mps.srplayer.opengl;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
 import android.opengl.GLException;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -18,6 +20,37 @@ import java.util.TreeMap;
 
 /** Shader helper functions. */
 public class GlUtils {
+
+    public static void saveTextureAsPNG(int textureId, int textureType, int width, int height, String filePath) {
+        // 创建一个FBO，并将纹理附加到颜色附件上
+        int[] framebuffers = new int[1];
+        GLES30.glGenFramebuffers(1, framebuffers, 0);
+        int fboId = framebuffers[0];
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, fboId);
+        GLES30.glFramebufferTexture2D(GLES30.GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, textureType, textureId, 0);
+
+        // 从FBO的颜色附件中读取像素数据
+        ByteBuffer pixelBuffer = ByteBuffer.allocateDirect(width * height * 4);
+        GLES30.glReadPixels(0, 0, width, height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, pixelBuffer);
+
+        // 将像素数据转换为Bitmap对象
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.copyPixelsFromBuffer(pixelBuffer);
+
+        // 将Bitmap对象保存为PNG文件
+        try {
+            FileOutputStream fos = new FileOutputStream(filePath);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 释放资源
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
+        GLES30.glDeleteFramebuffers(1, framebuffers, 0);
+        bitmap.recycle();
+    }
 
     private static final String TAG = GlUtils.class.getSimpleName();
     /**

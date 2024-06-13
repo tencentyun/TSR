@@ -21,10 +21,10 @@ public class VideoFrameDrawer {
     private static final String FRAGMENT_SHADER_NAME = "shaders/videoTex2D.frag";
 
     private final float[] mVertexCoors =  new float[]{
-            -1f, -1f,
-            1f, -1f,
             -1f, 1f,
-            1f, 1f
+            1f, 1f,
+            -1f, -1f,
+            1f, -1f
     };
     private final float[] mTextureCoors = new float[]{
             0f, 1f,
@@ -138,8 +138,7 @@ public class VideoFrameDrawer {
         GlUtils.checkGLError(TAG, "VideoFrameDrawer");
     }
 
-    public void onSurfaceChanged(int surfaceWidth, int surfaceHeight, int rotation) {
-        resolveRotate(rotation);
+    public void onSurfaceChanged(int surfaceWidth, int surfaceHeight) {
 
         ByteBuffer vertexByteBuffer = ByteBuffer.allocateDirect(mVertexCoors.length * 4);
         vertexByteBuffer.order(ByteOrder.nativeOrder());
@@ -159,14 +158,14 @@ public class VideoFrameDrawer {
             case 90:
                 x = mVertexCoors[0];
                 y = mVertexCoors[1];
-                mVertexCoors[0] = mVertexCoors[4];
-                mVertexCoors[1] = mVertexCoors[5];
-                mVertexCoors[4] = mVertexCoors[6];
-                mVertexCoors[5] = mVertexCoors[7];
-                mVertexCoors[6] = mVertexCoors[2];
-                mVertexCoors[7] = mVertexCoors[3];
-                mVertexCoors[2] = x;
-                mVertexCoors[3] = y;
+                mVertexCoors[0] = mVertexCoors[2];
+                mVertexCoors[1] = mVertexCoors[3];
+                mVertexCoors[2] = mVertexCoors[6];
+                mVertexCoors[3] = mVertexCoors[7];
+                mVertexCoors[6] = mVertexCoors[4];
+                mVertexCoors[7] = mVertexCoors[5];
+                mVertexCoors[4] = x;
+                mVertexCoors[5] = y;
                 break;
             case 180:
                 swap(mVertexCoors, 0, 6);
@@ -177,14 +176,14 @@ public class VideoFrameDrawer {
             case 270:
                 x = mVertexCoors[0];
                 y = mVertexCoors[1];
-                mVertexCoors[0] = mVertexCoors[2];
-                mVertexCoors[1] = mVertexCoors[3];
-                mVertexCoors[2] = mVertexCoors[6];
-                mVertexCoors[3] = mVertexCoors[7];
-                mVertexCoors[6] = mVertexCoors[4];
-                mVertexCoors[7] = mVertexCoors[5];
-                mVertexCoors[4] = x;
-                mVertexCoors[5] = y;
+                mVertexCoors[0] = mVertexCoors[4];
+                mVertexCoors[1] = mVertexCoors[5];
+                mVertexCoors[4] = mVertexCoors[6];
+                mVertexCoors[5] = mVertexCoors[7];
+                mVertexCoors[6] = mVertexCoors[2];
+                mVertexCoors[7] = mVertexCoors[3];
+                mVertexCoors[2] = x;
+                mVertexCoors[3] = y;
                 break;
             case 0:
             default:

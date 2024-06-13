@@ -2,8 +2,6 @@ package com.tencent.mps.srplayer;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,17 +19,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceScreen;
-import androidx.preference.SwitchPreferenceCompat;
 
 import java.util.Objects;
 
-public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends AppCompatActivity {
     private Uri mVideoUri;
     private String mFileName;
-    private boolean mVideoChooseLocal;
-    private SettingsFragment mSettingsFragment;
-    private Button mStartPlayTsrButton;
+    private static boolean mVideoChooseLocal;
+    private static SettingsFragment mSettingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +46,14 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
+        findViewById(R.id.down_line).setVisibility(View.GONE);
         LinearLayout localVideoLayout = findViewById(R.id.choose_local_video_layout);
         localVideoLayout.setVisibility(View.GONE);
 
+        mSettingsFragment.onLocalVideoChoosePreferenceCategoryVisibilityChanged(!mVideoChooseLocal);
+
         // 配置开始按钮
-        mStartPlayTsrButton = findViewById(R.id.start_play_button_tsr);
+        Button mStartPlayTsrButton = findViewById(R.id.start_play_button_tsr);
         mStartPlayTsrButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,6 +84,39 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
             }
         });
 
+        // 配置开始按钮
+        Button mStartExportButton = findViewById(R.id.start_export_button_tsr);
+        mStartExportButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingsActivity.this, TsrActivity.class);
+
+                if (mVideoChooseLocal) {
+                    if (mVideoUri == null) {
+                        Toast.makeText(getApplicationContext(), R.string.video_choose_hint, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (mFileName != null) {
+                        String[] fileNameSplit = mFileName.split("\\.");
+                        if (!Objects.equals(fileNameSplit[fileNameSplit.length - 1], "mp4") &&
+                                !Objects.equals(fileNameSplit[fileNameSplit.length - 1], "3gp") &&
+                                !Objects.equals(fileNameSplit[fileNameSplit.length - 1], "webm")) {
+                            Toast.makeText(getApplicationContext(), R.string.video_format_not_support, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.video_choose_hint, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    intent.putExtra("videoUri", mVideoUri.toString());
+                    intent.putExtra("fileName", mFileName);
+                }
+                intent.putExtra("export_video", true);
+                startActivity(intent);
+            }
+        });
+
         TextView chooseVideoButton = findViewById(R.id.choose_button);
         chooseVideoButton.setText(R.string.video_choose);
         chooseVideoButton.setOnClickListener(view -> {
@@ -106,101 +136,28 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 mVideoChooseLocal = true;
                 mSettingsFragment.onLocalVideoChoosePreferenceCategoryVisibilityChanged(false);
                 localVideoLayout.setVisibility(View.VISIBLE);
+                findViewById(R.id.down_line).setVisibility(View.VISIBLE);
             } else {
                 mVideoChooseLocal = false;
                 mSettingsFragment.onLocalVideoChoosePreferenceCategoryVisibilityChanged(true);
                 localVideoLayout.setVisibility(View.GONE);
+                findViewById(R.id.down_line).setVisibility(View.GONE);
             }
         });
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if ("export_video".equals(s)) {
-            if (!sharedPreferences.getBoolean("export_video", false)) {
-                mSettingsFragment.onExportVideoPreferenceCategoryVisibilityChanged(false);
-                mStartPlayTsrButton.setText(R.string.start_play_tsr);
-            } else {
-                mSettingsFragment.onExportVideoPreferenceCategoryVisibilityChanged(true);
-                mStartPlayTsrButton.setText(R.string.start_export_tsr);
-            }
-        }
-        if ("video_algorithm".equals(s)) {
-            if ("专业版增强".equals(sharedPreferences.getString("video_algorithm", ""))) {
-                mSettingsFragment.onPlaySrVideoPreferenceCategoryVisibilityChanged(false);
-                mSettingsFragment.onPlayIeVideoPreferenceCategoryVisibilityChanged(true);
-            } else if ("直接渲染".equals(sharedPreferences.getString("video_algorithm", ""))) {
-                mSettingsFragment.onPlaySrVideoPreferenceCategoryVisibilityChanged(false);
-                mSettingsFragment.onPlayIeVideoPreferenceCategoryVisibilityChanged(false);
-            }else {
-                mSettingsFragment.onPlaySrVideoPreferenceCategoryVisibilityChanged(true);
-                mSettingsFragment.onPlayIeVideoPreferenceCategoryVisibilityChanged(false);
-            }
-        }
-    }
-
     public static class SettingsFragment extends PreferenceFragmentCompat {
-        private PreferenceCategory mExportVideoPreferenceCategory;
-        private PreferenceCategory mPlaySrVideoPreferenceCategory;
-        private PreferenceCategory mLocalVideoChoosePreferenceCategory;
-        private PreferenceCategory mPlayIeVideoPreferenceCategory;
-
+        private static PreferenceCategory mLocalVideoChoosePreferenceCategory;
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-
-            SwitchPreferenceCompat switchPreference = findPreference("export_video");
-            if (switchPreference != null) {
-                mExportVideoPreferenceCategory = findPreference("export_config");
-                onExportVideoPreferenceCategoryVisibilityChanged(switchPreference.isChecked());
-            }
-
             mLocalVideoChoosePreferenceCategory = findPreference("choose_app_video");
-            onLocalVideoChoosePreferenceCategoryVisibilityChanged(true);
-
-            mPlaySrVideoPreferenceCategory = findPreference("play_sr_config");
-            mPlayIeVideoPreferenceCategory = findPreference("play_ie_config");
-
-            SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
-            String algorithm = sharedPreferences.getString("video_algorithm", "");
-            if ("专业版增强".equals(algorithm)) {
-                onPlaySrVideoPreferenceCategoryVisibilityChanged(false);
-                onPlayIeVideoPreferenceCategoryVisibilityChanged(true);
-            } else if ("直接渲染".equals(algorithm)) {
-                onPlaySrVideoPreferenceCategoryVisibilityChanged(false);
-                onPlayIeVideoPreferenceCategoryVisibilityChanged(false);
-            } else {
-                onPlaySrVideoPreferenceCategoryVisibilityChanged(true);
-                onPlayIeVideoPreferenceCategoryVisibilityChanged(false);
-            }
-        }
-
-        public void onPlaySrVideoPreferenceCategoryVisibilityChanged(boolean isVisible) {
-            if (mPlaySrVideoPreferenceCategory != null) {
-                mPlaySrVideoPreferenceCategory.setVisible(isVisible);
-            }
-        }
-
-        public void onPlayIeVideoPreferenceCategoryVisibilityChanged(boolean isVisible) {
-            if (mPlayIeVideoPreferenceCategory != null) {
-                mPlayIeVideoPreferenceCategory.setVisible(isVisible);
-            }
-        }
-
-        public void onExportVideoPreferenceCategoryVisibilityChanged(boolean isVisible) {
-            if (mExportVideoPreferenceCategory != null) {
-                mExportVideoPreferenceCategory.setVisible(isVisible);
-            }
         }
 
         public void onLocalVideoChoosePreferenceCategoryVisibilityChanged(boolean isVisible) {
             if (mLocalVideoChoosePreferenceCategory != null) {
                 mLocalVideoChoosePreferenceCategory.setVisible(isVisible);
             }
-        }
-
-        public PreferenceScreen getSettingsPreferenceScreen() {
-            return getPreferenceScreen();
         }
     }
 

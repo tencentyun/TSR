@@ -13,8 +13,8 @@
     <string name="video_choose">点击选择视频</string>
     <string name="video_choose_hint">请先选择视频</string>
     <string name="video_format_not_support">只支持.mp4、.webm、.3gp封装格式的视频</string>
-    <string name="sr_ratio">超分倍数</string>
-    <string name="video_choose_type">视频选择模式</string>
+    <string name="sr_ratio">放大倍数</string>
+    <string name="video_choose_text">选择视频</string>
     <string name="video_op_type">视频操作模式</string>
     <string name="codec_type">编码器</string>
     <string name="bitrate_mbps">编码码率(Mb/s)，与保真度正相关</string>
@@ -37,10 +37,8 @@
     <string name="cycle_play_on">播放结束后从头开始循环播放</string>
     <string name="cycle_play_off">播放结束后停止</string>
 
-    <string name="start_play_tsr">开始播放TSR</string>
-    <string name="start_play_dlsr">开始播放Y5</string>
-    <string name="start_export_tsr">开始导出TSR</string>
-    <string name="start_export_dlsr">开始导出Y5</string>
+    <string name="start_play_tsr">播放</string>
+    <string name="start_export_tsr">导出</string>
     <string name="right_bilinear">Right: Bilinear</string>
     <string name="left_sr">Left: TSR</string>
     <string name="play_video">播放</string>
@@ -56,8 +54,15 @@
     <string name="sr1.7x">1.7</string>
     <string name="sr2.0x">2.0</string>
 
-    <string name="local_video">选择手机本地视频</string>
-    <string name="in_app_video">选择app内置视频</string>
+    <string name="local_video">本地视频</string>
+    <string name="in_app_video">内置视频</string>
 
     <string name="girl_video">girl-544x960.mp4</string>
+
+    <string name="brightness">亮度值</string>
+    <string name="brightness_title">亮度调整，0–100，默认50</string>
+    <string name="contrast">对比度</string>
+    <string name="contrast_title">对比度调整，0–100，默认50</string>
+    <string name="saturation">饱和度</string>
+    <string name="saturation_title">饱和度调整，0–100，默认50</string>
 </resources>
