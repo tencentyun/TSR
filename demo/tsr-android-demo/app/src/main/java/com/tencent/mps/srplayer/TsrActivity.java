@@ -16,6 +16,9 @@ import android.opengl.GLES11Ext;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Surface;
@@ -26,6 +29,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
@@ -101,7 +105,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private final Context mContext = this;
     private MediaExtractor mExtractor;
     private volatile MediaCodec mMediaCodec;
-    private volatile boolean mStopDecode;
     private String mFileName;
     private String mCodecType;
     private float mFrameRate;
@@ -109,7 +112,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private int mOutputWidth;
     private int mOutputHeight;
     private boolean mIsFullScreenRender;
-    private final Object mDumpLock = new Object();
+    private Handler mHandler;
+    private HandlerThread mHandlerThread;
 
     private void prepareDecoder() {
         // 初始化解码器
@@ -142,90 +146,81 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     break;
                 }
             }
+            mMediaCodec.start();
         } catch (Exception e) {
             Log.e(TAG, "mediacodec exception:" + e.getMessage());
         }
     }
 
     private void startDecode() {
-        new Thread(() -> {
-            // 初始化解码器
-            try {
-                Log.i(TAG, "start decoder");
-                mMediaCodec.start();
+        // 初始化解码器
+        Log.i(TAG, "start decode");
+        final long TIMEOUT_US = 10000;
+        final long[] startTime = {System.currentTimeMillis()};
+        final long[] pauseTime = {0};
+        final boolean[] pausing = {false};
 
-                final long TIMEOUT_US = 1000;
-                long startTime = System.currentTimeMillis();
-                long pauseTime = 0;
-                boolean pausing = false;
-                while (!mStopDecode) {
-                    if (mIsPause) {
-                        if (!pausing) {
-                            // 记录暂停的时间点，用于更新开始的时间
-                            pauseTime = System.currentTimeMillis();
-                        }
-                        pausing = true;
-                        continue;
+        mHandlerThread = new HandlerThread("DecodeThread");
+        mHandlerThread.start();
+        mHandler = new Handler(mHandlerThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if (mIsPause) {
+                    if (!pausing[0]) {
+                        // 记录暂停的时间点，用于更新开始的时间
+                        pauseTime[0] = System.currentTimeMillis();
                     }
-                    if (pausing) {
-                        pausing = false;
-                        startTime += System.currentTimeMillis() - pauseTime;
-                    }
+                    pausing[0] = true;
+                    return;
+                }
+                if (pausing[0]) {
+                    pausing[0] = false;
+                    startTime[0] += System.currentTimeMillis() - pauseTime[0];
+                }
 
-                    int inputBufferIndex = mMediaCodec.dequeueInputBuffer(TIMEOUT_US);
-                    if (inputBufferIndex >= 0) {
-                        ByteBuffer inputBuffer = mMediaCodec.getInputBuffer(inputBufferIndex);
-                        int sampleSize = mExtractor.readSampleData(inputBuffer, 0);
-                        if (sampleSize < 0) {
-                            mMediaCodec.queueInputBuffer(inputBufferIndex, 0, 0,
-                                    0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
-                        } else {
-                            mMediaCodec.queueInputBuffer(inputBufferIndex, 0, sampleSize, mExtractor.getSampleTime(), 0);
-                            mExtractor.advance();
-                        }
-                    }
-                    MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-                    int outputBufferIndex = mMediaCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);
-                    if ((bufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
-                        // All frames have been decoded
-                        break;
-                    }
-                    if (outputBufferIndex >= 0) {
-                        // 获取这一帧的预计显示时间（毫秒）
-                        long presentationTimeMs = bufferInfo.presentationTimeUs / 1000;
-                        // 计算从开始解码到现在过了多少时间
-                        long elapsedTime = System.currentTimeMillis() - startTime;
-                        // 如果预计显示时间大于已经过去的时间，那就等待一段时间
-                        if (presentationTimeMs > elapsedTime) {
-                            try {
-                                Thread.sleep(presentationTimeMs - elapsedTime);
-                            } catch (InterruptedException e) {
-                                Log.e(TAG, "mediacodec exception:" + e.getMessage());
-                            }
-                        }
-                        mMediaCodec.releaseOutputBuffer(outputBufferIndex, true);
-
-                        if (mIsRecordVideo) {
-                            synchronized (mDumpLock) {
-                                mDumpLock.wait();
-                            }
-                        }
+                int inputBufferIndex = mMediaCodec.dequeueInputBuffer(TIMEOUT_US);
+                if (inputBufferIndex >= 0) {
+                    ByteBuffer inputBuffer = mMediaCodec.getInputBuffer(inputBufferIndex);
+                    int sampleSize = mExtractor.readSampleData(inputBuffer, 0);
+                    if (sampleSize < 0) {
+                        mMediaCodec.queueInputBuffer(inputBufferIndex, 0, 0,
+                                0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                    } else {
+                        mMediaCodec.queueInputBuffer(inputBufferIndex, 0, sampleSize, mExtractor.getSampleTime(), 0);
+                        mExtractor.advance();
                     }
                 }
-            } catch (Exception e) {
-                Log.e(TAG, "mediacodec exception:" + e.getMessage());
-            } finally {
-                if (mMediaCodec != null) {
-                    mMediaCodec.stop();
-                    mMediaCodec.release();
-                    mMediaCodec = null;
+                MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+                int outputBufferIndex = mMediaCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);
+                if ((bufferInfo.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
+                    // All frames have been decoded
+                    return;
                 }
-                if (mExtractor != null) {
-                    mExtractor.release();
-                    mExtractor = null;
+                if (outputBufferIndex >= 0) {
+                    // 获取这一帧的预计显示时间（毫秒）
+                    long presentationTimeMs = bufferInfo.presentationTimeUs / 1000;
+                    // 计算从开始解码到现在过了多少时间
+                    long elapsedTime = System.currentTimeMillis() - startTime[0];
+                    // 如果预计显示时间大于已经过去的时间，那就等待一段时间
+                    if (presentationTimeMs > elapsedTime) {
+                        try {
+                            Thread.sleep(presentationTimeMs - elapsedTime);
+                        } catch (InterruptedException e) {
+                            Log.e(TAG, "mediacodec exception:" + e.getMessage());
+                        }
+                    }
+                    mMediaCodec.releaseOutputBuffer(outputBufferIndex, true);
+
+                    if (!mIsRecordVideo) {
+                        sendEmptyMessage(0);
+                    }
+                } else {
+                    sendEmptyMessage(0);
                 }
             }
-        }).start();
+        };
+
+        mHandler.sendEmptyMessage(0);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -344,28 +339,53 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         String version = GLES30.glGetString(GL10.GL_VERSION);
-        Log.i(TAG, "OpenGL ES Version: " + version );
+        Log.i(TAG, "OpenGL ES Version: " + version);
+        float versionCode = Float.parseFloat(version.split(" ")[2]);
 
-        mVideoFrameDrawer = new VideoFrameDrawer();
-        mCompareTexDrawer = new CompareTexDrawer();
-        try {
-            mVideoFrameDrawer.createOnGLThread(mContext);
-            mCompareTexDrawer.createOnGLThread(mContext);
-        } catch (IOException e) {
-            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
+        if (versionCode >= 3.1) {
+            mVideoFrameDrawer = new VideoFrameDrawer();
+            mCompareTexDrawer = new CompareTexDrawer();
+            try {
+                mVideoFrameDrawer.createOnGLThread(mContext);
+                mCompareTexDrawer.createOnGLThread(mContext);
+            } catch (IOException e) {
+                Log.e(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+
+            if (mIsRecordVideo) {
+                configureMediaRecorder(mFileName, mOutputWidth,
+                        mOutputHeight, mFrameRate, mBitrateMbps, mCodecType);
+            }
+
+            startDecode();
         }
-
-        if (mIsRecordVideo) {
-            configureMediaRecorder(mFileName, mOutputWidth,
-                    mOutputHeight, mFrameRate, mBitrateMbps, mCodecType);
-        }
-
-        startDecode();
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
         Log.i(TAG, "onSurfaceChanged: " + width + "x" + height + ", rotation = " + mRotation);
+
+        /*-------------------------------- Step 1: init the TSRPass. -------------------------------------------*/
+        if (mIsFullScreenRender) {
+            mSrRatio = calculateSrRatio(width, height, mFrameWidth, mFrameHeight);
+        }
+        boolean initResultTSRPassStandard = mTSRPassStandard.init(mFrameWidth, mFrameHeight, mSrRatio);
+        boolean initResultTSRPassStandardWithParams = mTSRPassStandardWithParams.init(mFrameWidth, mFrameHeight, mSrRatio);
+        // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
+        // Here we set these parameters to slightly enhance the image.
+        mTSRPassStandardWithParams.setParameters(51, 52, 55, 0);
+        boolean initResultTSRPassProfessional = mTSRPassProfessional.init(mFrameWidth, mFrameHeight, mSrRatio);
+        boolean initResultTIEPass = mTIEPass.init(mFrameWidth, mFrameHeight);
+
+        if (!initResultTIEPass || !initResultTSRPassStandard || !initResultTSRPassStandardWithParams ||
+                !initResultTSRPassProfessional) {
+            String openglEsVersion = GLES30.glGetString(GL10.GL_VERSION);
+            runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                    String.format("当前设备OpenGL ES版本过低，为%s。\nTSRSDK需要OpenGL ES 3.1及以上才能正常运行。", openglEsVersion),
+                    (dialogInterface, i) -> finish()));
+            return;
+        }
+
         if (mCompareTexDrawer != null) {
             mCompareTexDrawer.onSurfaceChanged(width, height);
         }
@@ -380,18 +400,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         mBilinearRenderPass = new OffScreenRenderPass();
         mBilinearRenderPass.init(GLES30.GL_TEXTURE_2D, width,
                 height, "shaders/videoTex2D.frag");
-
-        /*-------------------------------- Step 1: init the TSRPass. -------------------------------------------*/
-        if (mIsFullScreenRender) {
-            mSrRatio = calculateSrRatio(width, height, mFrameWidth, mFrameHeight);
-        }
-        mTSRPassStandard.init(mFrameWidth, mFrameHeight, mSrRatio);
-        mTSRPassStandardWithParams.init(mFrameWidth, mFrameHeight, mSrRatio);
-        // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
-        // Here we set these parameters to slightly enhance the image.
-        mTSRPassStandardWithParams.setParameters(51, 52, 55);
-        mTSRPassProfessional.init(mFrameWidth, mFrameHeight, mSrRatio);
-        mTIEPass.init(mFrameWidth, mFrameHeight);
     }
 
     @Override
@@ -411,11 +419,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             updateTexture = false;
             newFrame = true;
             mPlayFrameCount++;
-
             if (mIsRecordVideo) {
-                synchronized (mDumpLock) {
-                    mDumpLock.notifyAll();
-                }
+                mHandler.sendEmptyMessage(0);
             }
         }
 
@@ -552,13 +557,20 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         if (mMediaRecorder != null) {
             mMediaRecorder = null;
         }
-        mStopDecode = true;
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
+        if (mHandlerThread != null) {
+            mHandlerThread.quit();
+            mHandlerThread = null;
+        }
         TSRSdk.getInstance().release();
     }
 
     private void configureMediaRecorder(String fileName, int frameWidth, int frameHeight, float frameRate, int bitrateMbps, String codecType) {
         String filePath = mContext.getExternalFilesDir("dump_video/") + "/" +
-                fileName.split("\\.")[0]+ "_" + mSrRatio + "x_" + mAlgorithm + "_" + codecType + "_" + bitrateMbps + "M_" +
+                fileName.split("\\.")[0] + "_" + mSrRatio + "x_" + mAlgorithm + "_" + codecType + "_" + bitrateMbps + "M_" +
                 System.currentTimeMillis() + ".mp4";
         mMediaRecorder = new MediaRecorder(mContext, filePath,
                 frameWidth, frameHeight, mRotation,
@@ -606,7 +618,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         }
 
         GLSurfaceView glSurfaceView = new GLSurfaceView(mContext);
-        glSurfaceView.setEGLContextClientVersion(3);
+        glSurfaceView.setEGLContextClientVersion(2);
         glSurfaceView.setRenderer(TsrActivity.this);
 
         if (mIsFullScreenRender) {
@@ -645,11 +657,11 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     // Double swipe to exit
     private long mBackPressed;
     @Override
-    public void onBackPressed(){
-        if(mBackPressed + TIME_EXIT > System.currentTimeMillis()){
+    public void onBackPressed() {
+        if (mBackPressed + TIME_EXIT > System.currentTimeMillis()) {
             super.onBackPressed();
-        }else{
-            Toast.makeText(this,R.string.slide_again, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.slide_again, Toast.LENGTH_SHORT).show();
             mBackPressed = System.currentTimeMillis();
         }
     }
@@ -693,5 +705,4 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             }
         }
     }
-
 }
