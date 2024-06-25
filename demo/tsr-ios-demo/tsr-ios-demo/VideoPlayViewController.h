@@ -8,10 +8,11 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MetalKit/MetalKit.h>
-#import <tsr_client/TsrPass.h>
+#import <tsr_client/TSRPass.h>
 #import <tsr_client/TSRSdk.h>
 
 #define APPID -1
+#define LICENSE_NAME @"" // if your license name is auth_IOS.crt, please set it @"auth_IOS.crt"
 
 @interface VideoPlayViewController : UIViewController<MTKViewDelegate, TSRSdkLicenseVerifyResultCallback>
 

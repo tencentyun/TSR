@@ -11,18 +11,11 @@
 
 @implementation VideoPlayViewController
 
-- (void)verifyTSRLicenseAndCreateSRPass {
+- (TSRSdkLicenseStatus)offlineVerifyTSRLicense {
     [TSRSdk.getInstance reset];
-    [TSRSdk.getInstance initWithAppId:APPID sdkLicenseVerifyResultCallback:self tsrLogger:[[Logger alloc] init]];
-}
-
-- (void)onTSRSdkLicenseVerifyResult:(TSRSdkLicenseStatus)status {
-    NSLog(@"Online verification callback");
-    if (status == TSRSdkLicenseStatusAvailable) {
-        [self createTSRPass];
-    } else {
-        NSLog(@"sdk license status is %ld", (long)status);
-    }
+    NSArray *arrayOfComponents = [LICENSE_NAME componentsSeparatedByString:@"."];
+    NSURL *fileURL = [[NSBundle mainBundle] URLForResource:arrayOfComponents[0] withExtension:@".crt"];
+    return [TSRSdk.getInstance initWithAppId:APPID licenseUrl:fileURL tsrLogger:[[Logger alloc] init]];
 }
 
 -(void)createTSRPass {
@@ -38,7 +31,7 @@
     _sr_texture = [_device newTextureWithDescriptor:textureDescriptor];
     
     // 初始化tsrpass
-    _tsr_pass = [[TSRPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+    _tsr_pass = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
 }
 
 - (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio {
@@ -61,7 +54,12 @@
             _isUseTsr = true;
             _isTsrOn = true;
             [self.infoLabel setText:@"TSR: ON"];
-            [self verifyTSRLicenseAndCreateSRPass];
+            TSRSdkLicenseStatus status = [self offlineVerifyTSRLicense];
+            if (status == TSRSdkLicenseStatusAvailable) {
+                [self createTSRPass];
+            } else {
+                NSLog(@"sdk license status is %ld", (long)status);
+            }
         } else {
             _isUseTsr = false;
             _isTsrOn = false;
