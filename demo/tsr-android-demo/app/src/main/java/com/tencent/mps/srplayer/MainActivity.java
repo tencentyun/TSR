@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.graphics.SurfaceTexture;
 import android.graphics.SurfaceTexture.OnFrameAvailableListener;
 import android.media.AudioManager;
@@ -42,7 +43,11 @@ import com.tencent.mps.tie.api.TSRPass;
 import com.tencent.mps.tie.api.TSRSdk;
 import com.tencent.mps.tie.api.TSRSdk.TSRSdkLicenseStatus;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Objects;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -53,7 +58,12 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
     /**--------------------------------- THE PARAMS FOR SDK VERIFICATION----------------------------------------*/
     // Modify mAppId to your APPID which can be found in Tencent Cloud account.
-    private final long mAppId;
+    private final long mAppId = -1;
+
+    // Modify mLicensePath to your sdk license's path in your test phone.
+    // If you want to run demo as soon as possible, you can just put your sdk license to assets. Demo is going to
+    // copy .crt file from assets to sdcard as the mLicensePath is null, and will load it to init TsrSdk.
+    private String mLicensePath = null;
     /**---------------------------------------------------------------------------------------------------------*/
 
     // Time interval for double swipe to exit
@@ -171,11 +181,14 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
         surface.release();
 
         // Create the pass that convert TextureOES to Texture2D.
-        mTexOESToTex2DPass = new OffScreenRenderPass(GLES30.GL_TEXTURE_2D,
+        // Create the pass that convert TextureOES to Texture2D.
+        mTexOESToTex2DPass = new OffScreenRenderPass();
+        mTexOESToTex2DPass.init(GLES30.GL_TEXTURE_2D,
                 mInputTexture.getWidth(), mInputTexture.getHeight(), "shaders/videoTexOES.frag");
-        // Create BilinearPass
-        mBilinearRenderPass = new OffScreenRenderPass(GLES30.GL_TEXTURE_2D, (int) (mFrameWidth * mSrRatio),
-                (int) (mFrameHeight * mSrRatio), "shaders/videoTex2D.frag");
+
+        mBilinearRenderPass = new OffScreenRenderPass();
+        mBilinearRenderPass.init(GLES30.GL_TEXTURE_2D, (int) (mInputTexture.getWidth() * mSrRatio),
+                (int) (mInputTexture.getHeight() * mSrRatio), "shaders/videoTex2D.frag");
 
         if (mIsSROn) {
             /*-------------------------------- Step 1: create the TSRPass. -------------------------------------------*/
@@ -207,10 +220,10 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
         if (mCompareTexDrawer != null) {
-            mCompareTexDrawer.onSurfaceChanged(width, height, mRotation);
+            mCompareTexDrawer.onSurfaceChanged(width, height);
         }
         if (mVideoFrameDrawer != null) {
-            mVideoFrameDrawer.onSurfaceChanged(width, height, mRotation);
+            mVideoFrameDrawer.onSurfaceChanged(width, height);
         }
     }
 
@@ -240,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
         if (mIsSROn) {
             /* Step 3: Pass the input texture's id to TSRPass#render(int), and get the output texture's id. The output
         texture is the result of super-resolution.*/
-            int srTextureId = mTSRPass.render(tex2dId, transformMatrix);
+            int srTextureId = mTSRPass.render(tex2dId);
 
             /* Step 4: Use the TSRPass's output texture to do your own render. */
             if (mMediaRecorder != null) {
@@ -249,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
                 }
             } else {
                 if (mIsCompareLerp) {
-                    int bilinearTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D, transformMatrix);
+                    int bilinearTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D);
                     mCompareTexDrawer.draw(srTextureId, bilinearTextureId);
                 } else {
                     mVideoFrameDrawer.draw(srTextureId);
@@ -394,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
             if (mFrameWidth > mFrameHeight) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
-            verifyLicense();
+            offlineVerifyLicense(mContext);
         });
 
         // 绑定播放结束事件
@@ -408,25 +421,31 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
         });
     }
 
-    private void verifyLicense() {
-        TSRSdk.getInstance().init(mAppId, status -> {
-            if (status == TSRSdkLicenseStatus.AVAILABLE) {
-                Log.i(TAG, "Online verify sdk license success: " + status);
-                createTsrPassAndAddView();
-            } else {
-                Log.i(TAG, "Online verify sdk license failed: " + status);
-                runOnUiThread(() -> {
-                    Toast.makeText(mContext, "Online verify sdk license failed: " + status, Toast.LENGTH_SHORT).show();
+    private void offlineVerifyLicense(Context context) {
+        if (mLicensePath == null) {
+            copyAssetsFileToSDCard(context);
+        }
+
+        TSRSdkLicenseStatus status = TSRSdk.getInstance().init(mAppId, mLicensePath, mTSRLogger);
+        if (status == TSRSdkLicenseStatus.AVAILABLE) {
+            Log.i(TAG, "Verify sdk license success: " + status.toString());
+            createTsrPassAndAddView();
+        } else {
+            Log.i(TAG, "Verify sdk license failed: " + status.toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Verify sdk license failed: " + status.toString(), Toast.LENGTH_SHORT).show();
                     finish();
-                });
-            }
-        }, mTSRLogger);
+                }
+            });
+        }
     }
 
     private void createTsrPassAndAddView() {
         if (mIsSROn) {
             // Create TsrPassAndroid
-            mTSRPass = new TSRPass();
+            mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
         }
 
         GLSurfaceView glSurfaceView = new GLSurfaceView(mContext);
@@ -445,5 +464,62 @@ public class MainActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
             mMediaPlayer.start();
         });
+    }
+
+    private void copyAssetsFileToSDCard(Context context) {
+        AssetManager assetManager = context.getAssets();
+        String licenseName = null;
+        String[] files = null;
+        try {
+            files = assetManager.list("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (files != null) {
+            for (String file : files) {
+                if (file.endsWith(".crt")) {
+                    licenseName = file;
+                    break;
+                }
+            }
+        }
+
+        if (licenseName == null) {
+            Log.i(TAG, "license not found.");
+            return;
+        }
+
+        InputStream in = null;
+        OutputStream out = null;
+
+        try {
+            in = assetManager.open(licenseName);
+            mLicensePath = context.getExternalFilesDir("license/").getAbsolutePath() + "/" + licenseName;
+            File outFile = new File(mLicensePath);
+            out = new FileOutputStream(outFile);
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

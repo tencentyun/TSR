@@ -2,7 +2,6 @@ package com.tencent.mps.srplayer.pass;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.opengl.GLES30;
 
 import com.tencent.mps.srplayer.opengl.GlUtils;
 
@@ -21,10 +20,10 @@ public class VideoFrameDrawer {
     private static final String FRAGMENT_SHADER_NAME = "shaders/videoTex2D.frag";
 
     private final float[] mVertexCoors =  new float[]{
-            -1f, -1f,
-            1f, -1f,
             -1f, 1f,
-            1f, 1f
+            1f, 1f,
+            -1f, -1f,
+            1f, -1f
     };
     private final float[] mTextureCoors = new float[]{
             0f, 1f,
@@ -99,9 +98,9 @@ public class VideoFrameDrawer {
     private void createGLProgram() throws IOException {
         if (mProgram == -1) {
             int vertexShader =
-                    GlUtils.loadGLShader(TAG, mContext, GLES30.GL_VERTEX_SHADER, VERTEX_SHADER_NAME);
+                    GlUtils.loadGLShader(TAG, mContext, GLES20.GL_VERTEX_SHADER, VERTEX_SHADER_NAME);
             int fragmentShader =
-                    GlUtils.loadGLShader(TAG, mContext, GLES30.GL_FRAGMENT_SHADER, FRAGMENT_SHADER_NAME);
+                    GlUtils.loadGLShader(TAG, mContext, GLES20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER_NAME);
 
             mProgram = GLES20.glCreateProgram();
             GLES20.glAttachShader(mProgram, vertexShader);
@@ -111,7 +110,7 @@ public class VideoFrameDrawer {
             mVertexPosHandler = GLES20.glGetAttribLocation(mProgram, "aPosition");
             mTexturePosHandler = GLES20.glGetAttribLocation(mProgram, "aCoordinate");
             mTextureHandler = GLES20.glGetUniformLocation(mProgram, "uTexture");
-            GlUtils.checkGLError(TAG, "CloudVideoDraw");
+            GlUtils.checkGLError(TAG, "VideoFrameDrawer");
         }
         GLES20.glUseProgram(mProgram);
     }
@@ -121,10 +120,10 @@ public class VideoFrameDrawer {
      */
     public void draw(int textureId) {
         GlUtils.checkGLError(TAG, "VideoFrameDrawer");
-        GLES30.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES30.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
 
-        GLES30.glUseProgram(mProgram);
+        GLES20.glUseProgram(mProgram);
         GLES20.glUniform1i(mTextureHandler, 0);
         GLES20.glViewport(0, 0, mWidth, mHeight);
 
@@ -138,8 +137,7 @@ public class VideoFrameDrawer {
         GlUtils.checkGLError(TAG, "VideoFrameDrawer");
     }
 
-    public void onSurfaceChanged(int surfaceWidth, int surfaceHeight, int rotation) {
-        resolveRotate(rotation);
+    public void onSurfaceChanged(int surfaceWidth, int surfaceHeight) {
 
         ByteBuffer vertexByteBuffer = ByteBuffer.allocateDirect(mVertexCoors.length * 4);
         vertexByteBuffer.order(ByteOrder.nativeOrder());
@@ -159,14 +157,14 @@ public class VideoFrameDrawer {
             case 90:
                 x = mVertexCoors[0];
                 y = mVertexCoors[1];
-                mVertexCoors[0] = mVertexCoors[4];
-                mVertexCoors[1] = mVertexCoors[5];
-                mVertexCoors[4] = mVertexCoors[6];
-                mVertexCoors[5] = mVertexCoors[7];
-                mVertexCoors[6] = mVertexCoors[2];
-                mVertexCoors[7] = mVertexCoors[3];
-                mVertexCoors[2] = x;
-                mVertexCoors[3] = y;
+                mVertexCoors[0] = mVertexCoors[2];
+                mVertexCoors[1] = mVertexCoors[3];
+                mVertexCoors[2] = mVertexCoors[6];
+                mVertexCoors[3] = mVertexCoors[7];
+                mVertexCoors[6] = mVertexCoors[4];
+                mVertexCoors[7] = mVertexCoors[5];
+                mVertexCoors[4] = x;
+                mVertexCoors[5] = y;
                 break;
             case 180:
                 swap(mVertexCoors, 0, 6);
@@ -177,14 +175,14 @@ public class VideoFrameDrawer {
             case 270:
                 x = mVertexCoors[0];
                 y = mVertexCoors[1];
-                mVertexCoors[0] = mVertexCoors[2];
-                mVertexCoors[1] = mVertexCoors[3];
-                mVertexCoors[2] = mVertexCoors[6];
-                mVertexCoors[3] = mVertexCoors[7];
-                mVertexCoors[6] = mVertexCoors[4];
-                mVertexCoors[7] = mVertexCoors[5];
-                mVertexCoors[4] = x;
-                mVertexCoors[5] = y;
+                mVertexCoors[0] = mVertexCoors[4];
+                mVertexCoors[1] = mVertexCoors[5];
+                mVertexCoors[4] = mVertexCoors[6];
+                mVertexCoors[5] = mVertexCoors[7];
+                mVertexCoors[6] = mVertexCoors[2];
+                mVertexCoors[7] = mVertexCoors[3];
+                mVertexCoors[2] = x;
+                mVertexCoors[3] = y;
                 break;
             case 0:
             default:

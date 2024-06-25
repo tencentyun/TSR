@@ -65,10 +65,10 @@ public class RenderPipeLine {
 
         // 矩形平面的顶点和纹理坐标数据
         float[] RECTANGLE_VERTEX_DATA = {
-                -1.0f, -1.0f, 0.0f, 1.0f,
-                1.0f,  -1.0f, 1.0f, 1.0f,
-                -1.0f, 1.0f, 0.0f, 0.0f,
-                1.0f,  1.0f, 1.0f, 0.0f,
+                -1.0f, 1.0f, 0.0f, 1.0f,
+                1.0f,  1.0f, 1.0f, 1.0f,
+                -1.0f, -1.0f, 0.0f, 0.0f,
+                1.0f,  -1.0f, 1.0f, 0.0f,
         };
         ByteBuffer mVertexByteBuffer = ByteBuffer.allocateDirect(RECTANGLE_VERTEX_DATA.length * 4);
         mVertexByteBuffer.order(ByteOrder.nativeOrder());

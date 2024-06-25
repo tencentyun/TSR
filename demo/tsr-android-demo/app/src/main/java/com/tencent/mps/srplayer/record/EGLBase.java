@@ -46,11 +46,10 @@ public class EGLBase {
             throw  new RuntimeException("eglMakeCurrent 失败！");
         }
 
-
         mVideoFrameDrawer = new VideoFrameDrawer();
         try {
             mVideoFrameDrawer.createOnGLThread(context);
-            mVideoFrameDrawer.onSurfaceChanged(width, height, rotation);
+            mVideoFrameDrawer.onSurfaceChanged(width, height);
         } catch (IOException e) {
             e.printStackTrace();
         }
