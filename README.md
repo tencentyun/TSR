@@ -2,7 +2,6 @@
 
 ## 1.产品介绍
 终端视频增强SDK，基于高效的图像处理算法和AI模型推理能力，实现终端视频超分辨率、画质增强等功能。  
-
 各版本具体功能详情如下： 
 
 | 功能点           | 标准版 | 专业版 |
@@ -13,14 +12,15 @@
 | AI画质增强      |        | 支持   |  
 
 <br>
-<img src=./docs/pro-tsr-cmp.png width=80%/>  
+<img src=./docs/pro-tsr-cmp.png width=80%/>
 
-<small>从左到右依次为540P原视频、普通播放、超分播放(标准版)、超分播放(标准版+增强)、超分播放(专业版)。
-[链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/20240621%20%E5%AF%B9%E5%A4%96%E4%BB%8B%E7%BB%8D%E6%95%88%E6%9E%9C/index%28%E6%A8%A1%E7%89%88-%E5%8E%9F%E6%99%AE%E6%A0%87%E6%A0%87%E4%B8%93%29.html)</small>  
-
+<span style="font-size:80%;">从左到右依次为540P原视频、普通播放、超分播放(标准版)、超分播放(标准版+增强)、超分播放(专业版)。
+[链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/20240621%20%E5%AF%B9%E5%A4%96%E4%BB%8B%E7%BB%8D%E6%95%88%E6%9E%9C/index%28%E6%A8%A1%E7%89%88-%E5%8E%9F%E6%99%AE%E6%A0%87%E6%A0%87%E4%B8%93%29.html)</span>
+  
+<br>
 <img src=./docs/pro-ie-cmp.png width=50% />  
 
-<small>从左到右依次为540P原视频、增强视频。[链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/20240621%20%E5%AF%B9%E5%A4%96%E4%BB%8B%E7%BB%8D%E6%95%88%E6%9E%9C/index%28%E6%A8%A1%E7%89%88-%E5%8E%9F%E5%A2%9E%29.html) </small>  
+<span style="font-size:80%;">从左到右依次为540P原视频、增强视频。[链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/20240621%20%E5%AF%B9%E5%A4%96%E4%BB%8B%E7%BB%8D%E6%95%88%E6%9E%9C/index%28%E6%A8%A1%E7%89%88-%E5%8E%9F%E5%A2%9E%29.html) </span>
 
 * 标准版的优势是性能，我们的算法能以极低的耗时和功耗，实现较好的超分辨率效果。
 * 标准版里还提供了图像增强能力，可以调整图像的对比度、亮度、色彩饱和度。
