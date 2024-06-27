@@ -2,7 +2,6 @@ package com.tencent.mps.srplayer.pass;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.opengl.GLES30;
 
 import com.tencent.mps.srplayer.opengl.GlUtils;
 
@@ -99,9 +98,9 @@ public class VideoFrameDrawer {
     private void createGLProgram() throws IOException {
         if (mProgram == -1) {
             int vertexShader =
-                    GlUtils.loadGLShader(TAG, mContext, GLES30.GL_VERTEX_SHADER, VERTEX_SHADER_NAME);
+                    GlUtils.loadGLShader(TAG, mContext, GLES20.GL_VERTEX_SHADER, VERTEX_SHADER_NAME);
             int fragmentShader =
-                    GlUtils.loadGLShader(TAG, mContext, GLES30.GL_FRAGMENT_SHADER, FRAGMENT_SHADER_NAME);
+                    GlUtils.loadGLShader(TAG, mContext, GLES20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER_NAME);
 
             mProgram = GLES20.glCreateProgram();
             GLES20.glAttachShader(mProgram, vertexShader);
@@ -121,10 +120,10 @@ public class VideoFrameDrawer {
      */
     public void draw(int textureId) {
         GlUtils.checkGLError(TAG, "VideoFrameDrawer");
-        GLES30.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES30.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
 
-        GLES30.glUseProgram(mProgram);
+        GLES20.glUseProgram(mProgram);
         GLES20.glUniform1i(mTextureHandler, 0);
         GLES20.glViewport(0, 0, mWidth, mHeight);
 

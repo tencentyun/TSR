@@ -2,7 +2,6 @@ package com.tencent.mps.srplayer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.graphics.SurfaceTexture.OnFrameAvailableListener;
@@ -31,7 +30,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 
 import com.tencent.mps.srplayer.helper.TapHelper;
 import com.tencent.mps.srplayer.opengl.Texture;
@@ -106,9 +104,9 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private MediaExtractor mExtractor;
     private volatile MediaCodec mMediaCodec;
     private String mFileName;
-    private String mCodecType;
     private float mFrameRate;
-    private int mBitrateMbps;
+    private String mExportCodecType;
+    private int mExportBitrateMbps;
     private int mOutputWidth;
     private int mOutputHeight;
     private boolean mIsFullScreenRender;
@@ -230,33 +228,31 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         setContentView(R.layout.activity_main);
 
         mIsFullScreenRender = false;
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mFileName = sharedPreferences.getString("video_title", "");
-        String srRatio = sharedPreferences.getString("sr_ratio", "1.0");
-        if ("全屏自适应".equals(srRatio)) {
+
+        mFileName = getIntent().getStringExtra("file_name");
+        mAlgorithm = getIntent().getStringExtra("algorithm");
+        mCompareAlgorithm = getIntent().getStringExtra("compare_algorithm");
+        mExportCodecType = getIntent().getStringExtra("export_codec");
+        mExportBitrateMbps = getIntent().getIntExtra("export_bitrate", 10);
+        mIsRecordVideo = getIntent().getBooleanExtra("export_video", false);
+
+        String srRatio = getIntent().getStringExtra("sr_ratio");
+        if ("专业版增强".equals(mAlgorithm) || srRatio == null) {
+            // Not use SR
+            mSrRatio = 1.0f;
+        } else if ("全屏自适应".equals(srRatio)) {
             mIsFullScreenRender = true;
         } else {
             mSrRatio = Float.parseFloat(srRatio);
         }
 
-        mAlgorithm = sharedPreferences.getString("video_algorithm", "");
-        mCompareAlgorithm = sharedPreferences.getString("compare_algorithm", "");
-        mCodecType = sharedPreferences.getString("codec_type", "H264");
-        mBitrateMbps = Integer.parseInt(sharedPreferences.getString("bitrate_mbps", "20"));
-        mIsRecordVideo = getIntent().getBooleanExtra("export_video", false);
-        if ("专业版增强".equals(mAlgorithm)) {
-            // Not use SR
-            mSrRatio = 1.0f;
-        }
-
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         mExtractor = new MediaExtractor();
         try {
-            String uriString = getIntent().getStringExtra("videoUri");
+            String uriString = getIntent().getStringExtra("video_uri");
             if (uriString != null) {
                 Uri videoUri = Uri.parse(uriString);
                 if (videoUri != null) {
-                    mFileName = getIntent().getStringExtra("fileName");
                     mExtractor.setDataSource(mContext, videoUri, null);
                     retriever.setDataSource(mContext, videoUri);
                 }
@@ -354,7 +350,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
 
             if (mIsRecordVideo) {
                 configureMediaRecorder(mFileName, mOutputWidth,
-                        mOutputHeight, mFrameRate, mBitrateMbps, mCodecType);
+                        mOutputHeight, mFrameRate, mExportBitrateMbps, mExportCodecType);
             }
 
             startDecode();
@@ -704,5 +700,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                 }
             }
         }
+        ProgressDialogUtils.updateText("Exporting..." + (int) ((float) mPlayFrameCount / mVideoFrameCount * 100) + "%");
     }
 }
