@@ -13,6 +13,7 @@
 #import <tsr_client/TIEPass.h>
 
 #define APPID -1
+#define AUTH_ID 0
 
 @interface VideoPlayViewController : UIViewController<MTKViewDelegate, TSRSdkLicenseVerifyResultCallback>
 
@@ -25,6 +26,8 @@
 @property (nonatomic, strong) UIButton *playDirectlyButton;
 @property (nonatomic, strong) UIButton *standardSRButton;
 @property (nonatomic, strong) UILabel *infoLabel;
+@property (nonatomic, strong) MTKView *mtkView;
+@property (nonatomic, strong) UIView *whiteView;
 
 @property (nonatomic, strong) id<MTLDevice> device;
 @property (nonatomic, strong) id<MTLCommandQueue> commandQueue;
@@ -41,6 +44,8 @@
 @property (nonatomic, assign) CGSize videoSize;
 @property (nonatomic, assign) float srRatio;
 @property (nonatomic, assign) BOOL isVideoLandscape;
+@property (nonatomic, assign) int outputWidth;
+@property (nonatomic, assign) int outputHeight;
 
 - (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio algorithm:(NSString*)algorithm;
 

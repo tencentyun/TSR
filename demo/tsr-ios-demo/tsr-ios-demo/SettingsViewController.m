@@ -102,8 +102,8 @@
     _srLabel.text = @"Super Resolution Ratio";
     [self.view addSubview:_srLabel];
     // 添加超分辨率倍率选择器
-    NSArray *resolutionRatios = @[@"1.0", @"1.25", @"1.5", @"1.7", @"2.0"];
-    self.resolutionRatioControl = [[UISegmentedControl alloc] initWithItems:resolutionRatios]; self.resolutionRatioControl.frame = CGRectMake(left, top + 270, self.view.bounds.size.width - 40, 50); self.resolutionRatioControl.selectedSegmentIndex = 4; // 默认选择2.0 
+    NSArray *resolutionRatios = @[@"1.0", @"1.25", @"1.5", @"1.7", @"2.0", @"Auto"];
+    self.resolutionRatioControl = [[UISegmentedControl alloc] initWithItems:resolutionRatios]; self.resolutionRatioControl.frame = CGRectMake(left, top + 270, self.view.bounds.size.width - 40, 50); self.resolutionRatioControl.selectedSegmentIndex = 4; // 默认选择2.0
     [self.view addSubview:self.resolutionRatioControl];
     // 分割线
     self.horizontalLine = [[UIView alloc]initWithFrame:CGRectMake(0, top + 350, self.view.bounds.size.width, 1)];
@@ -137,7 +137,12 @@
 - (void)playVideoButtonTapped:(id)sender {
     // 获取选中的超分辨率倍率
     NSString *selectedResolutionRatio = [self.resolutionRatioControl titleForSegmentAtIndex:self.resolutionRatioControl.selectedSegmentIndex];
-    float srRatio = [selectedResolutionRatio floatValue];
+    float srRatio;
+    if ([@"Auto" isEqualToString:selectedResolutionRatio]) {
+        srRatio = -1;
+    } else {
+        srRatio = [selectedResolutionRatio floatValue];
+    }
     NSLog(@"Selected resolution ratio: %@", selectedResolutionRatio);
     
     NSString *selectedAlgorithm = [self.algorithmOptionsSegmentedControl titleForSegmentAtIndex:self.algorithmOptionsSegmentedControl.selectedSegmentIndex];

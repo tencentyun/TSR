@@ -12,9 +12,9 @@
 
 @implementation VideoPlayViewController
 
-- (void)verifyTSRLicenseAndCreateSRPass {
+- (void)verifyTSRLicense {
     [TSRSdk.getInstance reset];
-    [TSRSdk.getInstance initWithAppId:APPID sdkLicenseVerifyResultCallback:self tsrLogger:[[Logger alloc] init]];
+    [TSRSdk.getInstance initWithAppId:APPID authId:AUTH_ID sdkLicenseVerifyResultCallback:self tsrLogger:[[Logger alloc] init]];
 }
 
 - (void)onTSRSdkLicenseVerifyResult:(TSRSdkLicenseStatus)status {
@@ -34,11 +34,17 @@
     _sr_texture = [_device newTextureWithDescriptor:srTextureDescriptor];
     
     // 初始化tsrpass
-    _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
-    // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
-    // Here we set (52, 52, 58) to slightly enhance the image.
-    [_tsr_pass_standard setParametersWithBrightness:51 saturation:52 contrast:55];
-    _tsr_pass_professional = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+    if (_srRatio > 0) {
+        _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+
+        _tsr_pass_professional = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+    } else {
+        // The SR setting is "Auto"
+        _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height outputWidth:_outputWidth outputHeight:_outputHeight];
+
+        _tsr_pass_professional = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height outputWidth:_outputWidth outputHeight:_outputHeight];
+    }
+
 
     MTLTextureDescriptor *ieTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
     ieTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
@@ -50,8 +56,6 @@
 - (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio algorithm:(NSString*)algorithm {
     self = [super init];
     if (self) {
-        [self addEdgePanGesture];
-        
         _srRatio = srRatio;
         _algorithm = algorithm;
 
@@ -65,19 +69,48 @@
         _in_texture = [device newTextureWithDescriptor:textureDescriptor];
 
         [self.infoLabel setText:_algorithm];
-        [self verifyTSRLicenseAndCreateSRPass];
+        
+        CGRect rect;
+        if (srRatio > 0) {
+            rect = CGRectMake(0, 0, _videoSize.width * srRatio / 3, _videoSize.height * srRatio / 3);
+        } else {
+            // The SR setting is "Auto"
+            int screenHeight = self.view.bounds.size.height * 3;
+            int screenWidth = self.view.bounds.size.width * 3;
+            int videoWidth = _videoSize.width;
+            int videoHeight = _videoSize.height;
+            int viewWidth, viewHeight;
+            double videoRatio = 1.0 * videoWidth / videoHeight;
+            double screenRatio = 1.0 * screenWidth / screenHeight;
+            if (screenRatio > videoRatio) {
+                int width = (int) (videoRatio * screenHeight);
+                viewWidth = width;
+                viewHeight = screenHeight;
+            } else {
+                int height = (int) (screenWidth / videoRatio);
+                viewWidth = screenWidth;
+                viewHeight = height;
+            }
+            _outputWidth = viewWidth;
+            _outputHeight = viewHeight;
+            rect = CGRectMake(0, 0, viewWidth / 3, viewHeight / 3);
+        }
         
         // 设置MTKView
-        MTKView* mtkView = [[MTKView alloc] initWithFrame:self.view.bounds device:device];
-        mtkView.delegate = self;
-        mtkView.framebufferOnly = NO;
-        [self.view addSubview:mtkView];
+        _mtkView = [[MTKView alloc] initWithFrame:rect device:device];
+        _mtkView.delegate = self;
+        _mtkView.framebufferOnly = NO;
+        [self.view addSubview:_mtkView];
+        
+        [self verifyTSRLicense];
         
         // 设置UI
         [self setUI];
         
         // 创建渲染管线
-        [self setupRenderPipeline:mtkView device:device];
+        [self setupRenderPipeline];
+        
+
     }
     return self;
 }
@@ -86,19 +119,19 @@
     [super viewDidLoad];
 }
 
-- (void)setupRenderPipeline:(MTKView*)mtkView device:(id<MTLDevice>)device {
+- (void)setupRenderPipeline {
     NSError *error;
     
-    id<MTLLibrary> library = [device newDefaultLibrary];
+    id<MTLLibrary> library = [_device newDefaultLibrary];
     id<MTLFunction> vertexFunction = [library newFunctionWithName:@"vertexShader"];
     id<MTLFunction> fragmentFunction = [library newFunctionWithName:@"fragmentShader"];
     
     MTLRenderPipelineDescriptor *pipelineDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
     pipelineDescriptor.vertexFunction = vertexFunction;
     pipelineDescriptor.fragmentFunction = fragmentFunction;
-    pipelineDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelFormat;
+    pipelineDescriptor.colorAttachments[0].pixelFormat = _mtkView.colorPixelFormat;
     
-    _pipelineState = [device newRenderPipelineStateWithDescriptor:pipelineDescriptor error:&error];
+    _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineDescriptor error:&error];
     
     if (!_pipelineState) {
         NSLog(@"Failed to create pipeline state: %@", error);
@@ -230,6 +263,18 @@
 }
 
 - (void)setUI {
+    for (UIView *subview in self.view.subviews) {
+        [subview removeFromSuperview];
+    }
+
+    _whiteView = [[UIView alloc] init];
+    _whiteView.backgroundColor = [UIColor whiteColor];
+    _whiteView.frame = self.view.bounds;
+    [self.view addSubview:_whiteView];
+    [self addEdgePanGesture];
+    
+    [self.view addSubview:_mtkView];
+    
     // 创建播放/暂停按钮
     self.playPauseButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.playPauseButton setTitle:@"Play/Pause" forState:UIControlStateNormal];
@@ -382,6 +427,43 @@
     AVPlayerItem *playerItem = notification.object;
     [playerItem seekToTime:kCMTimeZero];
     [_player play];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self setUI];
+        
+        self.whiteView.frame = CGRectMake(0, 0, size.width, size.height);
+        
+        CGRect rect;
+        if (_srRatio > 0) {
+            rect = CGRectMake(0, 0, _videoSize.width * _srRatio / 3, _videoSize.height * _srRatio / 3);
+        } else {
+            // The SR setting is "Auto"
+            int screenHeight = size.height * 3;
+            int screenWidth = size.width * 3;
+            int videoWidth = _videoSize.width;
+            int videoHeight = _videoSize.height;
+            int viewWidth, viewHeight;
+            double videoRatio = 1.0 * videoWidth / videoHeight;
+            double screenRatio = 1.0 * screenWidth / screenHeight;
+            if (screenRatio > videoRatio) {
+                int width = (int) (videoRatio * screenHeight);
+                viewWidth = width;
+                viewHeight = screenHeight;
+            } else {
+                int height = (int) (screenWidth / videoRatio);
+                viewWidth = screenWidth;
+                viewHeight = height;
+            }
+            _outputWidth = viewWidth;
+            _outputHeight = viewHeight;
+            rect = CGRectMake(0, 0, viewWidth / 3, viewHeight / 3);
+        }
+        _mtkView.frame = rect;
+    } completion:nil];
 }
 
 @end
