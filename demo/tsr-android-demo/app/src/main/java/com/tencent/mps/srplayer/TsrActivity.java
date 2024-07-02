@@ -58,6 +58,9 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     /**--------------------------------- THE PARAMS FOR SDK VERIFICATION----------------------------------------*/
     // Modify mAppId to your APPID which can be found in Tencent Cloud account.
     private final long mAppId = -1;
+
+    // Modify mAuthId to your authentication ID, which can be obtained from the Tencent Cloud MPS Team.
+    private final int mAuthId = 0;
     /**---------------------------------------------------------------------------------------------------------*/
 
     // Flag indicating if the video is currently paused
@@ -274,7 +277,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         Log.i(TAG, "rotation = " + mRotation);
 
         // Init TSRSdk
-        TSRSdk.getInstance().init(mAppId, status -> {
+        TSRSdk.getInstance().init(mAppId, mAuthId, status -> {
             if (status == TSRSdkLicenseStatus.AVAILABLE) {
                 Log.i(TAG, "Online verify sdk license success: " + status);
                 mTSRPassStandard = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
