@@ -172,6 +172,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                         pauseTime[0] = System.currentTimeMillis();
                     }
                     pausing[0] = true;
+                    sendEmptyMessage(0);
                     return;
                 }
                 if (pausing[0]) {
