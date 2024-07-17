@@ -549,10 +549,10 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mTexOESToTex2DPass.release();
         }
         if (mTSRPassStandard != null) {
-            mTSRPassStandard.release();
+            mTSRPassStandard.deInit();
         }
         if (mTSRPassProfessional != null) {
-            mTSRPassProfessional.release();
+            mTSRPassProfessional.deInit();
         }
         if (mMediaRecorder != null) {
             mMediaRecorder = null;
@@ -565,7 +565,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mHandlerThread.quit();
             mHandlerThread = null;
         }
-        TSRSdk.getInstance().release();
+        TSRSdk.getInstance().deInit();
     }
 
     private void configureMediaRecorder(String fileName, int frameWidth, int frameHeight, float frameRate, int bitrateMbps, String codecType) {

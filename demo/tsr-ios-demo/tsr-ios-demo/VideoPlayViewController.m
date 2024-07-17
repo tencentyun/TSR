@@ -13,7 +13,7 @@
 @implementation VideoPlayViewController
 
 - (void)verifyTSRLicense {
-    [TSRSdk.getInstance reset];
+    [TSRSdk.getInstance deInit];
     [TSRSdk.getInstance initWithAppId:APPID authId:AUTH_ID sdkLicenseVerifyResultCallback:self tsrLogger:[[Logger alloc] init]];
 }
 
@@ -29,7 +29,7 @@
 -(void)createTSRPassAndTIEPass {
     NSLog(@"inputWidth = %d, inputHeight = %d", (int)_videoSize.width, (int)_videoSize.height);
 
-    MTLTextureDescriptor *srTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
+    MTLTextureDescriptor *srTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width * _srRatio height:_videoSize.height * _srRatio mipmapped:NO];
     srTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
     _sr_texture = [_device newTextureWithDescriptor:srTextureDescriptor];
     
@@ -44,11 +44,6 @@
 
         _tsr_pass_professional = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height outputWidth:_outputWidth outputHeight:_outputHeight];
     }
-
-
-    MTLTextureDescriptor *ieTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
-    ieTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
-    _source_texture = [_device newTextureWithDescriptor:ieTextureDescriptor];
 
     _tie_pass = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height];
 }
@@ -156,84 +151,70 @@
         NSLog(@"pixel buffer is null");
         return;
     }
-    
-    [self updateInputTextureWithPixelBuffer:pixelBuffer];
-    
+
+    [self updateTextureWithPixelBuffer:pixelBuffer texture:_in_texture];
+
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
-    
+
     // 创建命令缓冲区
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-    
+
     if ([_algorithm isEqualToString:@"Pro Image Enhance"]) {
-        _source_texture = [_tie_pass render:_in_texture commandBuffer:commandBuffer];
+        _ie_texture = [_tie_pass render:_in_texture commandBuffer:commandBuffer];
     } else if ([_algorithm isEqualToString:@"Standard SR"]) {
-        _sr_texture = [_tsr_pass_standard render:_in_texture commandBuffer:commandBuffer];
+        // _sr_texture = [_tsr_pass_standard render:_in_texture commandBuffer:commandBuffer];
+        CVPixelBufferRef p = [_tsr_pass_standard renderWithPixelBuffer:pixelBuffer];
+        [self updateTextureWithPixelBuffer:p texture:_sr_texture];
+
     } else if ([_algorithm isEqualToString:@"Pro SR"]){
         _sr_texture = [_tsr_pass_professional render:_in_texture commandBuffer:commandBuffer];
-    } else {
-        // 使用双线性插值算法
-        // 创建一个渲染命令编码器
-        MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
-        renderPassDescriptor.colorAttachments[0].texture = _source_texture;
-        renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
-        renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
-        id<MTLRenderCommandEncoder> encoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-        // 设置渲染管线状态
-        [encoder setRenderPipelineState:_pipelineState];
-        // 设置纹理
-        [encoder setFragmentTexture:_in_texture atIndex:0];
-        // 编码渲染命令
-        [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
-        // 结束编码
-        [encoder endEncoding];
     }
-    
+
     // 创建渲染编码器
     MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
     renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
     renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
     renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 1);
-    
+
     id<MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
-    
+
     // 设置渲染管道状态
     [renderEncoder setRenderPipelineState:_pipelineState];
-    
+
     // 设置纹理
     if ([_algorithm isEqualToString:@"Pro Image Enhance"]) {
-        [renderEncoder setFragmentTexture:_source_texture atIndex:0];
+        [renderEncoder setFragmentTexture:_ie_texture atIndex:0];
     } else if ([_algorithm isEqualToString:@"Play directly"]) {
         [renderEncoder setFragmentTexture:_in_texture atIndex:0];
     } else {
         [renderEncoder setFragmentTexture:_sr_texture atIndex:0];
     }
-    
+
     // 绘制
     [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
-    
+
     // 结束编码
     [renderEncoder endEncoding];
-    
+
     // 提交命令
     [commandBuffer presentDrawable:drawable];
     [commandBuffer commit];
-    
+
     // 释放资源
     CVPixelBufferRelease(pixelBuffer);
 }
 
-- (void)updateInputTextureWithPixelBuffer:(CVPixelBufferRef)pixelBuffer {
+- (void)updateTextureWithPixelBuffer:(CVPixelBufferRef)pixelBuffer texture: (id<MTLTexture>)texture{
     size_t width = CVPixelBufferGetWidth(pixelBuffer);
     size_t height = CVPixelBufferGetHeight(pixelBuffer);
-    
+
     CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     void *baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer);
     size_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
-    
-    [_in_texture replaceRegion:MTLRegionMake2D(0, 0, width, height) mipmapLevel:0 withBytes:baseAddress bytesPerRow:bytesPerRow];
-    
+
+    [texture replaceRegion:MTLRegionMake2D(0, 0, width, height) mipmapLevel:0 withBytes:baseAddress bytesPerRow:bytesPerRow];
+
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
 }
 
@@ -246,19 +227,19 @@
         AVAssetTrack *videoTrack = tracks.firstObject;
         videoSize = videoTrack.naturalSize;
     }
-    
+
     AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
-    
+
     NSDictionary *outputSettings = @{(id)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA)};
     _videoOutput = [[AVPlayerItemVideoOutput alloc] initWithOutputSettings:outputSettings];
     [playerItem addOutput:_videoOutput];
-    
+
     _player = [AVPlayer playerWithPlayerItem:playerItem];
     [_player play];
-    
+
     //添加播放完成通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(runLoopTheMovie:) name:AVPlayerItemDidPlayToEndTimeNotification object:_player.currentItem];
-    
+
     return videoSize;
 }
 
@@ -272,9 +253,9 @@
     _whiteView.frame = self.view.bounds;
     [self.view addSubview:_whiteView];
     [self addEdgePanGesture];
-    
+
     [self.view addSubview:_mtkView];
-    
+
     // 创建播放/暂停按钮
     self.playPauseButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.playPauseButton setTitle:@"Play/Pause" forState:UIControlStateNormal];
@@ -353,7 +334,9 @@
     // 将按钮添加到视图中
     [self.view addSubview:self.playPauseButton];
 
-    
+
+
+
     // 创建提示信息的文本框
     self.infoLabel = [[UILabel alloc] init];
     self.infoLabel.text = _algorithm;
@@ -367,6 +350,8 @@
     CGFloat labelHeight = self.infoLabel.frame.size.height;
     self.infoLabel.frame = CGRectMake(labelX, labelY, labelWidth, labelHeight);
     [self.view addSubview:self.infoLabel];
+
+
 }
 
 - (void)addEdgePanGesture {
@@ -374,7 +359,7 @@
     UIScreenEdgePanGestureRecognizer *rightEdgePanGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleEdgePanGesture:)];
     rightEdgePanGestureRecognizer.edges = UIRectEdgeRight; // 从屏幕右边缘开始滑动
     [self.view addGestureRecognizer:rightEdgePanGestureRecognizer];
-    
+
     // 添加滑动手势识别器
     UIScreenEdgePanGestureRecognizer *leftEdgePanGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleEdgePanGesture:)];
     leftEdgePanGestureRecognizer.edges = UIRectEdgeLeft; // 从屏幕左边缘开始滑动
@@ -384,7 +369,12 @@
 - (void)handleEdgePanGesture:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         // 关闭当前视图控制器并返回到上一层视图控制器
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:^{
+            // 在这里执行您需要在视图控制器关闭后进行的操作
+            [self.tsr_pass_standard deInit];
+            [self.tsr_pass_professional deInit];
+            [TSRSdk.getInstance deInit];
+        }];
     }
 }
 
@@ -434,9 +424,9 @@
 
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         [self setUI];
-        
+
         self.whiteView.frame = CGRectMake(0, 0, size.width, size.height);
-        
+
         CGRect rect;
         if (_srRatio > 0) {
             rect = CGRectMake(0, 0, _videoSize.width * _srRatio / 3, _videoSize.height * _srRatio / 3);

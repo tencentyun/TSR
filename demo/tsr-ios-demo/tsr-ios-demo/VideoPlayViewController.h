@@ -34,7 +34,7 @@
 @property (nonatomic, strong) id<MTLRenderPipelineState> pipelineState;
 @property (nonatomic, strong) id<MTLTexture> in_texture;
 @property (nonatomic, strong) id<MTLTexture> sr_texture;
-@property (nonatomic, strong) id<MTLTexture> source_texture;
+@property (nonatomic, strong) id<MTLTexture> ie_texture;
 
 @property (nonatomic, strong) TSRPass* tsr_pass_standard;
 @property (nonatomic, strong) TSRPass* tsr_pass_professional;
