@@ -436,9 +436,11 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         long startTime = System.currentTimeMillis();
 
         boolean newFrame = false;
+
         if (updateTexture) {
-            mSurfaceTexture.updateTexImage();
             updateTexture = false;
+            mSurfaceTexture.updateTexImage();
+
             newFrame = true;
             mPlayFrameCount++;
             if (mIsRecordVideo) {
@@ -557,7 +559,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     }
 
     @Override
-    synchronized public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         updateTexture = true;
     }
 
