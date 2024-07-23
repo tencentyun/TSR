@@ -59,10 +59,15 @@
 
     <string name="girl_video">girl-544x960.mp4</string>
 
-    <string name="brightness">亮度值</string>
-    <string name="brightness_title">亮度调整，0–100，默认50</string>
-    <string name="contrast">对比度</string>
-    <string name="contrast_title">对比度调整，0–100，默认50</string>
-    <string name="saturation">饱和度</string>
-    <string name="saturation_title">饱和度调整，0–100，默认50</string>
+    <string name="brightness">明亮度:51</string>
+    <string name="brightness_title">亮度调整，0–100，默认51</string>
+    <string name="contrast">对比度:55</string>
+    <string name="contrast_title">对比度调整，0–100，默认55</string>
+    <string name="saturation">饱和度:52</string>
+    <string name="saturation_title">饱和度调整，0–100，默认52</string>
+    <string name="sharpness">锐化度:0</string>
+    <string name="sharpness_title">锐化度调整，0–100，默认0</string>
+
+    <string name="down">down</string>
+    <string name="up">up</string>
 </resources>

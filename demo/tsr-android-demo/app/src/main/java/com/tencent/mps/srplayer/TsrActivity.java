@@ -23,8 +23,11 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +118,17 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private boolean mIsFullScreenRender;
     private Handler mHandler;
     private HandlerThread mHandlerThread;
+    // TSRPass parameters
+    private float mBrightness = 51;
+    private float mContrast = 55;
+    private float mSaturation = 52;
+    private float mSharpness = 0;
+    // TSRPass parameters view
+    private RadioButton mBrightnessRadioButton;
+    private RadioButton mContrastRadioButton;
+    private RadioButton mSaturationRadioButton;
+    private RadioButton mSharpnessRadioButton;
+    private CheckBox mParamsSettingCheckBox;
 
     private void prepareDecoder() {
         // 初始化解码器
@@ -230,6 +244,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initParamSettingView();
 
         mIsFullScreenRender = false;
 
@@ -248,6 +263,11 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mIsFullScreenRender = true;
         } else {
             mSrRatio = Float.parseFloat(srRatio);
+        }
+
+        if (!("超分播放(标准版+增强参数)".equals(mAlgorithm) || "超分播放(标准版+增强参数)".equals(
+                mCompareAlgorithm))) {
+            mParamsSettingCheckBox.setVisibility(View.GONE);
         }
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -370,10 +390,11 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mSrRatio = calculateSrRatio(width, height, mFrameWidth, mFrameHeight);
         }
         boolean initResultTSRPassStandard = mTSRPassStandard.init(mFrameWidth, mFrameHeight, mSrRatio);
-        boolean initResultTSRPassStandardWithParams = mTSRPassStandardWithParams.init(mFrameWidth, mFrameHeight, mSrRatio);
+        boolean initResultTSRPassStandardWithParams = mTSRPassStandardWithParams.init(mFrameWidth, mFrameHeight,
+                mSrRatio);
         // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
         // Here we set these parameters to slightly enhance the image.
-        mTSRPassStandardWithParams.setParameters(51, 52, 55, 0);
+        mTSRPassStandardWithParams.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
         boolean initResultTSRPassProfessional = mTSRPassProfessional.init(mFrameWidth, mFrameHeight, mSrRatio);
         boolean initResultTIEPass = mTIEPass.init(mFrameWidth, mFrameHeight);
 
@@ -381,7 +402,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                 !initResultTSRPassProfessional) {
             String openglEsVersion = GLES30.glGetString(GL10.GL_VERSION);
             runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                    String.format("当前设备OpenGL ES版本过低，为%s。\nTSRSDK需要OpenGL ES 3.1及以上才能正常运行。", openglEsVersion),
+                    String.format("当前设备OpenGL ES版本过低，为%s。\nTSRSDK需要OpenGL ES 3.1及以上才能正常运行。",
+                            openglEsVersion),
                     (dialogInterface, i) -> finish()));
             return;
         }
@@ -554,6 +576,9 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         if (mTSRPassProfessional != null) {
             mTSRPassProfessional.deInit();
         }
+        if (mTIEPass != null) {
+            mTIEPass.deInit();
+        }
         if (mMediaRecorder != null) {
             mMediaRecorder = null;
         }
@@ -568,9 +593,11 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         TSRSdk.getInstance().deInit();
     }
 
-    private void configureMediaRecorder(String fileName, int frameWidth, int frameHeight, float frameRate, int bitrateMbps, String codecType) {
+    private void configureMediaRecorder(String fileName, int frameWidth, int frameHeight, float frameRate,
+            int bitrateMbps, String codecType) {
         String filePath = mContext.getExternalFilesDir("dump_video/") + "/" +
-                fileName.split("\\.")[0] + "_" + mSrRatio + "x_" + mAlgorithm + "_" + codecType + "_" + bitrateMbps + "M_" +
+                fileName.split("\\.")[0] + "_" + mSrRatio + "x_" + mAlgorithm + "_" + codecType + "_" + bitrateMbps
+                + "M_" +
                 System.currentTimeMillis() + ".mp4";
         mMediaRecorder = new MediaRecorder(mContext, filePath,
                 frameWidth, frameHeight, mRotation,
@@ -656,6 +683,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private static final long TIME_EXIT = 2000;
     // Double swipe to exit
     private long mBackPressed;
+
     @Override
     public void onBackPressed() {
         if (mBackPressed + TIME_EXIT > System.currentTimeMillis()) {
@@ -667,7 +695,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     }
 
     private float calculateSrRatio(int viewWidth, int viewHeight, int videoWidth, int videoHeight) {
-        Log.i(TAG, "viewWidth = " + viewWidth + ", viewHeight = " + viewHeight + ", videoWidth = " + videoWidth + ", videoHeight = " + videoHeight);
+        Log.i(TAG, "viewWidth = " + viewWidth + ", viewHeight = " + viewHeight + ", videoWidth = " + videoWidth
+                + ", videoHeight = " + videoHeight);
         double videoRatio = 1.0 * videoWidth / videoHeight;
         double viewRatio = 1.0 * viewWidth / viewHeight;
         if (viewRatio > videoRatio) {
@@ -678,7 +707,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     }
 
     private void dumpFrame(int textureId) {
-        if ("超分播放(标准版)".equals(mAlgorithm) || "普通播放".equals(mAlgorithm) || "超分播放(标准版+增强参数)".equals(mAlgorithm)) {
+        if ("超分播放(标准版)".equals(mAlgorithm) || "普通播放".equals(mAlgorithm)
+                || "超分播放(标准版+增强参数)".equals(mAlgorithm)) {
             mMediaRecorder.encodeFrame(textureId, System.nanoTime());
             if (mPlayFrameCount == mVideoFrameCount) {
                 mMediaRecorder.stop();
@@ -705,5 +735,64 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             }
         }
         ProgressDialogUtils.updateText("Exporting..." + (int) ((float) mPlayFrameCount / mVideoFrameCount * 100) + "%");
+    }
+
+    private void initParamSettingView() {
+        mBrightnessRadioButton = findViewById(R.id.radio_btn_brightness);
+        mContrastRadioButton = findViewById(R.id.radio_btn_contrast);
+        mSaturationRadioButton = findViewById(R.id.radio_btn_saturation);
+        mSharpnessRadioButton = findViewById(R.id.radio_btn_sharpness);
+        mParamsSettingCheckBox = findViewById(R.id.color_setting);
+        LinearLayout layout = findViewById(R.id.color_setting_view);
+        mParamsSettingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            layout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
+        Button upValueButton = findViewById(R.id.up_value_button);
+        upValueButton.setOnClickListener(v -> {
+            if (mBrightnessRadioButton.isChecked()) {
+                mBrightness += 1;
+            } else if (mContrastRadioButton.isChecked()) {
+                mContrast += 1;
+            } else if (mSaturationRadioButton.isChecked()) {
+                mSaturation += 1;
+            } else if (mSharpnessRadioButton.isChecked()) {
+                mSharpness += 1;
+            }
+            updateValue();
+        });
+        Button downValueButton = findViewById(R.id.down_value_button);
+        downValueButton.setOnClickListener(v -> {
+            if (mBrightnessRadioButton.isChecked()) {
+                mBrightness -= 1;
+            } else if (mContrastRadioButton.isChecked()) {
+                mContrast -= 1;
+            } else if (mSaturationRadioButton.isChecked()) {
+                mSaturation -= 1;
+            } else if (mSharpnessRadioButton.isChecked()) {
+                mSharpness -= 1;
+            }
+            updateValue();
+        });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateValue() {
+        mBrightness = standardValue(mBrightness);
+        mSharpness = standardValue(mSharpness);
+        mSaturation = standardValue(mSaturation);
+        mContrast = standardValue(mContrast);
+        if (mTSRPassStandardWithParams != null) {
+            mTSRPassStandardWithParams.setParameters(mBrightness, mContrast, mSaturation, mSharpness);
+        }
+        runOnUiThread(() -> {
+            mBrightnessRadioButton.setText("明亮度:" + (int) mBrightness);
+            mContrastRadioButton.setText("对比度:" + (int) mContrast);
+            mSaturationRadioButton.setText("饱和度:" + (int) mSaturation);
+            mSharpnessRadioButton.setText("锐化度:" + (int) mSharpness);
+        });
+    }
+
+    private float standardValue(float value) {
+        return Math.max((float) 0, Math.min((float) 100, value)); // 限制value在0和100之间
     }
 }
