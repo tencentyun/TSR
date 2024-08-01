@@ -55,7 +55,7 @@
 ## 5. 包大小
 * 标准版：Android AAR约0.6M（含arm64-v8a和armeabi-v7a）；iOS Framework 0.35MB。
 
-* 专业版：Android AAR 6.9MB（含arm64-v8a和armeabi-v7a）；iOS Framework 6.03MB。
+* 专业版：Android AAR 4.08MB（含arm64-v8a和armeabi-v7a）；iOS Framework 6.03MB。
 
 ## 6. Demo体验
 [下载链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/SRPlayer.apk)  
