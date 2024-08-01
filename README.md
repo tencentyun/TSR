@@ -54,7 +54,7 @@
 <img src=docs/scenario_case_game.png width=80% />
 
 ## 4. 兼容性
-Android 5.0及以上；iPhone 5s 且 iOS 12 及以上。
+Android 5.0，及以上；iPhone 5s且iOS 12，及以上。
 
 机型适配率高。
 
@@ -76,4 +76,4 @@ Android 5.0及以上；iPhone 5s 且 iOS 12 及以上。
 </div>
 
 ## 7. 接入指引
-参考[Android](./Android 接入指南.md)、[iOS](./iOS 接入指南.md)接入指南。
+参考[Android](Android%20接入指南.md)、[iOS](iOS%20接入指南.md)接入指南。
