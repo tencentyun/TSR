@@ -60,7 +60,7 @@ Android 5.0，及以上；iPhone 5s且iOS 12，及以上。
 
 ## 5. 包大小
 * 标准版：Android AAR约 0.3MB（单arm64-v8a架构）；iOS Framework 0.4MB。
-* 专业版：Android AAR约 2.1MB（单arm64-v8a架构）；iOS Framework 6.0MB。
+* 专业版：Android AAR约 2.1MB（单arm64-v8a架构）；iOS Framework 1.9MB。
 
 ## 6. 体验Demo
 [下载链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/SRPlayer.apk)  

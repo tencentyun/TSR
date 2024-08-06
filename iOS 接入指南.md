@@ -89,7 +89,7 @@ TSRPass是用于进行超分辨率渲染的类，它包括了init、setParameter
    _sr_texture = [_tsr_pass render:_in_texture commandBuffer:commandBuffer];
 ```
 
-2. 当您已经不需要使用TSRSdk时，需要调用TSRSdk的deInit方法，释放资源。
+* 当您已经不需要使用TSRPass时，需要调用TSRPass的deInit方法，释放资源。
 ```
 // Release resources when the TSRPass object is no longer needed.
 [_tsr_pass deInit];
@@ -102,6 +102,12 @@ TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。
 
 ```
 _tie_pass = [[TIEPass alloc] initWithDevice:mTLDevice inputWidth:width inputHeight:height];
+```
+
+* 当您已经不需要使用TIEPass时，需要调用TIEPass的deInit方法，释放资源。
+```
+// Release resources when the TIEPass object is no longer needed.
+[_tie_pass deInit];
 ```
 
 ### **2.1.4 TSRLogger**
