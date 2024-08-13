@@ -102,7 +102,7 @@ App签名证书信息可以使用keytool命令查看，例如
 
 它包括了init、render和deInit方法。在使用TSRPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用deInit方法释放资源。
 
-**注意：这个类不是线程安全的，必须在同一个线程中调用TSRPass的方法。**
+**注意：TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。**
 
 以下是标准版超分代码示例：
 ```
@@ -143,7 +143,7 @@ tsrPass.deInit();
 ### **2.2.3 TIEPass**
 [TIEPass](https://tencentyun.github.io/TSR/android-docs/1.5/com/tencent/mps/tie/api/TIEPass.html)是用于进行图像增强渲染的类，**只在专业版SDK可用**。它包括init、render和deInit方法。在使用TIEPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用release方法释放资源。
 
-**注意：这个类不是线程安全的，必须在同一个线程中调用TSRPass的方法。**
+**注意：TIEPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。**
 
 以下是代码示例：
 ```
