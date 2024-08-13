@@ -96,13 +96,14 @@ App签名证书信息可以使用keytool命令查看，例如
 ### **2.2.2 TSRPass**
 [TSRPass](https://tencentyun.github.io/TSR/android-docs/1.5/com/tencent/mps/tie/api/TSRPass.html)是用于进行超分辨率渲染的类，在创建TSRPass时，您需要传入TSRAlgorithmType设置超分的算法类型。
 
+**注意：TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。**
+
 在TSRAlgorithmType枚举中，有STANDARD、PROFESSIONAL两个算法运行模式：
 1. STANDARD（标准）模式：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
 2. PROFESSIONAL（专业）模式：更注重超分辨率效果，适用于高质量要求的场景。这种模式的超分辨率效果优于 STANDARD 模式，但对设备性能有一定要求，建议在中高端智能手机上使用。**需要注意的是，这种模式仅在专业版SDK中提供支持。**
 
 它包括了init、render和deInit方法。在使用TSRPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用deInit方法释放资源。
 
-**注意：TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。**
 
 以下是标准版超分代码示例：
 ```

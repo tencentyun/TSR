@@ -65,12 +65,14 @@ TSRSdk包括`initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:`和`
 [TSRSdk.getInstance deInit];
 ```
 ### **2.1.2 TSRPass**
+
+TSRPass是用于进行超分辨率渲染的类，它包括了init、setParametersWithBrightness、render方法。
+
 **注意：**
 1. TSRPass使用Metal框架进行超分辨率渲染，需要设备支持Metal。
 2. TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。
 3. 专业版算法TSRAlgorithmTypeProfessional需要iOS系统版本在15.0或以上才生效。
 
-TSRPass是用于进行超分辨率渲染的类，它包括了init、setParametersWithBrightness、render方法。
 * 在使用TSRPass前，您需要调用`initWithDevice:inputWidth:inputHeight:srRatio:`方法进行初始化。
 ```
  # 标准版
