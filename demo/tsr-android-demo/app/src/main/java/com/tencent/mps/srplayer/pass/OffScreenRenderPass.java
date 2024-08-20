@@ -11,7 +11,7 @@ import com.tencent.mps.srplayer.opengl.Texture;
 import java.io.IOException;
 
 public class OffScreenRenderPass {
-    public static final String TAG = "TexOESToTex2DPass";
+    public static final String TAG = "OffScreenRenderPass";
 
     /**
      * Shaders
@@ -35,7 +35,7 @@ public class OffScreenRenderPass {
     }
 
     public void init (int outputTextureType, int destWidth, int destHeight, String assetsFragShaderPath) {
-        Log.i(TAG, "creating Texture2DRenderPass: dest resolution = "
+        Log.i(TAG, "creating OffScreenRenderPass: dest resolution = "
                 + destWidth + "x" + destHeight);
         // create the target texture
         mTexture = new Texture(false, outputTextureType, 0, destWidth, destHeight);
@@ -53,7 +53,7 @@ public class OffScreenRenderPass {
     }
 
     /**
-     * Convert TextureOES to Texture2D
+     * render to mTexture
      *
      * @return The id of output texture
      */
@@ -65,7 +65,7 @@ public class OffScreenRenderPass {
     }
 
     /**
-     * Convert TextureOES to Texture2D
+     * render to mTexture
      *
      * @return The id of output texture
      */
