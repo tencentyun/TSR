@@ -104,9 +104,8 @@ TSRPass是用于进行超分辨率渲染的类，它包括了init、setParameter
 TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。它包括init和render方法。在使用TIEPass前，您需要调用init方法进行初始化。
 
 **注意：**
-1. TIEPass使用Metal框架进行超分辨率渲染，需要设备支持Metal。
-2. TIEPass不是线程安全的，必须在同一个线程中调用TIEPass的方法。
-3. TIEPass只在专业版SDK生效，且需要iOS系统版本在15.0或以上。
+1. TIEPass不是线程安全的，必须在同一个线程中调用TIEPass的方法。
+2. TIEPass只在专业版SDK生效，且需要iOS系统版本在15.0或以上。
 
 * 在使用TIEPass前，您需要调用`initWithDevice:inputWidth:inputHeight:`方法进行初始化。
 
