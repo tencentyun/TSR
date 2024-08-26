@@ -125,6 +125,6 @@ TSRLogger用于接收SDK内部的日志，请将这些日志写到文件，以�
 # **3 SDK API描述**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/1.5/index.html)
+[TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/1.7/index.html)
 
 
