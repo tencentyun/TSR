@@ -41,8 +41,11 @@
     <string name="start_export_tsr">导出</string>
     <string name="right_bilinear">Right: Bilinear</string>
     <string name="left_sr">Left: TSR</string>
-    <string name="play_video">播放</string>
-    <string name="pause_video">暂停</string>
+    <string name="play_video">点击播放</string>
+    <string name="pause_video">点击暂停</string>
+
+    <string name="turn_on_sr">点击开启超分</string>
+    <string name="turn_off_sr">点击关闭超分</string>
 
     <string name="dump_start">开始Dump，请等待Dump完成…</string>
     <string name="dump_done">超分视频已保存在手机相册</string>
@@ -58,15 +61,6 @@
     <string name="in_app_video">内置视频</string>
 
     <string name="girl_video">girl-544x960.mp4</string>
-
-    <string name="brightness">明亮度:51</string>
-    <string name="brightness_title">亮度调整，0–100，默认51</string>
-    <string name="contrast">对比度:55</string>
-    <string name="contrast_title">对比度调整，0–100，默认55</string>
-    <string name="saturation">饱和度:52</string>
-    <string name="saturation_title">饱和度调整，0–100，默认52</string>
-    <string name="sharpness">锐化度:0</string>
-    <string name="sharpness_title">锐化度调整，0–100，默认0</string>
 
     <string name="down">down</string>
     <string name="up">up</string>

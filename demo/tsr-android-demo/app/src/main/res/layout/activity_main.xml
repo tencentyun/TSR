@@ -13,7 +13,7 @@
             android:keepScreenOn="true" />
 
     <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
@@ -50,29 +50,25 @@
                 <RadioButton
                         android:textColor="@color/white"
                         android:id="@+id/radio_btn_brightness"
-                        android:text="@string/brightness"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                <RadioButton
-                        android:textColor="@color/white"
-                        android:checked="true"
-                        android:id="@+id/radio_btn_contrast"
-                        android:text="@string/contrast"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                 <RadioButton
                         android:textColor="@color/white"
                         android:id="@+id/radio_btn_saturation"
-                        android:text="@string/saturation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                 <RadioButton
+                    android:textColor="@color/white"
+                    android:checked="true"
+                    android:id="@+id/radio_btn_contrast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RadioButton
                         android:textColor="@color/white"
                         android:id="@+id/radio_btn_sharpness"
-                        android:text="@string/sharpness"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
             </RadioGroup>
@@ -90,6 +86,34 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/fps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FPS: 0"
+                android:textColor="#FF0000" />
+
+            <TextView
+                android:id="@+id/avgFps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AVG_FPS: 0"
+                android:textColor="#FF0000"
+ />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
@@ -105,14 +129,31 @@
                 android:textColor="#FF0000"
                 android:textSize="15sp" />
 
-        <Button
-                android:id="@+id/playControlButton"
-                android:layout_width="100dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            >
+
+            <Button
+                android:id="@+id/switchSRButton"
+                android:layout_width="95dp"
                 android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
+                android:backgroundTint="#00FF0000"
+                android:text="@string/turn_off_sr"
+                android:layout_marginRight="20dp"
+                android:textColor="#FF0000" />
+
+            <Button
+                android:id="@+id/playControlButton"
+                android:layout_width="95dp"
+                android:layout_height="match_parent"
                 android:backgroundTint="#00FF0000"
                 android:text="@string/play_video"
                 android:textColor="#FF0000" />
+        </LinearLayout>
+
+
 
         <TextView
                 android:id="@+id/cmp_algorithm"

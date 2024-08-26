@@ -20,8 +20,10 @@
         <item>普通播放</item>
         <item>超分播放(标准版)</item>
         <item>超分播放(标准版+增强参数)</item>
-        <item>超分播放(专业版)</item>
-        <item>增强播放(专业版)</item>
+        <item>超分播放(专业版-高算力)</item>
+        <item>超分播放(专业版-低算力)</item>
+        <item>增强播放(专业版-高算力)</item>
+        <item>增强播放(专业版-低算力)</item>
     </string-array>
 
     <string-array name="compare_algorithm">
@@ -29,8 +31,10 @@
         <item>普通播放</item>
         <item>超分播放(标准版)</item>
         <item>超分播放(标准版+增强参数)</item>
-        <item>超分播放(专业版)</item>
-        <item>增强播放(专业版)</item>
+        <item>超分播放(专业版-高算力)</item>
+        <item>超分播放(专业版-低算力)</item>
+        <item>增强播放(专业版-高算力)</item>
+        <item>增强播放(专业版-低算力)</item>
     </string-array>
 
     <string-array name="codecs">
