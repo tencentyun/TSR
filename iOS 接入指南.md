@@ -66,21 +66,28 @@ TSRSdk包括`initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:`和`
 ```
 ### **2.1.2 TSRPass**
 
-TSRPass是用于进行超分辨率渲染的类，它包括了init、setParametersWithBrightness、render方法。
+TSRPass是用于进行超分辨率渲染的类，它包括了init、setParametersWithBrightness、render方法。在创建TSRPass时，您需要传入TSRAlgorithmType设置超分的算法类型。
+
+在TSRAlgorithmType枚举中，有TSRAlgorithmTypeStandard、TSRAlgorithmTypeProfessionalHighQuality和TSRAlgorithmTypeProfessionalFast三个算法运行模式：
+1. TSRAlgorithmTypeStandard（标准）模式：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
+2. TSRAlgorithmTypeProfessionalHighQuality（专业版-高质量）模式：TSRAlgorithmTypeProfessionalHighQuality模式确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+3. TSRAlgorithmTypeProfessionalFast（专业版-快速）模式：TSRAlgorithmTypeProfessionalFast模式在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
+   它包括了init、render和deInit方法。在使用TSRPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用deInit方法释放资源。
 
 **注意：**
 1. TSRPass使用Metal框架进行超分辨率渲染，需要设备支持Metal。
 2. TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。
-3. 专业版算法TSRAlgorithmTypeProfessional需要iOS系统版本在15.0或以上才生效。
+3. 专业版算法TSRAlgorithmTypeProfessionalFast需要iOS系统版本在15.0或以上才生效。
+4. 专业版算法TSRAlgorithmTypeProfessionalHighQuality需要iOS系统版本在16.0或以上才生效。
 
 * 在使用TSRPass前，您需要调用`initWithDevice:inputWidth:inputHeight:srRatio:`方法进行初始化。
 ```
  # 标准版
   _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
-```
-```
- # 专业版
- _tsr_pass_professional = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+ # 专业版-Fast
+ _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+ # 专业版-HIGH_QUALITY
+ _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
 ```
 
 * 初始化TSRPass后，您可以通过调用`setParametersWithBrightness:saturation:contrast:`调整渲染的参数值(可选)
@@ -101,16 +108,25 @@ TSRPass是用于进行超分辨率渲染的类，它包括了init、setParameter
 ```
 
 ### **2.1.3 TIEPass**
-TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。它包括init和render方法。在使用TIEPass前，您需要调用init方法进行初始化。
+TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。它包括init、render、renderWithPixelBuffer方法。在使用TIEPass前，您需要调用init方法进行初始化。在创建TIEPass时，您需要传入TIEAlgorithmType设置超分的算法类型:
+
+在TIEAlgorithmType枚举中，有TIEAlgorithmTypeProfessionalHighQuality和TIEAlgorithmTypeProfessionalFast两个算法运行模式：
+1. TIEAlgorithmTypeProfessionalHighQuality（专业版-高质量）模式：TIEAlgorithmTypeProfessionalHighQuality模式确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+2. TIEAlgorithmTypeProfessionalFast（专业版-快速）模式：TIEAlgorithmTypeProfessionalFast模式在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
+   它包括了init、render和deInit方法。在使用TSRPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用deInit方法释放资源。
 
 **注意：**
 1. TIEPass不是线程安全的，必须在同一个线程中调用TIEPass的方法。
-2. TIEPass只在专业版SDK生效，且需要iOS系统版本在15.0或以上。
+2. 专业版算法TIEAlgorithmTypeProfessionalFast需要iOS系统版本在15.0或以上才生效。
+3. 专业版算法TIEAlgorithmTypeProfessionalHighQuality需要iOS系统版本在16.0或以上才生效。
 
 * 在使用TIEPass前，您需要调用`initWithDevice:inputWidth:inputHeight:`方法进行初始化。
 
 ```
-_tie_pass = [[TIEPass alloc] initWithDevice:mTLDevice inputWidth:width inputHeight:height];
+ // 使用FAST算法
+ _tie_pass_fast = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalFast];
+ // 使用HIGH_QUALITY算法
+ _tie_pass_high_quality = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalHighQuality];
 ```
 
 * 当您已经不需要使用TIEPass时，需要调用TIEPass的deInit方法，释放资源。

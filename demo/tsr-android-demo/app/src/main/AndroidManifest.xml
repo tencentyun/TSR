@@ -3,6 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
             android:name="com.tencent.mps.srplayer.SRApplication"
@@ -15,25 +16,32 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.SRPlayer"
+            android:usesCleartextTraffic="true"
             tools:targetApi="31">
+
+        <uses-native-library
+            android:name="libOpenCL.so"
+            android:required="false" />
+
         <activity
-                android:name="com.tencent.mps.srplayer.SettingsActivity"
-                android:exported="true">
+            android:name=".SettingsActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                    android:name="android.app.lib_name"
-                    android:value="" />
-        </activity>
-        <activity
-                android:name="com.tencent.mps.srplayer.TsrActivity"
-                android:exported="true">
 
             <meta-data
-                    android:name="android.app.lib_name"
-                    android:value="" />
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".TsrActivity"
+            android:exported="true" >
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
         </activity>
     </application>
 
