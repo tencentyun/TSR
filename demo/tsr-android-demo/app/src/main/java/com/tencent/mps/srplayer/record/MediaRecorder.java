@@ -6,11 +6,14 @@ import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.opengl.EGLContext;
+import android.opengl.GLES30;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Surface;
+
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -30,10 +33,13 @@ public class MediaRecorder {
     private EGLBase mEglBase;
     private boolean isStart;
     private int index;
-    private int mFrameRate;
-    private int mBitrateMbps;
-    private String mCodecType;
-    private int mRotation;
+    private final float mFrameRate;
+    private final int mFrameIntervalUs;
+    private int mTimestamp;
+    private final int mBitrateMbps;
+    private final String mCodecType;
+    private final int mRotation;
+    private int frameCount = 0;
 
     /**
      *
@@ -44,12 +50,13 @@ public class MediaRecorder {
      * 还可以让人家传递帧率 fps、码率等参数
      */
     public MediaRecorder(Context context, String path, int width, int height, int rotation,
-                         int frameRate, int bitrateMbps, String codecType, EGLContext eglContext){
+                         float frameRate, int bitrateMbps, String codecType, EGLContext eglContext){
         mContext = context.getApplicationContext();
         mPath = path;
-        mWidth = width / 16 * 16;
-        mHeight = height / 16 * 16;
+        mWidth = width / 2 * 2;
+        mHeight = height / 2 * 2;
         mFrameRate = frameRate;
+        mFrameIntervalUs = (int) (1000 * 1000 / mFrameRate);
         mBitrateMbps = bitrateMbps;
         mRotation = rotation;
         mEglContext = eglContext;
@@ -66,9 +73,6 @@ public class MediaRecorder {
      * 开始录制视频
      */
     public void start() throws IOException{
-        /**
-         * 配置MediaCodec 编码器
-         */
         //视频格式
         //编码出的宽、高
         MediaFormat mediaFormat = MediaFormat.createVideoFormat(mCodecType, mWidth, mHeight);
@@ -76,9 +80,9 @@ public class MediaRecorder {
         //码率
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, mBitrateMbps * 1000 * 1000);
         //帧率
-        mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate);
+        mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, (int) mFrameRate);
         //捕获率
-        mediaFormat.setInteger(MediaFormat.KEY_CAPTURE_RATE, mFrameRate);
+        mediaFormat.setInteger(MediaFormat.KEY_CAPTURE_RATE, (int) mFrameRate);
         //关键帧间隔
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
         //颜色格式（RGB\YUV）
@@ -96,12 +100,6 @@ public class MediaRecorder {
         //封装器 复用器
         mMediaMuxer = new MediaMuxer(mPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
 
-        /**
-         * 配置EGL环境，需要在一个线程中处理，线程间通信
-         * Handler
-         * Handler： 子线程通知主线程
-         * Looper.loop()
-         */
         HandlerThread handlerThread = new HandlerThread("VideoCodec");
         handlerThread.start();
         Looper looper = handlerThread.getLooper();
@@ -122,11 +120,11 @@ public class MediaRecorder {
         });
     }
 
-
     public void encodeFrame(final int textureId, final long timestamp) {
         if (!isStart){
             return;
         }
+        GLES30.glFinish();
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -190,6 +188,10 @@ public class MediaRecorder {
                     outputBuffer.position(bufferInfo.offset);
                     //ByteBuffer 可读写总长度
                     outputBuffer.limit(bufferInfo.offset + bufferInfo.size);
+                    frameCount++;
+                    Log.i(TAG, "frameCount = " + frameCount + ", size = " + bufferInfo.size);
+                    bufferInfo.presentationTimeUs = mTimestamp;
+                    mTimestamp += mFrameIntervalUs;
                     //写出
                     mMediaMuxer.writeSampleData(index, outputBuffer, bufferInfo);
                 }
@@ -207,6 +209,7 @@ public class MediaRecorder {
         if (!isStart) {
             return;
         }
+        Log.i(TAG, "MediaRecorder stop.");
         isStart = false;
         mHandler.post(new Runnable() {
             @Override
@@ -231,6 +234,22 @@ public class MediaRecorder {
                 }
             }
         });
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "mPath='" + mPath + '\'' +
+                ", mWidth=" + mWidth +
+                ", mHeight=" + mHeight +
+                ", mFrameRate=" + mFrameRate +
+                ", mBitrateMbps=" + mBitrateMbps +
+                ", mCodecType='" + mCodecType + '\'' +
+                ", mRotation=" + mRotation;
+    }
+
+    public boolean isStart() {
+        return isStart;
     }
 
     /**

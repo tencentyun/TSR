@@ -104,7 +104,6 @@ public class EGLBase {
         }
     }
 
-
     public void draw(int textureId, long timestamp){
         // 绑定当前线程的显示设备及上下文， 之后操作opengl，就是在这个虚拟显示上操作
         if (!EGL14.eglMakeCurrent(mEglDisplay,mEglSurface,mEglSurface,mEglContext)) {

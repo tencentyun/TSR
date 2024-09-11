@@ -21,6 +21,9 @@
 		4D24119B2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */; };
 		4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D2411A72B60C1F800720192 /* girl-544x960.mp4 */; };
 		4D2411AA2B60C21100720192 /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411A92B60C21100720192 /* shader.metal */; };
+		4DDA6C342C9179620024A68C /* auth_123_IOS.crt in Resources */ = {isa = PBXBuildFile; fileRef = 4DDA6C332C9179620024A68C /* auth_123_IOS.crt */; };
+		4DDA6C372C917AE20024A68C /* tsr_client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DDA6C352C917A5B0024A68C /* tsr_client.framework */; };
+		4DDA6C382C917AE20024A68C /* tsr_client.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4DDA6C352C917A5B0024A68C /* tsr_client.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4DF5FCD02BB2779000A333C6 /* 720P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */; };
 		4DF5FCD12BB2779000A333C6 /* 540P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */; };
 		4DF5FCD22BB2779000A333C6 /* 4K.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */; };
@@ -53,6 +56,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4DDA6C382C917AE20024A68C /* tsr_client.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -83,6 +87,8 @@
 		4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tsr_ios_demoUITestsLaunchTests.m; sourceTree = "<group>"; };
 		4D2411A72B60C1F800720192 /* girl-544x960.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "girl-544x960.mp4"; sourceTree = "<group>"; };
 		4D2411A92B60C21100720192 /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
+		4DDA6C332C9179620024A68C /* auth_123_IOS.crt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = auth_123_IOS.crt; sourceTree = "<group>"; };
+		4DDA6C352C917A5B0024A68C /* tsr_client.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = tsr_client.framework; sourceTree = "<group>"; };
 		4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720P.mp4; sourceTree = "<group>"; };
 		4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 540P.mp4; sourceTree = "<group>"; };
 		4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4K.mp4; sourceTree = "<group>"; };
@@ -96,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DDA6C372C917AE20024A68C /* tsr_client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +126,7 @@
 		4D2411662B60C1D000720192 = {
 			isa = PBXGroup;
 			children = (
+				4DDA6C352C917A5B0024A68C /* tsr_client.framework */,
 				4D2411712B60C1D000720192 /* tsr-ios-demo */,
 				4D24118D2B60C1D300720192 /* tsr-ios-demoTests */,
 				4D2411972B60C1D300720192 /* tsr-ios-demoUITests */,
@@ -140,9 +148,10 @@
 		4D2411712B60C1D000720192 /* tsr-ios-demo */ = {
 			isa = PBXGroup;
 			children = (
+				4DDA6C332C9179620024A68C /* auth_123_IOS.crt */,
+				4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */,
 				4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */,
 				4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */,
-				4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */,
 				4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */,
 				4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */,
 				4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */,
@@ -301,6 +310,7 @@
 				4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */,
 				4DF5FCD12BB2779000A333C6 /* 540P.mp4 in Resources */,
 				4DF5FCD52BB2779000A333C6 /* 1080P.mp4 in Resources */,
+				4DDA6C342C9179620024A68C /* auth_123_IOS.crt in Resources */,
 				4DF5FCD42BB2779000A333C6 /* 864P.mp4 in Resources */,
 				4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */,
 				4D24117D2B60C1D000720192 /* Main.storyboard in Resources */,
@@ -513,9 +523,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KN7WY94HU7;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = FN2V63AD2J;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -528,6 +540,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -541,6 +554,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "com.tencent.mps.tsr-ios-demo_Development_SignProvision";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -552,9 +566,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KN7WY94HU7;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = FN2V63AD2J;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -567,6 +583,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -580,6 +597,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "com.tencent.mps.tsr-ios-demo_Development_SignProvision";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

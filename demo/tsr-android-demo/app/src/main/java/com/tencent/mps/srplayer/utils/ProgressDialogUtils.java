@@ -13,6 +13,10 @@ public class ProgressDialogUtils {
         progressDialog.show();
     }
 
+    public static void updateText(String message) {
+        progressDialog.setMessage(message);
+    }
+
     public static void hideProgressDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();

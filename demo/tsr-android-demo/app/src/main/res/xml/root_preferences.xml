@@ -1,45 +1,47 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:key="choose_app_video" app:title="@string/video_app_header">
+    <PreferenceCategory app:key="choose_app_video">
         <ListPreference
-            app:key="@string/video_title"
+            app:key="video_title"
             app:title="@string/video_title"
             app:entries="@array/video_names"
             app:entryValues="@array/video_names"
-            app:defaultValue="1080P.mp4"
+            app:defaultValue="540.mp4"
             app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
-    <ListPreference
-        app:key="@string/sr_ratio"
-        app:title="@string/sr_ratio"
-        app:entries="@array/sr_ratio"
-        app:entryValues="@array/sr_ratio"
-        app:defaultValue="2.0"
-        app:useSimpleSummaryProvider="true" />
+    <PreferenceCategory app:key="play_sr_config" app:title="@string/config_header">
+        <ListPreference
+            app:key="video_algorithm"
+            app:title="@string/video_algorithm"
+            app:entries="@array/video_algorithm"
+            app:entryValues="@array/video_algorithm"
+            app:defaultValue="超分播放(专业版)"
+            app:useSimpleSummaryProvider="true"/>
 
-    <PreferenceCategory app:key="play_config" app:title="@string/config_header">
+        <ListPreference
+                app:key="compare_algorithm"
+                app:title="@string/compare_algorithm"
+                app:entries="@array/compare_algorithm"
+                app:entryValues="@array/compare_algorithm"
+                app:defaultValue="不对比"
+                app:useSimpleSummaryProvider="true"
+            />
 
-        <SwitchPreferenceCompat
-            app:key="@string/full_screen_config"
-            app:title="@string/full_screen_config"
-            app:summaryOn="@string/full_screen_on"
-            app:summaryOff="@string/full_screen_off"
-            app:defaultValue="true"/>
-
-        <SwitchPreferenceCompat
-            app:key="@string/compare_lerp"
-            app:title="@string/compare_lerp"
-            app:summaryOn="@string/compare_lerp_on"
-            app:summaryOff="@string/compare_lerp_off"
-            app:defaultValue="false"/>
-
+        <ListPreference
+            app:key="sr_ratio"
+            app:title="@string/sr_ratio"
+            app:entries="@array/sr_ratio"
+            app:entryValues="@array/sr_ratio"
+            app:defaultValue="2.0"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory app:key="export_config" app:title="@string/export_config">
 
         <ListPreference
-            app:key="@string/codec_type"
+            app:key="codec_type"
             app:title="@string/codec_type"
             app:entries="@array/codecs"
             app:entryValues="@array/codecs"
@@ -47,7 +49,7 @@
             app:useSimpleSummaryProvider="true"/>
 
         <EditTextPreference
-            app:key="@string/bitrate_mbps"
+            app:key="bitrate_mbps"
             app:title="@string/bitrate_mbps"
             app:defaultValue="20"
             app:useSimpleSummaryProvider="true"/>

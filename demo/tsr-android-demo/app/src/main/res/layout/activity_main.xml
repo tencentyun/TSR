@@ -1,47 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/black"
         android:orientation="vertical">
+
     <FrameLayout
             android:id="@+id/video_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:keepScreenOn="true"/>
+            android:layout_gravity="center"
+            android:keepScreenOn="true" />
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+        <CheckBox
+                android:id="@+id/color_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+
+        <LinearLayout
+                android:id="@+id/color_setting_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/text_background"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+            <android.widget.Button
+                    android:id="@+id/down_value_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/down"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/teal_700" />
+
+            <RadioGroup
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <RadioButton
+                        android:textColor="@color/white"
+                        android:id="@+id/radio_btn_brightness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                <RadioButton
+                        android:textColor="@color/white"
+                        android:id="@+id/radio_btn_saturation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                <RadioButton
+                    android:textColor="@color/white"
+                    android:checked="true"
+                    android:id="@+id/radio_btn_contrast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <RadioButton
+                        android:textColor="@color/white"
+                        android:id="@+id/radio_btn_sharpness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+            </RadioGroup>
+
+            <android.widget.Button
+                    android:id="@+id/up_value_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/up"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/teal_700" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/fps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FPS: 0"
+                android:textColor="#FF0000" />
+
+            <TextView
+                android:id="@+id/avgFps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AVG_FPS: 0"
+                android:textColor="#FF0000"
+ />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:background="#00000000">
+
         <TextView
                 android:id="@+id/sr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/left_sr"
-                android:textSize="15sp"
                 android:layout_alignParentStart="true"
+                android:layout_marginStart="15dp"
+                android:text="@string/left_sr"
                 android:textColor="#FF0000"
-                android:layout_marginStart="15dp" />
-        <Button
+                android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            >
+
+            <Button
+                android:id="@+id/switchSRButton"
+                android:layout_width="95dp"
+                android:layout_height="match_parent"
+                android:backgroundTint="#00FF0000"
+                android:text="@string/turn_off_sr"
+                android:layout_marginRight="20dp"
+                android:textColor="#FF0000" />
+
+            <Button
                 android:id="@+id/playControlButton"
-                android:layout_width="100dp"
+                android:layout_width="95dp"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FF0000"
                 android:text="@string/play_video"
-                android:textColor="#FF0000"
-                android:layout_centerHorizontal="true"
-                />
+                android:textColor="#FF0000" />
+        </LinearLayout>
+
+
+
         <TextView
-                android:id="@+id/lerp"
+                android:id="@+id/cmp_algorithm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/right_bilinear"
-                android:textSize="15sp"
                 android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
+                android:text="@string/right_bilinear"
                 android:textColor="#FF0000"
-                android:layout_marginEnd="15dp" />
+                android:textSize="15sp" />
     </RelativeLayout>
 
 </FrameLayout>

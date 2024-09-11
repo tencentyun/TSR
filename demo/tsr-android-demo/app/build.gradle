@@ -3,6 +3,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/gaojunfeng/tsr.keystore')
+            storePassword '12345678'
+            keyAlias 'tsr'
+            keyPassword '12345678'
+        }
+    }
     namespace 'com.tencent.mps.srplayer'
     compileSdk 33
 
@@ -29,7 +37,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "SRPlayer.apk"
+            outputFileName = "SRPlayer-Offline.apk"
         }
     }
 }

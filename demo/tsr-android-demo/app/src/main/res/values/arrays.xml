@@ -1,21 +1,40 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="video_names">
-        <item>4K.mp4</item>
-        <item>1080P.mp4</item>
-        <item>864P.mp4</item>
-        <item>720P.mp4</item>
-        <item>576P.mp4</item>
-        <item>540P.mp4</item>
+        <item>540x960_vertical.mp4</item>
+        <item>848x480_horizontal.mp4</item>
     </string-array>
 
     <string-array name="sr_ratio">
-        <item>OFF</item>
         <item>1.0</item>
         <item>1.25</item>
         <item>1.5</item>
         <item>1.7</item>
         <item>2.0</item>
+        <item>2.5</item>
+        <item>3.0</item>
+        <item>全屏自适应</item>
+    </string-array>
+
+    <string-array name="video_algorithm">
+        <item>普通播放</item>
+        <item>超分播放(标准版)</item>
+        <item>超分播放(标准版+增强参数)</item>
+        <item>超分播放(专业版-高算力)</item>
+        <item>超分播放(专业版-低算力)</item>
+        <item>增强播放(专业版-高算力)</item>
+        <item>增强播放(专业版-低算力)</item>
+    </string-array>
+
+    <string-array name="compare_algorithm">
+        <item>不对比</item>
+        <item>普通播放</item>
+        <item>超分播放(标准版)</item>
+        <item>超分播放(标准版+增强参数)</item>
+        <item>超分播放(专业版-高算力)</item>
+        <item>超分播放(专业版-低算力)</item>
+        <item>增强播放(专业版-高算力)</item>
+        <item>增强播放(专业版-低算力)</item>
     </string-array>
 
     <string-array name="codecs">
