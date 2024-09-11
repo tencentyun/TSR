@@ -54,9 +54,9 @@
 <img src=docs/scenario_case_game.png width=80% />
 
 ## 4. 兼容性
-Android 5.0，及以上；iPhone 5s且iOS 12，及以上。
+* 标准版：Android 5.0，及以上；iPhone 5s且iOS 12，及以上。机型适配率高。
+* 专业版：Android 5.0，及以上；低算力（FAST）算法iOS 15及以上，高算力（HIGH_QUALITY）算法iOS 16及以上。
 
-机型适配率高。
 
 ## 5. 包大小
 * 标准版：Android AAR约 0.3MB（单arm64-v8a架构）；iOS Framework 0.4MB。
