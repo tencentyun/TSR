@@ -64,7 +64,7 @@ To ensure that the service can be properly authorized, you also need to activate
 
 ## 1.2 Compilation and Execution of the Demo Project
 
-Download the source code of the Demo project [here](https://github.com/tencentyun/TSR/tree/main/demo/tsr-ios-demo).
+Download the source code of the Demo project [here](https://github.com/tencentyun/TSR/tree/offline-verification/demo/tsr-ios-demo).
 
 Alter the demo's Bundle Identifier and provide it to Tencent Cloud business services. Refer to the previous "SDK Authorization Application" steps to acquire the SDK and authorization files, then configure them within the Demo project. The procedure is as follows:
 
