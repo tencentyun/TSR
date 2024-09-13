@@ -13,28 +13,28 @@
         <item>2.0</item>
         <item>2.5</item>
         <item>3.0</item>
-        <item>全屏自适应</item>
+        <item>Full Screen Adaptive</item>
     </string-array>
 
     <string-array name="video_algorithm">
-        <item>普通播放</item>
-        <item>超分播放(标准版)</item>
-        <item>超分播放(标准版+增强参数)</item>
-        <item>超分播放(专业版-高算力)</item>
-        <item>超分播放(专业版-低算力)</item>
-        <item>增强播放(专业版-高算力)</item>
-        <item>增强播放(专业版-低算力)</item>
+        <item>Normal</item>
+        <item>Super-Resolution(STD)</item>
+        <item>Super-Resolution(STD-Enhanced Params)</item>
+        <item>Super-Resolution(PRO-High Quality)</item>
+        <item>Super-Resolution(PRO-Fast)</item>
+        <item>Enhanced(PRO-High Quality)</item>
+        <item>Enhanced(PRO-Fast)</item>
     </string-array>
 
     <string-array name="compare_algorithm">
-        <item>不对比</item>
-        <item>普通播放</item>
-        <item>超分播放(标准版)</item>
-        <item>超分播放(标准版+增强参数)</item>
-        <item>超分播放(专业版-高算力)</item>
-        <item>超分播放(专业版-低算力)</item>
-        <item>增强播放(专业版-高算力)</item>
-        <item>增强播放(专业版-低算力)</item>
+        <item>No Comparison</item>
+        <item>Normal</item>
+        <item>Super-Resolution(STD)</item>
+        <item>Super-Resolution(STD-Enhanced Params)</item>
+        <item>Super-Resolution(PRO-High Quality)</item>
+        <item>Super-Resolution(PRO-Fast)</item>
+        <item>Enhanced(PRO-High Quality)</item>
+        <item>Enhanced(PRO-Fast)</item>
     </string-array>
 
     <string-array name="codecs">

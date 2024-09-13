@@ -1,5 +1,5 @@
 # 终端视频增强SDK
-
+- [[English]](README_en.md)
 ## 1.产品介绍
 终端视频增强SDK，基于高效的图像处理算法和AI模型推理能力，实现终端视频超分辨率、画质增强等功能。超分辨率是指在终端播放时，在尽量保持画质的前提下将原始视频进行高效的上采样，以适应显示设备的播放分辨率。画质增强是指改善图像的视觉质量，使其更加清晰细腻和真实。  
 各版本具体功能详情如下： 
@@ -54,9 +54,8 @@
 <img src=docs/scenario_case_game.png width=80% />
 
 ## 4. 兼容性
-Android 5.0，及以上；iPhone 5s且iOS 12，及以上。
-
-机型适配率高。
+* 标准版：Android 5.0，及以上；iPhone 5s且iOS 12，及以上。机型适配率高。
+* 专业版：Android 5.0，及以上；低算力（FAST）算法iOS 15及以上，高算力（HIGH_QUALITY）算法iOS 16及以上。
 
 ## 5. 包大小
 * 标准版：Android AAR约 0.3MB（单arm64-v8a架构）；iOS Framework 0.4MB。

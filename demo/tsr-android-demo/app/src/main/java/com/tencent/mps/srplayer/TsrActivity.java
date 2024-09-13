@@ -3,6 +3,7 @@ package com.tencent.mps.srplayer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.SurfaceTexture;
 import android.graphics.SurfaceTexture.OnFrameAvailableListener;
 import android.media.MediaCodec;
@@ -107,11 +108,11 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     // Super-resolution upscale ratio.
     private float mSrRatio;
     // Frame processing algorithm
-    private volatile String mAlgorithm;
+    private volatile Algorithm mAlgorithm;
     // The frame processing algorithm being compared
-    private volatile String mCompareAlgorithm;
+    private volatile Algorithm mCompareAlgorithm;
     // The Algorithm to switch
-    private volatile String mSwitchAlgorithm;
+    private volatile Algorithm mSwitchAlgorithm;
     // Is turn off SR
     private volatile boolean mIsTurnOffSR;
     // InputTexture
@@ -151,7 +152,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private CheckBox mParamsSettingCheckBox;
 
     private void prepareDecoder() {
-        // 初始化解码器
+        // Initialize the decoder
         try {
             Log.i(TAG, "prepareDecoder");
 
@@ -188,7 +189,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     }
 
     private void startDecode() {
-        // 初始化解码器
+        // Initialize the decoder
         Log.i(TAG, "start decode");
         final long TIMEOUT_US = 10000;
         final long[] startTime = {System.currentTimeMillis()};
@@ -202,7 +203,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             public void handleMessage(@NonNull Message msg) {
                 if (mIsPause) {
                     if (!pausing[0]) {
-                        // 记录暂停的时间点，用于更新开始的时间
+                        // Record the pause time point for updating the start time
                         pauseTime[0] = System.currentTimeMillis();
                     }
                     pausing[0] = true;
@@ -233,11 +234,11 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     return;
                 }
                 if (outputBufferIndex >= 0) {
-                    // 获取这一帧的预计显示时间（毫秒）
+                    // Get the estimated display time of this frame (milliseconds)
                     long presentationTimeMs = bufferInfo.presentationTimeUs / 1000;
-                    // 计算从开始解码到现在过了多少时间
+                    // Calculate the elapsed time since the start of decoding
                     long elapsedTime = System.currentTimeMillis() - startTime[0];
-                    // 如果预计显示时间大于已经过去的时间，那就等待一段时间
+                    // If the estimated display time is greater than the elapsed time, wait for a while
                     if (presentationTimeMs > elapsedTime) {
                         try {
                             Thread.sleep(presentationTimeMs - elapsedTime);
@@ -264,29 +265,93 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Algorithm.initializeDescriptions(mContext);
         initParamSettingView();
 
         mIsFullScreenRender = false;
 
         mFileName = getIntent().getStringExtra("file_name");
-        mAlgorithm = getIntent().getStringExtra("algorithm");
-        mCompareAlgorithm = getIntent().getStringExtra("compare_algorithm");
         mExportCodecType = getIntent().getStringExtra("export_codec");
         mExportBitrateMbps = getIntent().getIntExtra("export_bitrate", 10);
         mIsRecordVideo = getIntent().getBooleanExtra("export_video", false);
+        String algorithm = getIntent().getStringExtra("algorithm");
+        switch (Objects.requireNonNull(algorithm)) {
+            case "Normal":
+            case "普通播放":
+                mAlgorithm = Algorithm.NORMAL;
+                break;
+            case "Super-Resolution(STD)":
+            case "超分播放(标准版)":
+                mAlgorithm = Algorithm.SR_STD;
+                break;
+            case "Super-Resolution(STD-Enhanced Params)":
+            case "超分播放(标准版+增强参数)":
+                mAlgorithm = Algorithm.SR_STD_EH;
+                break;
+            case "Super-Resolution(PRO-High Quality)":
+            case "超分播放(专业版-高算力)":
+                mAlgorithm = Algorithm.SR_PRO_HQ;
+                break;
+            case "Super-Resolution(PRO-Fast)":
+            case "超分播放(专业版-低算力)":
+                mAlgorithm = Algorithm.SR_PRO_FAST;
+                break;
+            case "Enhanced(PRO-Fast)":
+            case "增强播放(专业版-低算力)":
+                mAlgorithm = Algorithm.IE_PRO_FAST;
+                break;
+            case "Enhanced(PRO-High Quality)":
+            case "增强播放(专业版-高算力)":
+                mAlgorithm = Algorithm.IE_PRO_HQ;
+                break;
+        }
+        String compareAlgorithm = getIntent().getStringExtra("compare_algorithm");
+        switch (Objects.requireNonNull(compareAlgorithm)) {
+            case "No Comparison":
+            case "不对比":
+                mCompareAlgorithm = Algorithm.NONE;
+                break;
+            case "Normal":
+            case "普通播放":
+                mCompareAlgorithm = Algorithm.NORMAL;
+                break;
+            case "Super-Resolution(STD)":
+            case "超分播放(标准版)":
+                mCompareAlgorithm = Algorithm.SR_STD;
+                break;
+            case "Super-Resolution(STD-Enhanced Params)":
+            case "超分播放(标准版+增强参数)":
+                mCompareAlgorithm = Algorithm.SR_STD_EH;
+                break;
+            case "Super-Resolution(PRO-High Quality)":
+            case "超分播放(专业版-高算力)":
+                mCompareAlgorithm = Algorithm.SR_PRO_HQ;
+                break;
+            case "Super-Resolution(PRO-Fast)":
+            case "超分播放(专业版-低算力)":
+                mCompareAlgorithm = Algorithm.SR_PRO_FAST;
+                break;
+            case "Enhanced(PRO-Fast)":
+            case "增强播放(专业版-低算力)":
+                mCompareAlgorithm = Algorithm.IE_PRO_FAST;
+                break;
+            case "Enhanced(PRO-High Quality)":
+            case "增强播放(专业版-高算力)":
+                mCompareAlgorithm = Algorithm.IE_PRO_HQ;
+                break;
+        }
 
         String srRatio = getIntent().getStringExtra("sr_ratio");
         if (TextUtils.isEmpty(srRatio)) {
             // Not use SR
             mSrRatio = 1.0f;
-        } else if ("全屏自适应".equals(srRatio)) {
+        } else if ("全屏自适应".equals(srRatio) || "Full Screen Adaptive".equals(srRatio)) {
             mIsFullScreenRender = true;
         } else {
             mSrRatio = Float.parseFloat(srRatio);
         }
 
-        if (!("超分播放(标准版+增强参数)".equals(mAlgorithm) || "超分播放(标准版+增强参数)".equals(
-                mCompareAlgorithm))) {
+        if (!(mAlgorithm == Algorithm.SR_STD_EH || mCompareAlgorithm == Algorithm.SR_STD_EH)) {
             mParamsSettingCheckBox.setVisibility(View.GONE);
         }
 
@@ -351,19 +416,19 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         }
 
         if (mIsRecordVideo) {
-            //获取视频时长，单位：毫秒(ms)
+            // Get video duration, unit: milliseconds (ms)
             String duration_s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             if (duration_s != null) {
                 long duration = Long.parseLong(duration_s);
 
-                //获取视频帧数
+                // Get video frame count
                 int frameRate = 0;
                 String count_s = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT);
                 if (count_s != null) {
                     mVideoFrameCount = Long.parseLong(count_s);
-                    //计算帧率
-                    float dt = (float) duration / mVideoFrameCount; // 平均每帧的时间间隔
-                    mFrameRate = Math.round(1000 / dt * 100) * 0.01f; // 帧率
+                    // Calculate frame rate
+                    float dt = (float) duration / mVideoFrameCount; // Average time interval per frame
+                    mFrameRate = Math.round(1000 / dt * 100) * 0.01f; // Frame rate
 
                     Log.i(TAG, "video frame rate = " + mFrameRate + ", frame count = " + mVideoFrameCount);
                 }
@@ -407,78 +472,70 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mSrRatio = calculateSrRatio(width, height, mFrameWidth, mFrameHeight);
         }
 
-        // 初始化进行超分/增强渲染的Pass
-        String algorithm = mAlgorithm;
-        if ("超分播放(标准版)".equals(algorithm)) {
+        // Initialize the Pass for super-resolution/enhanced rendering
+        if (mAlgorithm == Algorithm.SR_STD) {
             mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
-        } else if ("超分播放(标准版+增强参数)".equals(algorithm)) {
+        } else if (mAlgorithm == Algorithm.SR_STD_EH) {
             mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
             // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
             // Here we set these parameters to slightly enhance the image.
             mTSRPass.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
-        } else if ("超分播放(专业版-低算力)".equals(algorithm)) {
+        } else if (mAlgorithm == Algorithm.SR_PRO_FAST) {
             mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_FAST);
-        } else if ("超分播放(专业版-高算力)".equals(algorithm)) {
+        } else if (mAlgorithm == Algorithm.SR_PRO_HQ) {
             mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-        } else if ("增强播放(专业版-低算力)".equals(algorithm)) {
+        } else if (mAlgorithm == Algorithm.IE_PRO_FAST) {
             mTIEPass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_FAST);
-        } else if ("增强播放(专业版-高算力)".equals(algorithm)) {
+        } else if (mAlgorithm == Algorithm.IE_PRO_HQ) {
             mTIEPass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
         }
 
-        if (algorithm.startsWith("超分")) {
+        if (isSrAlgorithm(mAlgorithm)) {
             boolean initResultTSRPass = mTSRPass.init(mFrameWidth, mFrameHeight, mSrRatio);
             if (!initResultTSRPass) {
                 runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                        String.format("TSRPass初始化失败。"),
+                        String.format("TSRPass initialization failed."),
                         (dialogInterface, i) -> {}));
-
             }
-        } else if (algorithm.startsWith("增强")) {
+        } else if (mAlgorithm == Algorithm.IE_PRO_FAST || mAlgorithm == Algorithm.IE_PRO_HQ) {
             boolean initResultTIEPass = mTIEPass.init(mFrameWidth, mFrameHeight);
             if (!initResultTIEPass) {
                 runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                        String.format("TIEPass快速初始化失败。"),
+                        String.format("TIEPass initialization failed."),
                         (dialogInterface, i) -> {}));
-
             }
         }
 
-        String cmpAlgorithm = mCompareAlgorithm;
-        if (!TextUtils.isEmpty(cmpAlgorithm)) {
-            if ("超分播放(标准版)".equals(cmpAlgorithm)) {
-                mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
-            } else if ("超分播放(标准版+增强参数)".equals(cmpAlgorithm)) {
-                mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
-                // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
-                // Here we set these parameters to slightly enhance the image.
-                mTSRPassCmp.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
-            } else if ("超分播放(专业版-低算力)".equals(cmpAlgorithm)) {
-                mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_FAST);
-            } else if ("超分播放(专业版-高算力)".equals(cmpAlgorithm)) {
-                mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-            } else if ("增强播放(专业版-低算力)".equals(cmpAlgorithm)) {
-                mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_FAST);
-            } else if ("增强播放(专业版-高算力)".equals(cmpAlgorithm)) {
-                mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
+        if (mCompareAlgorithm == Algorithm.SR_STD) {
+            mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
+        } else if (mCompareAlgorithm == Algorithm.SR_STD_EH) {
+            mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
+            // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
+            // Here we set these parameters to slightly enhance the image.
+            mTSRPassCmp.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
+        } else if (mCompareAlgorithm == Algorithm.SR_PRO_FAST) {
+            mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_FAST);
+        } else if (mCompareAlgorithm == Algorithm.SR_PRO_HQ) {
+            mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
+        } else if (mCompareAlgorithm == Algorithm.IE_PRO_FAST) {
+            mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_FAST);
+        } else if (mCompareAlgorithm == Algorithm.IE_PRO_HQ) {
+            mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
+        }
+
+        if (isSrAlgorithm(mCompareAlgorithm)) {
+            boolean initResultTSRPass = mTSRPassCmp.init(mFrameWidth, mFrameHeight, mSrRatio);
+            if (!initResultTSRPass) {
+                runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                        String.format("TSRPass initialization failed."),
+                        (dialogInterface, i) -> {}));
             }
-
-            if (cmpAlgorithm.startsWith("超分")) {
-                boolean initResultTSRPass = mTSRPassCmp.init(mFrameWidth, mFrameHeight, mSrRatio);
-                if (!initResultTSRPass) {
-                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                            String.format("TSRPass初始化失败。"),
-                            (dialogInterface, i) -> {}));
-
-                }
-            } else if (cmpAlgorithm.startsWith("增强")) {
-                boolean initResultTIEPass = mTIEPassCmp.init(mFrameWidth, mFrameHeight);
-                if (!initResultTIEPass) {
-                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                            String.format("TIEPass快速初始化失败。"),
-                            (dialogInterface, i) -> {}));
-
-                }
+        } else if (mCompareAlgorithm == Algorithm.IE_PRO_FAST || mCompareAlgorithm == Algorithm.IE_PRO_HQ) {
+            boolean initResultTIEPass = mTIEPassCmp.init(mFrameWidth, mFrameHeight);
+            if (!initResultTIEPass) {
+                runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                        String.format("TIEPass initialization failed."),
+                        (dialogInterface, i) -> {}));
             }
         }
 
@@ -487,7 +544,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         Matcher matcher = pattern.matcher(openglEsVersion);
         if (matcher.find() && Float.parseFloat(matcher.group()) < 3.1) {
             runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                    String.format("当前设备OpenGL ES版本过低，为%s。\nTSRSDK需要OpenGL ES 3.1及以上才能正常运行。",
+                    String.format("The current device's OpenGL ES version is too low, which is %s.\nTSRSDK requires OpenGL ES 3.1 or above to run properly.",
                             openglEsVersion),
                     (dialogInterface, i) -> finish()));
             return;
@@ -543,21 +600,21 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         /* Step 3: Pass the input texture's id to TSRPass or TIEPass, and get the output texture's id. The output
         texture is the result of super-resolution or image enhance.*/
         switch (mAlgorithm) {
-            case "普通播放":
+            case NORMAL:
                 processTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D);
                 break;
-            case "超分播放(标准版)":
-            case "超分播放(标准版+增强参数)":
-            case "超分播放(专业版-高算力)":
-            case "超分播放(专业版-低算力)":
+            case SR_STD:
+            case SR_STD_EH:
+            case SR_PRO_HQ:
+            case SR_PRO_FAST:
                 if (mTSRPass == null) {
                     Log.w(TAG, "mTSRPass is null!");
                     break;
                 }
                 processTextureId = mTSRPass.render(tex2dId);
                 break;
-            case "增强播放(专业版-低算力)":
-            case "增强播放(专业版-高算力)":
+            case IE_PRO_FAST:
+            case IE_PRO_HQ:
                 if (mTIEPass == null) {
                     Log.w(TAG, "mTIEPass is null!");
                     break;
@@ -575,10 +632,10 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         } else {
             // Render the processed frames to screen
             switch (mCompareAlgorithm) {
-                case "不对比":
+                case NONE:
                     mVideoFrameDrawer.draw(processTextureId);
                     break;
-                case "普通播放":
+                case NORMAL:
                     if (mBilinearRenderPass == null) {
                         Log.w(TAG, "mBilinearRenderPass is null!");
                         mVideoFrameDrawer.draw(processTextureId);
@@ -587,10 +644,10 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     cmpTextureId = mBilinearRenderPass.render(tex2dId, GLES30.GL_TEXTURE_2D);
                     mCompareTexDrawer.draw(processTextureId, cmpTextureId);
                     break;
-                case "超分播放(标准版)":
-                case "超分播放(标准版+增强参数)":
-                case "超分播放(专业版-高算力)":
-                case "超分播放(专业版-低算力)":
+                case SR_STD:
+                case SR_STD_EH:
+                case SR_PRO_HQ:
+                case SR_PRO_FAST:
                     if (mTSRPassCmp == null) {
                         Log.w(TAG, "mTSRPassCmp is null!");
                         mVideoFrameDrawer.draw(processTextureId);
@@ -599,8 +656,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     cmpTextureId = mTSRPassCmp.render(tex2dId);
                     mCompareTexDrawer.draw(processTextureId, cmpTextureId);
                     break;
-                case "增强播放(专业版-高算力)":
-                case "增强播放(专业版-低算力)":
+                case IE_PRO_HQ:
+                case IE_PRO_FAST:
                     if (mTIEPassCmp == null) {
                         Log.w(TAG, "mTIEPass is null!");
                         mVideoFrameDrawer.draw(processTextureId);
@@ -622,12 +679,12 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         if (fpsData != null) {
             runOnUiThread(() -> {
                 Log.v(TAG, "fps = " + fpsData.getFps() + ", avg fps = " + fpsData.getAvgFps());
-                // 显示fps
+                // show fps
                 TextView fpsView = findViewById(R.id.fps);
                 String fps = "FPS: " + (int) fpsData.getFps();
                 fpsView.setText(fps);
 
-                // 显示平均fps
+                // show avg fps
                 TextView avgFpsView = findViewById(R.id.avgFps);
                 String avgFps = "AVG_FPS: " + (int) fpsData.getAvgFps();
                 avgFpsView.setText(avgFps);
@@ -708,7 +765,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         }
     }
 
-    private void initView(boolean isRecordVideo, String srAlgorithm, String cmpAlgorithm) {
+    private void initView(boolean isRecordVideo, Algorithm srAlgorithm, Algorithm cmpAlgorithm) {
         if (!isRecordVideo) {
             // Init playControllerButton
             Button playControlButton = findViewById(R.id.playControlButton);
@@ -724,7 +781,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             });
 
             Button switchSRButton = findViewById(R.id.switchSRButton);
-            if ("不对比".equals(mCompareAlgorithm)) {
+            if (mCompareAlgorithm == Algorithm.NONE) {
                 switchSRButton.setOnClickListener(view -> {
                     if (mIsTurnOffSR) {
                         mAlgorithm = mSwitchAlgorithm;
@@ -732,7 +789,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                         switchSRButton.setText(R.string.turn_off_sr);
                     } else {
                         mSwitchAlgorithm = mAlgorithm;
-                        mAlgorithm = "普通播放";
+                        mAlgorithm = Algorithm.NORMAL;
                         mIsTurnOffSR = true;
                         switchSRButton.setText(R.string.turn_on_sr);
                     }
@@ -746,12 +803,12 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         TextView cmp = findViewById(R.id.cmp_algorithm);
 
         // Whether to compare bilinear
-        if ("不对比".equals(cmpAlgorithm)) {
+        if (cmpAlgorithm == Algorithm.NONE) {
             sr.setVisibility(View.INVISIBLE);
             cmp.setVisibility(View.INVISIBLE);
         } else {
-            sr.setText(srAlgorithm);
-            cmp.setText(cmpAlgorithm);
+            sr.setText(srAlgorithm.toString());
+            cmp.setText(cmpAlgorithm.toString());
         }
 
         mGLSurfaceView = new GLSurfaceView(mContext);
@@ -817,8 +874,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     }
 
     private void dumpFrame(int textureId) {
-        if ("超分播放(标准版)".equals(mAlgorithm) || "普通播放".equals(mAlgorithm)
-                || "超分播放(标准版+增强参数)".equals(mAlgorithm)) {
+        if (mAlgorithm == Algorithm.SR_STD || mAlgorithm == Algorithm.NORMAL ||
+                mAlgorithm == Algorithm.SR_STD_EH) {
             mMediaRecorder.encodeFrame(textureId, System.nanoTime());
             if (mPlayFrameCount == mVideoFrameCount) {
                 mMediaRecorder.stop();
@@ -828,7 +885,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                 mMediaRecorder.encodeFrame(textureId, System.nanoTime());
                 if (mPlayFrameCount == mVideoFrameCount) {
                     int lastId = -1;
-                    if (mAlgorithm.startsWith("超分")) {
+                    if (isSrAlgorithm(mAlgorithm)) {
                         lastId = mTSRPass.render(textureId);
                     } else {
                         lastId = mTIEPass.render(textureId);
@@ -849,13 +906,13 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
 
     private void initParamSettingView() {
         mBrightnessRadioButton = findViewById(R.id.radio_btn_brightness);
-        mBrightnessRadioButton.setText("明亮度:" + (int) mBrightness);
+        mBrightnessRadioButton.setText(getString(R.string.brightness) + ":" + (int) mBrightness);
         mSaturationRadioButton = findViewById(R.id.radio_btn_saturation);
-        mSaturationRadioButton.setText("饱和度:" + (int) mSaturation);
+        mSaturationRadioButton.setText(getString(R.string.saturation) + ":" + (int) mSaturation);
         mContrastRadioButton = findViewById(R.id.radio_btn_contrast);
-        mContrastRadioButton.setText("对比度:" + (int) mContrast);
+        mContrastRadioButton.setText(getString(R.string.contrast) + ":" + (int) mContrast);
         mSharpnessRadioButton = findViewById(R.id.radio_btn_sharpness);
-        mSharpnessRadioButton.setText("锐化度:" + (int) mSharpness);
+        mSharpnessRadioButton.setText(getString(R.string.sharpness) + ":"  + (int) mSharpness);
         mParamsSettingCheckBox = findViewById(R.id.color_setting);
         LinearLayout layout = findViewById(R.id.color_setting_view);
         mParamsSettingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -899,14 +956,60 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mTSRPass.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
         }
         runOnUiThread(() -> {
-            mBrightnessRadioButton.setText("明亮度:" + (int) mBrightness);
-            mSaturationRadioButton.setText("饱和度:" + (int) mSaturation);
-            mContrastRadioButton.setText("对比度:" + (int) mContrast);
-            mSharpnessRadioButton.setText("锐化度:" + (int) mSharpness);
+            mBrightnessRadioButton.setText(getString(R.string.brightness) + ":"  + (int) mBrightness);
+            mSaturationRadioButton.setText(getString(R.string.saturation) + ":"  + (int) mSaturation);
+            mContrastRadioButton.setText(getString(R.string.contrast) + ":"  + (int) mContrast);
+            mSharpnessRadioButton.setText(getString(R.string.sharpness) + ":"  + (int) mSharpness);
         });
     }
 
     private float standardValue(float value) {
         return Math.max((float) 0, Math.min((float) 100, value)); // 限制value在0和100之间
+    }
+
+    private boolean isSrAlgorithm(Algorithm algorithm) {
+        return algorithm == Algorithm.SR_STD || algorithm == Algorithm.SR_STD_EH ||
+                algorithm == Algorithm.SR_PRO_HQ || algorithm == Algorithm.SR_PRO_FAST;
+    }
+
+    public enum Algorithm {
+        NONE, // no render
+        NORMAL, // render directly
+        SR_STD, // Super-Resolution(STD)
+        SR_STD_EH, // Super-Resolution(STD-Enhanced Params)
+        SR_PRO_HQ, // Super-Resolution(PRO-High Quality)
+        SR_PRO_FAST, // Super-Resolution(PRO-Fast)
+        IE_PRO_HQ, // Enhanced(PRO-High Quality)
+        IE_PRO_FAST; // Enhanced(PRO-Fast)
+
+        private String description;
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return description;
+        }
+
+        public static void initializeDescriptions(Context context) {
+            Resources res = context.getResources();
+            String[] descriptions = res.getStringArray(R.array.compare_algorithm);
+
+            if (descriptions.length >= Algorithm.values().length) {
+                Algorithm.NONE.setDescription(descriptions[0]);
+                Algorithm.NORMAL.setDescription(descriptions[1]);
+                Algorithm.SR_STD.setDescription(descriptions[2]);
+                Algorithm.SR_STD_EH.setDescription(descriptions[3]);
+                Algorithm.SR_PRO_HQ.setDescription(descriptions[4]);
+                Algorithm.SR_PRO_FAST.setDescription(descriptions[5]);
+                Algorithm.IE_PRO_HQ.setDescription(descriptions[6]);
+                Algorithm.IE_PRO_FAST.setDescription(descriptions[7]);
+            } else {
+                throw new IllegalStateException("The array length in arrays.xml does not match the number of enum constants.");
+            }
+        }
     }
 }
