@@ -55,8 +55,12 @@ For example, in a cloud gaming scenario, by utilizing the real-time video super-
 <img src=docs/scenario_case_game.png width=80% />
 
 ## 4. Compatibility
-* Standard Edition: Android 5.0 and above; iPhone 5s and iOS 12 and above. High device compatibility rate.
-* Professional Edition: Android 5.0 and above; low computing power (FAST) algorithm iOS 15 and above, high computing power (HIGH_QUALITY) algorithm iOS 16 and above.
+* Standard Edition:
+  - Android 5.0 and above;
+  - iPhone 5s and iOS 12 and above. High device compatibility rate.
+* Professional Edition:
+  - Android 5.0 and above;
+  - iOS: low computing power (FAST) algorithm iOS 15 and above, high computing power (HIGH_QUALITY) algorithm iOS 16 and above.
 
 ## 5. Package Size
 * Standard Edition: Android AAR about 0.3MB (single arm64-v8a architecture); iOS Framework 0.4MB.
