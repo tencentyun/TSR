@@ -143,6 +143,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private RadioButton mSharpnessRadioButton;
     private CheckBox mParamsSettingCheckBox;
 
+
     private void prepareDecoder() {
         // Initialize the decoder
         try {
@@ -482,18 +483,52 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         }
 
         if (isSrAlgorithm(mAlgorithm)) {
-            boolean initResultTSRPass = mTSRPass.init(mFrameWidth, mFrameHeight, mSrRatio);
-            if (!initResultTSRPass) {
-                runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                        String.format("TSRPass initialization failed."),
-                        (dialogInterface, i) -> {}));
+            TSRPass.TSRInitStatusCode error = mTSRPass.init(mFrameWidth, mFrameHeight, mSrRatio);
+            String errorMsg = "";
+            switch (error) {
+                case SUCCESS:
+                    Log.i(TAG, "TSRPass init success.");
+                    break;
+                case OPENGL_ES_VERSION_LOWER_THAN_3_1:
+                case SDK_LICENSE_STATUS_NOT_AVAILABLE:
+                case ALGORITHM_TYPE_INVALID:
+                case ML_MODEL_INIT_FAILED:
+                case INPUT_RESOLUTION_INVALID:
+                case INSTANCE_NOT_EXIST:
+                    errorMsg = "TSRPass initialization failed. " + error.getDescription();
+                    String finalErrorMsg = errorMsg;
+                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                            String.format(finalErrorMsg),
+                            (dialogInterface, i) -> {}));
+                    break;
+                default:
+                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                            String.format("Unknown error"),
+                            (dialogInterface, i) -> {}));
             }
         } else if (mAlgorithm == Algorithm.IE_PRO_FAST || mAlgorithm == Algorithm.IE_PRO_HQ) {
-            boolean initResultTIEPass = mTIEPass.init(mFrameWidth, mFrameHeight);
-            if (!initResultTIEPass) {
-                runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                        String.format("TIEPass initialization failed."),
-                        (dialogInterface, i) -> {}));
+            TIEPass.TIEInitStatusCode error = mTIEPass.init(mFrameWidth, mFrameHeight);
+            String errorMsg = "";
+            switch (error) {
+                case SUCCESS:
+                    Log.i(TAG, "TIEPass init success.");
+                    break;
+                case OPENGL_ES_VERSION_LOWER_THAN_3_1:
+                case SDK_LICENSE_STATUS_NOT_AVAILABLE:
+                case ALGORITHM_TYPE_INVALID:
+                case ML_MODEL_INIT_FAILED:
+                case INPUT_RESOLUTION_INVALID:
+                case INSTANCE_NOT_EXIST:
+                    errorMsg = "TIEPass initialization failed. " + error.getDescription();
+                    String finalErrorMsg = errorMsg;
+                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                            String.format(finalErrorMsg),
+                            (dialogInterface, i) -> {}));
+                    break;
+                default:
+                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                            String.format("Unknown error"),
+                            (dialogInterface, i) -> {}));
             }
         }
 
@@ -515,18 +550,53 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         }
 
         if (isSrAlgorithm(mCompareAlgorithm)) {
-            boolean initResultTSRPass = mTSRPassCmp.init(mFrameWidth, mFrameHeight, mSrRatio);
-            if (!initResultTSRPass) {
-                runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                        String.format("TSRPass initialization failed."),
-                        (dialogInterface, i) -> {}));
+            TSRPass.TSRInitStatusCode error = mTSRPassCmp.init(mFrameWidth, mFrameHeight, mSrRatio);
+            String errorMsg = "";
+            switch (error) {
+                case SUCCESS:
+                    Log.i(TAG, "TSRPass init success.");
+                    break;
+                case OPENGL_ES_VERSION_LOWER_THAN_3_1:
+                case SDK_LICENSE_STATUS_NOT_AVAILABLE:
+                case ALGORITHM_TYPE_INVALID:
+                case ML_MODEL_INIT_FAILED:
+                case INPUT_RESOLUTION_INVALID:
+                case INSTANCE_NOT_EXIST:
+                    errorMsg = "TSRPass initialization failed. " + error.getDescription();
+                    String finalErrorMsg = errorMsg;
+                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                            String.format(finalErrorMsg),
+                            (dialogInterface, i) -> {}));
+                    break;
+                default:
+                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                            String.format("Unknown error"),
+                            (dialogInterface, i) -> {}));
             }
+
         } else if (mCompareAlgorithm == Algorithm.IE_PRO_FAST || mCompareAlgorithm == Algorithm.IE_PRO_HQ) {
-            boolean initResultTIEPass = mTIEPassCmp.init(mFrameWidth, mFrameHeight);
-            if (!initResultTIEPass) {
-                runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                        String.format("TIEPass initialization failed."),
-                        (dialogInterface, i) -> {}));
+            TIEPass.TIEInitStatusCode error = mTIEPassCmp.init(mFrameWidth, mFrameHeight);
+            String errorMsg = "";
+            switch (error) {
+                case SUCCESS:
+                    Log.i(TAG, "TIEPass init success.");
+                    break;
+                case OPENGL_ES_VERSION_LOWER_THAN_3_1:
+                case SDK_LICENSE_STATUS_NOT_AVAILABLE:
+                case ALGORITHM_TYPE_INVALID:
+                case ML_MODEL_INIT_FAILED:
+                case INPUT_RESOLUTION_INVALID:
+                case INSTANCE_NOT_EXIST:
+                    errorMsg = "TIEPass initialization failed. " + error.getDescription();
+                    String finalErrorMsg = errorMsg;
+                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                            String.format(finalErrorMsg),
+                            (dialogInterface, i) -> {}));
+                    break;
+                default:
+                    runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
+                            String.format("Unknown error"),
+                            (dialogInterface, i) -> {}));
             }
         }
 
@@ -540,7 +610,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     (dialogInterface, i) -> finish()));
             return;
         }
-
 
         if (mCompareTexDrawer != null) {
             mCompareTexDrawer.onSurfaceChanged(width, height);
@@ -721,13 +790,44 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         if (mMediaRecorder != null) {
             mMediaRecorder = null;
         }
+
+        // 停止 HandlerThread 的消息循环
+        if (mHandlerThread != null) {
+            mHandlerThread.quitSafely();
+            try {
+                mHandlerThread.join();
+            } catch (InterruptedException e) {
+                Log.e(TAG, Objects.requireNonNull(e.getMessage()));
+            }
+            mHandlerThread = null;
+        }
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
-        if (mHandlerThread != null) {
-            mHandlerThread.quit();
-            mHandlerThread = null;
+        if (mMediaCodec != null) {
+            mMediaCodec.release();
+            mMediaCodec = null;
+        }
+        if (mExtractor != null) {
+            mExtractor.release();
+            mExtractor = null;
+        }
+        if (mSurfaceTexture != null) {
+            mSurfaceTexture.release();
+            mSurfaceTexture = null;
+        }
+        if (mInputTexture != null) {
+            mInputTexture.release();
+            mInputTexture = null;
+        }
+        if (mCompareTexDrawer != null) {
+            mCompareTexDrawer.release();
+            mCompareTexDrawer = null;
+        }
+        if (mVideoFrameDrawer != null) {
+            mVideoFrameDrawer.release();
+            mVideoFrameDrawer = null;
         }
         FpsUtil.reset();
         TSRSdk.getInstance().deInit();

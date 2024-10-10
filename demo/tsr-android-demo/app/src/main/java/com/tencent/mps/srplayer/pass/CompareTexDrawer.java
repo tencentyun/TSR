@@ -260,4 +260,39 @@ public class CompareTexDrawer {
         nums[i] = nums[j];
         nums[j] = tmp;
     }
+
+    /**
+     * Release OpenGL resources.
+     */
+    public void release() {
+        if (mProgram != -1) {
+            GLES20.glDeleteProgram(mProgram);
+            mProgram = -1;
+        }
+
+        // 解绑纹理
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+
+        // 禁用顶点属性数组
+        if (mVertexPosHandler != -1) {
+            GLES20.glDisableVertexAttribArray(mVertexPosHandler);
+            mVertexPosHandler = -1;
+        }
+
+        if (mTexturePosHandler != -1) {
+            GLES20.glDisableVertexAttribArray(mTexturePosHandler);
+            mTexturePosHandler = -1;
+        }
+
+        // 清空缓冲区
+        if (mVertexBuffer != null) {
+            mVertexBuffer.clear();
+            mVertexBuffer = null;
+        }
+
+        if (mTextureBuffer != null) {
+            mTextureBuffer.clear();
+            mTextureBuffer = null;
+        }
+    }
 }

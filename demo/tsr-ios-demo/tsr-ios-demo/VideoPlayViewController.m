@@ -27,6 +27,58 @@
     }
 }
 
+-(void)checkTSRPassInitStatus:(TSRInitStatusCode)initStatus {
+    switch (initStatus) {
+        case TSRInitStatusCodeSuccess:
+            NSLog(@"Initialization successful.");
+            break;
+        case TSRInitStatusCodeMetalInitFailed:
+            NSLog(@"Metal initialization failed, fallback to normal playback.");
+            break;
+        case TSRInitStatusCodeSDKLicenseStatusNotAvailable:
+            NSLog(@"SDK license verification failed or was not verified, fallback to normal playback.");
+            break;
+        case TSRInitStatusCodeAlgorithmTypeInvalid:
+            NSLog(@"The initialization parameter TSRAlgorithmType is invalid, fallback to normal playback.");
+            break;
+        case TSRInitStatusCodeMLModelInitFailed:
+            NSLog(@"Machine learning model module initialization failed, fallback to TSRAlgorithmType.STANDARD.");
+            break;
+        case TSRInitStatusCodeInputResolutionInvalid:
+            NSLog(@"The input resolution is invalid; it must be between [1, 4096].");
+            break;
+        default:
+            NSLog(@"Unknown error");
+            break;
+    }
+}
+
+-(void)checkTIEPassInitStatus:(TIEInitStatusCode)initStatus {
+    switch (initStatus) {
+        case TIEInitStatusCodeSuccess:
+            NSLog(@"Initialization successful.");
+            break;
+        case TIEInitStatusCodeMetalInitFailed:
+            NSLog(@"Metal initialization failed, fallback to normal playback.");
+            break;
+        case TIEInitStatusCodeSDKLicenseStatusNotAvailable:
+            NSLog(@"SDK license verification failed or was not verified, fallback to normal playback.");
+            break;
+        case TIEInitStatusCodeAlgorithmTypeInvalid:
+            NSLog(@"The initialization parameter TSRAlgorithmType is invalid, fallback to normal playback.");
+            break;
+        case TIEInitStatusCodeMLModelInitFailed:
+            NSLog(@"Machine learning model module initialization failed, fallback to normal playback.");
+            break;
+        case TIEInitStatusCodeInputResolutionInvalid:
+            NSLog(@"The input resolution is invalid; it must be between [1, 4096].");
+            break;
+        default:
+            NSLog(@"Unknown error");
+            break;
+    }
+}
+
 -(void)createTSRPassAndTIEPass {
     NSLog(@"inputWidth = %d, inputHeight = %d", (int)_videoSize.width, (int)_videoSize.height);
 
@@ -34,18 +86,27 @@
     srTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
     _sr_texture = [_device newTextureWithDescriptor:srTextureDescriptor];
     
-    _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+    TSRInitStatusCode initStatus;
     
-    _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+    _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+    
+    [self checkTSRPassInitStatus:initStatus];
+    
+    _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+    [self checkTSRPassInitStatus:initStatus];
 
-    _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+    _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+    [self checkTSRPassInitStatus:initStatus];
     
     MTLTextureDescriptor *ieTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
     ieTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
     
     _ie_texture = [_device newTextureWithDescriptor:ieTextureDescriptor];
-    _tie_pass_fast = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalFast];
-    _tie_pass_high_quality = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalHighQuality];
+    TIEInitStatusCode tieInitStatus;
+    _tie_pass_fast = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalFast initStatusCode:&tieInitStatus];
+    [self checkTIEPassInitStatus:tieInitStatus];
+    _tie_pass_high_quality = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalHighQuality initStatusCode:&tieInitStatus];
+    [self checkTIEPassInitStatus:tieInitStatus];
     
     _srCreateDone = true;
 }
@@ -56,7 +117,7 @@
         _srRatio = srRatio;
         _algorithm = algorithm;
 
-        // Initialize the Metal device and command queue
+        // 初始化Metal设备和命令队列
         id<MTLDevice>device = MTLCreateSystemDefaultDevice();
         _device = device;
         _commandQueue = [device newCommandQueue];
@@ -95,17 +156,21 @@
             rect = CGRectMake(0, 0, viewWidth / 3, viewHeight / 3);
         }
         
-        // configure MTKView
+        // 设置MTKView
         _mtkView = [[MTKView alloc] initWithFrame:rect device:device];
         _mtkView.delegate = self;
         _mtkView.framebufferOnly = NO;
         [self.view addSubview:_mtkView];
         
         [self verifyTSRLicense];
-
+        
+        // 设置UI
         [self setUI];
-
+        
+        // 创建渲染管线
         [self setupRenderPipeline];
+        
+
     }
     return self;
 }
@@ -144,7 +209,7 @@
         return;
     }
     
-    // Get the current video frame
+    // 获取当前视频帧
     CMTime currentTime = _player.currentItem.currentTime;
     CVPixelBufferRef pixelBuffer = [_videoOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
     if (!pixelBuffer) {
@@ -161,22 +226,39 @@
     
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
     
-    // Create a command buffer
+    // 创建命令缓冲区
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
 
-    if ([_algorithm isEqualToString:@"Enhanced(PRO-Fast)"]) {
+    if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"]) {
         _ie_texture = [_tie_pass_fast render:_in_texture commandBuffer:commandBuffer];
-    } else if ([_algorithm isEqualToString:@"Enhanced(PRO-High Quality)"]) {
+    } else if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
         _ie_texture = [_tie_pass_high_quality render:_in_texture commandBuffer:commandBuffer];
-    } else if ([_algorithm isEqualToString:@"Super-Resolution(STD)"]) {
+    } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
         _sr_texture = [_tsr_pass_standard render:_in_texture commandBuffer:commandBuffer];
-    } else if ([_algorithm isEqualToString:@"Super-Resolution(PRO-Fast)"]){
+    } else if ([_algorithm isEqualToString:@"超分播放(专业版-低算力)"]){
         _sr_texture = [_tsr_pass_professional_fast render:_in_texture commandBuffer:commandBuffer];
-    } else if ([_algorithm isEqualToString:@"Super-Resolution(PRO-High Quality)"]){
+    } else if ([_algorithm isEqualToString:@"超分播放(专业版-高算力)"]){
         _sr_texture = [_tsr_pass_professional_high_quality render:_in_texture commandBuffer:commandBuffer];
     }
+
+//    if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"]) {
+//        CVPixelBufferRef pb = [_tie_pass_fast renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+//    } else if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
+//        CVPixelBufferRef pb = [_tie_pass_high_quality renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+//    } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
+//        CVPixelBufferRef pb = [_tsr_pass_standard renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-低算力)"]){
+//        CVPixelBufferRef pb = [_tsr_pass_professional_fast renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-高算力)"]){
+//        CVPixelBufferRef pb = [_tsr_pass_professional_high_quality renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+//    }
     
-    // Create a render encoder
+    // 创建渲染编码器
     MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
     renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
     renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
@@ -185,27 +267,29 @@
     
     id<MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
     
-    // Set the render pipeline state
+    // 设置渲染管道状态
     [renderEncoder setRenderPipelineState:_pipelineState];
     
-    // set texture
-    if ([_algorithm isEqualToString:@"Enhanced(PRO-Fast)"] || [_algorithm isEqualToString:@"Enhanced(PRO-High Quality)"]) {
+    // 设置纹理
+    if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"] || [_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
         [renderEncoder setFragmentTexture:_ie_texture atIndex:0];
-    } else if ([_algorithm isEqualToString:@"Normal"]) {
+    } else if ([_algorithm isEqualToString:@"普通播放"]) {
         [renderEncoder setFragmentTexture:_in_texture atIndex:0];
     } else {
         [renderEncoder setFragmentTexture:_sr_texture atIndex:0];
     }
     
-    // render
+    // 绘制
     [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
-
+    
+    // 结束编码
     [renderEncoder endEncoding];
-
+    
+    // 提交命令
     [commandBuffer presentDrawable:drawable];
     [commandBuffer commit];
     
-    // Release resources
+    // 释放资源
     CVPixelBufferRelease(pixelBuffer);
 }
 
@@ -240,7 +324,7 @@
     
     _player = [AVPlayer playerWithPlayerItem:playerItem];
     
-    // Add playback completion notification
+    //添加播放完成通知
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(runLoopTheMovie:) name:AVPlayerItemDidPlayToEndTimeNotification object:_player.currentItem];
     
     return videoSize;
@@ -259,76 +343,76 @@
     
     [self.view addSubview:_mtkView];
     
-    // Create play/pause button
+    // 创建播放/暂停按钮
     self.playPauseButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.playPauseButton setTitle:@"play/pause" forState:UIControlStateNormal];
+    [self.playPauseButton setTitle:@"播放/暂停" forState:UIControlStateNormal];
     [self.playPauseButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.playPauseButton addTarget:self action:@selector(togglePlayPause:) forControlEvents:UIControlEventTouchUpInside];
     self.playPauseButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
 
-    // Create Pro SR button
+    // 创建 Pro SR 按钮
     self.proSRFastButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.proSRFastButton setTitle:@"Super-Resolution(PRO-Fast)" forState:UIControlStateNormal];
+    [self.proSRFastButton setTitle:@"超分播放(专业版-低算力)" forState:UIControlStateNormal];
     [self.proSRFastButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.proSRFastButton addTarget:self action:@selector(proSRFastButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.proSRFastButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
     
     self.proSRHighQualityButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.proSRHighQualityButton setTitle:@"Super-Resolution(PRO-High Quality)" forState:UIControlStateNormal];
+    [self.proSRHighQualityButton setTitle:@"超分播放(专业版-高算力)" forState:UIControlStateNormal];
     [self.proSRHighQualityButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.proSRHighQualityButton addTarget:self action:@selector(proSRHighQualityButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.proSRHighQualityButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
 
-    // Create Pro IE button
+    // 创建 Pro IE 按钮
     self.proIEFastButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.proIEFastButton setTitle:@"Enhanced(PRO-Fast)" forState:UIControlStateNormal];
+    [self.proIEFastButton setTitle:@"增强播放(专业版-低算力)" forState:UIControlStateNormal];
     [self.proIEFastButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.proIEFastButton addTarget:self action:@selector(proIEFastButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.proIEFastButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
     
     self.proIEHighQualityButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.proIEHighQualityButton setTitle:@"Enhanced(PRO-High Quality)" forState:UIControlStateNormal];
+    [self.proIEHighQualityButton setTitle:@"增强播放(专业版-高算力)" forState:UIControlStateNormal];
     [self.proIEHighQualityButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.proIEHighQualityButton addTarget:self action:@selector(proIEHighQualityButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.proIEHighQualityButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
 
-    // Create playDirectly button
+    // 创建 playDirectly 按钮
     self.playDirectlyButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.playDirectlyButton setTitle:@"Normal" forState:UIControlStateNormal];
+    [self.playDirectlyButton setTitle:@"普通播放" forState:UIControlStateNormal];
     [self.playDirectlyButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.playDirectlyButton addTarget:self action:@selector(playDirectlyButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.playDirectlyButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
 
-    // Create Standard SR button
+    // 创建 Standard SR 按钮
     self.standardSRButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.standardSRButton setTitle:@"Super-Resolution(STD)" forState:UIControlStateNormal];
+    [self.standardSRButton setTitle:@"超分播放(标准版)" forState:UIControlStateNormal];
     [self.standardSRButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.standardSRButton addTarget:self action:@selector(standardSRButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.standardSRButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
 
-    // Get the screen width and height
+    // 获取屏幕的宽度和高度
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
 
-    // Calculate the position and size of the button
+    // 计算按钮的位置和大小
     CGFloat buttonWidth = 150;
     CGFloat buttonHeight = 50;
-    CGFloat buttonY = screenHeight - buttonHeight - 20;
+    CGFloat buttonY = screenHeight - buttonHeight - 20; // 20是按钮距离底部的间距
 
-    // Set the position and size of the play/pause button
-    CGFloat playPauseButtonX = (screenWidth - buttonWidth * 2) / 3;
+    // 设置播放/暂停按钮的位置和大小
+    CGFloat playPauseButtonX = (screenWidth - buttonWidth * 2) / 3; // 计算播放/暂停按钮的 X 坐标
     self.playPauseButton.frame = CGRectMake(playPauseButtonX, buttonY, buttonWidth, buttonHeight);
 
-    // Set the position and size of the text toggle button
-    CGFloat algorithmSwitchButtonX = playPauseButtonX * 2 + buttonWidth;
+    // 设置文本切换按钮的位置和大小
+    CGFloat algorithmSwitchButtonX = playPauseButtonX * 2 + buttonWidth; // 计算文本切换按钮的 X 坐标
 
-    if ([_algorithm isEqualToString:@"Enhanced(PRO-High Quality)"] || [_algorithm isEqualToString:@"Enhanced(PRO-Fast)"] || [_algorithm isEqualToString:@"Normal"]) {
+    if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"] || [_algorithm isEqualToString:@"增强播放(专业版-低算力)"] || [_algorithm isEqualToString:@"普通播放"]) {
         self.proIEHighQualityButton.frame = CGRectMake(algorithmSwitchButtonX, buttonY, buttonWidth, buttonHeight);
         
-        CGFloat ieFastButtonY = buttonY - buttonHeight - 20;
+        CGFloat ieFastButtonY = buttonY - buttonHeight - 20; // 在 srSwitchButton 上方 40 个点
         self.proIEFastButton.frame = CGRectMake(algorithmSwitchButtonX, ieFastButtonY, buttonWidth, buttonHeight);
 
-        CGFloat playDirectlyButtonY = ieFastButtonY - buttonHeight - 20;
+        CGFloat playDirectlyButtonY = ieFastButtonY - buttonHeight - 20; // 在 srSwitchButton 上方 40 个点
         self.playDirectlyButton.frame = CGRectMake(algorithmSwitchButtonX, playDirectlyButtonY, buttonWidth, buttonHeight);
 
         [self.view addSubview:self.proIEHighQualityButton];
@@ -340,12 +424,12 @@
         CGFloat proSRFastButtonY = buttonY - buttonHeight - 20;
         self.proSRFastButton.frame = CGRectMake(algorithmSwitchButtonX, proSRFastButtonY, buttonWidth, buttonHeight);
 
-        // Set the position and size of the Standard SR button
-        CGFloat standardSRButtonY = proSRFastButtonY - buttonHeight - 20;
+        // 设置 Standard SR 按钮的位置和大小
+        CGFloat standardSRButtonY = proSRFastButtonY - buttonHeight - 20; // 在 srSwitchButton 上方 20 个点
         self.standardSRButton.frame = CGRectMake(algorithmSwitchButtonX, standardSRButtonY, buttonWidth, buttonHeight);
 
-        // Set the position and size of the playDirectly button
-        CGFloat playDirectlyButtonY = standardSRButtonY - buttonHeight - 20;
+        // 设置 playDirectly 按钮的位置和大小
+        CGFloat playDirectlyButtonY = standardSRButtonY - buttonHeight - 20; // 在 srSwitchButton 上方 40 个点
         self.playDirectlyButton.frame = CGRectMake(algorithmSwitchButtonX, playDirectlyButtonY, buttonWidth, buttonHeight);
 
         [self.view addSubview:self.proSRHighQualityButton];
@@ -354,41 +438,41 @@
         [self.view addSubview:self.standardSRButton];
     }
 
-    // Add the button to the view
+    // 将按钮添加到视图中
     [self.view addSubview:self.playPauseButton];
     
-    // Create a text box for the prompt message
+    // 创建提示信息的文本框
     self.infoLabel = [[UILabel alloc] init];
     self.infoLabel.text = _algorithm;
     self.infoLabel.textColor = [UIColor redColor];
     self.infoLabel.backgroundColor = [UIColor clearColor];
     [self.infoLabel sizeToFit];
-    // Set the position of the text box
-    CGFloat labelX = 20;
-    CGFloat labelY = 40;
-    CGFloat labelWidth = 200;
+    // 设置文本框的位置
+    CGFloat labelX = 20; // 距离屏幕左边的间距
+    CGFloat labelY = 40; // 距离屏幕顶部的间距
+    CGFloat labelWidth = 200; // 设置文本框的宽度
     CGFloat labelHeight = self.infoLabel.frame.size.height;
     self.infoLabel.frame = CGRectMake(labelX, labelY, labelWidth, labelHeight);
     [self.view addSubview:self.infoLabel];
 }
 
 - (void)addEdgePanGesture {
-    // Add edge pan gesture recognizer
+    // 添加滑动手势识别器
     UIScreenEdgePanGestureRecognizer *rightEdgePanGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleEdgePanGesture:)];
-    rightEdgePanGestureRecognizer.edges = UIRectEdgeRight; // Swipe from the right edge of the screen
+    rightEdgePanGestureRecognizer.edges = UIRectEdgeRight; // 从屏幕右边缘开始滑动
     [self.view addGestureRecognizer:rightEdgePanGestureRecognizer];
-
-    // Add edge pan gesture recognizer
+    
+    // 添加滑动手势识别器
     UIScreenEdgePanGestureRecognizer *leftEdgePanGestureRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleEdgePanGesture:)];
-    leftEdgePanGestureRecognizer.edges = UIRectEdgeLeft; // Swipe from the left edge of the screen
+    leftEdgePanGestureRecognizer.edges = UIRectEdgeLeft; // 从屏幕左边缘开始滑动
     [self.view addGestureRecognizer:leftEdgePanGestureRecognizer];
 }
 
 - (void)handleEdgePanGesture:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        // Close the current view controller and return to the previous view controller
+        // 关闭当前视图控制器并返回到上一层视图控制器
         [self dismissViewControllerAnimated:YES completion:^{
-            // Perform any operations needed after the view controller is closed
+            // 在这里执行您需要在视图控制器关闭后进行的操作
             [self.tsr_pass_standard deInit];
             [self.tsr_pass_professional_fast deInit];
             [self.tsr_pass_professional_high_quality deInit];
@@ -401,49 +485,49 @@
 
 - (void)togglePlayPause:(UIButton *)button {
     if (self.player.rate == 0) {
-        // If AVPlayer is currently paused, start playing
+        // 如果 AVPlayer 当前是暂停状态，开始播放
         [self.player play];
     } else {
-        // If AVPlayer is currently playing, pause playback
+        // 如果 AVPlayer 当前是播放状态，暂停播放
         [self.player pause];
     }
 }
 
-// Add event handler for playDirectly button
+// 添加 playDirectly 按钮的事件处理方法
 - (void)playDirectlyButtonTapped:(UIButton *)sender {
-    _algorithm = @"Normal Play";
+    _algorithm = @"普通播放";
     self.infoLabel.text = _algorithm;
 }
 
-// Add event handler for Standard SR button
+// 添加 Standard SR 按钮的事件处理方法
 - (void)standardSRButtonTapped:(UIButton *)sender {
-    _algorithm = @"Super-Resolution Play (Standard)";
+    _algorithm = @"超分播放(标准版)";
     self.infoLabel.text = _algorithm;
 }
 
-// Add event handler for Pro SR button
+// 添加 Pro SR 按钮的事件处理方法
 - (void)proSRFastButtonTapped:(UIButton *)sender {
-    _algorithm = @"Super-Resolution Play (Professional - Low Power)";
+    _algorithm = @"超分播放(专业版-低算力)";
     self.infoLabel.text = _algorithm;
 }
 
 - (void)proSRHighQualityButtonTapped:(UIButton *)sender {
-    _algorithm = @"Super-Resolution Play (Professional - High Power)";
+    _algorithm = @"超分播放(专业版-高算力)";
     self.infoLabel.text = _algorithm;
 }
 
-// Add event handler for Pro IE button
+// 添加 Pro IE 按钮的事件处理方法
 - (void)proIEFastButtonTapped:(UIButton *)sender {
-    _algorithm = @"Enhanced Play (Professional - Low Power)";
+    _algorithm = @"增强播放(专业版-低算力)";
     self.infoLabel.text = _algorithm;
 }
 
 - (void)proIEHighQualityButtonTapped:(UIButton *)sender {
-    _algorithm = @"Enhanced Play (Professional - High Power)";
+    _algorithm = @"增强播放(专业版-高算力)";
     self.infoLabel.text = _algorithm;
 }
 
-#pragma mark - Receive playback completion notification
+#pragma mark - 接收播放完成的通知
 - (void)runLoopTheMovie:(NSNotification *)notification {
     AVPlayerItem *playerItem = notification.object;
     [playerItem seekToTime:kCMTimeZero];
@@ -455,9 +539,9 @@
 
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         [self setUI];
-
+        
         self.whiteView.frame = CGRectMake(0, 0, size.width, size.height);
-
+        
         CGRect rect;
         if (self->_srRatio > 0) {
             rect = CGRectMake(0, 0, self->_videoSize.width * self->_srRatio / 3, self->_videoSize.height * self->_srRatio / 3);

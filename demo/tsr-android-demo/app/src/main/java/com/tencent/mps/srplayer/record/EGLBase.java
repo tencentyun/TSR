@@ -7,6 +7,7 @@ import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
 import android.opengl.EGLExt;
 import android.opengl.EGLSurface;
+import android.util.Log;
 import android.view.Surface;
 
 import com.tencent.mps.srplayer.pass.VideoFrameDrawer;

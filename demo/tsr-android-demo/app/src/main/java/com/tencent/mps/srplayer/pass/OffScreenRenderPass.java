@@ -198,18 +198,32 @@ public class OffScreenRenderPass {
         return mTexture.getTextureId();
     }
 
-    /**
-     * release resource
-     */
     public void release() {
-        if (mShader != null) {
-            mShader.release();
-            mShader = null;
+        // 释放帧缓冲
+        if (mFrameBufferId != 0) {
+            GLES20.glDeleteFramebuffers(1, new int[]{mFrameBufferId}, 0);
+            mFrameBufferId = 0;
         }
+
+        // 释放纹理
         if (mTexture != null) {
             mTexture.release();
             mTexture = null;
         }
+
+        // 释放着色器
+        if (mShader != null) {
+            mShader.release();
+            mShader = null;
+        }
+
+        // 释放顶点缓冲对象
+        if (mVertexBuffer != 0) {
+            GLES20.glDeleteBuffers(1, new int[]{mVertexBuffer}, 0);
+            mVertexBuffer = 0;
+        }
+
+        Log.i(TAG, "OffScreenRenderPass resources released.");
     }
 
     public Texture getOutputTexture() {

@@ -195,4 +195,20 @@ public class VideoFrameDrawer {
         nums[i] = nums[j];
         nums[j] = tmp;
     }
+
+
+    public void release() {
+        if (mProgram != -1) {
+            GLES20.glDeleteProgram(mProgram);
+            mProgram = -1;
+        }
+
+        if (textures != null) {
+            GLES20.glDeleteTextures(textures.length, textures, 0);
+            textures = null;
+        }
+
+        mVertexBuffer = null;
+        mTextureBuffer = null;
+    }
 }
