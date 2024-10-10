@@ -37,10 +37,18 @@
 <img src=docs/standard-sr-performance2.png width=60% />
 
 ### 专业版超分辨率
-<img src=docs/pro-sr-performance.png width=80% />
+#### FAST
+<img src=docs/pro-sr-performance-fast.png width=80% />
+
+#### HIGH QUALITY
+<img src=docs/pro-sr-performance-high-quality.png width=80% />
 
 ### AI画质增强
-<img src=docs/pro-ie-performance.png width=80% />
+#### FAST
+<img src=docs/pro-ie-performance-fast.png width=80% />
+
+#### HIGH QUALITY
+<img src=docs/pro-ie-performance-high-quality.png width=80% />
 
 ## 3. 使用场景
 

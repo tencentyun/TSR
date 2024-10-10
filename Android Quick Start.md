@@ -67,7 +67,7 @@ The following is the compiled App installation package of the Demo project, whic
 <img src=./docs/tsr-work-flow.png width=50% />
 
 ### **2.2.1 TSRSdk**
-[TSRSdk](https://tencentyun.github.io/TSR/android-docs/1.8/com/tencent/mps/tie/api/TSRSdk.html) includes init and deInit methods. The init method is used to initialize the SDK, and the deInit method is used to release resources.
+[TSRSdk](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TSRSdk.html) includes init and deInit methods. The init method is used to initialize the SDK, and the deInit method is used to release resources.
 
 1. To initialize the TSRSdk for online authentication, you need to pass in the APPID and AUTH_ID for online authorization, and also pass in the TSRSdk.TSRSdkLicenseVerifyResultCallback to obtain the results of online authentication. In addition, you need to pass in a TSRLogger to obtain the SDK logs. Here is an example code:
 ```
@@ -92,7 +92,7 @@ The following is the compiled App installation package of the Demo project, whic
 ```
 
 ### **2.2.2 TSRPass**
-[TSRPass](https://tencentyun.github.io/TSR/android-docs/1.8/com/tencent/mps/tie/api/TSRPass.html) is a class used for super-resolution rendering. When creating a TSRPass, you need to pass in TSRAlgorithmType to set the super-resolution algorithm type.
+[TSRPass](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TSRPass.html) is a class used for super-resolution rendering. When creating a TSRPass, you need to pass in TSRAlgorithmType to set the super-resolution algorithm type.
 
 **Note: TSRPass is not thread-safe, and the methods of TSRPass must be called in the same thread.**
 
@@ -111,20 +111,24 @@ The following is an example of using STANDARD super-resolution algorithm code:
 TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
 
 // Initialize TSRPass and set the input image width, height and srRatio.
-tsrPass.init(inputWidth, inputHeight, srRatio);
+TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
-// Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
-// Here we set these parameters to slightly enhance the image.
-tsrPass.setParameters(52, 55, 60);
-
-// If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-// Conversion code can be written according to actual requirements.
-
-// Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
-int outputTextureId = tsrPass.render(inputTextureId);
-
-// Release resources when the TSRPass object is no longer needed.
-tsrPass.deInit();
+if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+   // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
+   // Here we set these parameters to slightly enhance the image.
+   tsrPass.setParameters(52, 55, 60);
+   
+   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
+   // Conversion code can be written according to actual requirements.
+   
+   // Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
+   int outputTextureId = tsrPass.render(inputTextureId);
+   
+   // Release resources when the TSRPass object is no longer needed.
+   tsrPass.deInit();
+} else {
+   // Do other things
+}
 
 //----------------------GL Thread---------------------//
 ```
@@ -140,26 +144,26 @@ TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY
 // TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_FAST);
 
 // Initialize TSRPass and set the input image width, height and srRatio.
-tsrPass.init(inputWidth, inputHeight, srRatio);
+TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
-// Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
-// Here we set these parameters to slightly enhance the image.
-tsrPass.setParameters(52, 55, 60);
-
-// If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-// Conversion code can be written according to actual requirements.
-
-// Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
-int outputTextureId = tsrPass.render(inputTextureId);
-
-// Release resources when the TSRPass object is no longer needed.
-tsrPass.deInit();
+if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {   
+   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
+   // Conversion code can be written according to actual requirements.
+   
+   // Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
+   int outputTextureId = tsrPass.render(inputTextureId);
+   
+   // Release resources when the TSRPass object is no longer needed.
+   tsrPass.deInit();
+} else {
+   // Do other things
+}
 
 //----------------------GL Thread---------------------//
 ```
 
 ### **2.2.3 TIEPass**
-[TIEPass](https://tencentyun.github.io/TSR/android-docs/1.8/com/tencent/mps/tie/api/TIEPass.html) is a class used for image enhancement rendering, **only available in the Professional Edition SDK**. When creating a TIEPass, you need to pass in TIEAlgorithmType to set the super-resolution algorithm type. It includes init, render, and deInit methods. Before using TIEPass, you need to call the init method to initialize. After using it, you need to call the release method to release resources.
+[TIEPass](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TIEPass.html) is a class used for image enhancement rendering, **only available in the Professional Edition SDK**. When creating a TIEPass, you need to pass in TIEAlgorithmType to set the super-resolution algorithm type. It includes init, render, and deInit methods. Before using TIEPass, you need to call the init method to initialize. After using it, you need to call the release method to release resources.
 
 In the TIEAlgorithmType enumeration, there are PROFESSIONAL_HIGH_QUALITY and PROFESSIONAL_FAST two algorithm running modes:
 1. PROFESSIONAL_HIGH_QUALITY (Professional Edition - High Quality) mode: PROFESSIONAL_HIGH_QUALITY mode ensures high image quality while requiring higher device performance. It is suitable for scenes with high image quality requirements and is recommended for use on mid-to-high-end smartphones.
@@ -179,24 +183,29 @@ TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY
 // TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_FAST);
 
 // Initialize TIEPass and set the input image width and height.
-tiePass.init(inputWidth, inputHeight);
+TIEPass.TIEInitStatusCode initStatus = tiePass.init(inputWidth, inputHeight);
 
-// If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-// Conversion code can be written according to actual requirements.
+if (initStatus == TIEInitStatusCode.SUCCESS) {
+   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
+   // Conversion code can be written according to actual requirements.
+   
+   // Perform image enhancement rendering on the input OpenGL texture and get the enhanced texture ID.
+   int outputTextureId = tiePass.render(inputTextureId);
+   
+   // Release resources when the TIEPass object is no longer needed.
+   tiePass.deInit();
+} else {
+   // Do other things
+}
 
-// Perform image enhancement rendering on the input OpenGL texture and get the enhanced texture ID.
-int outputTextureId = tiePass.render(inputTextureId);
-
-// Release resources when the TIEPass object is no longer needed.
-tiePass.deInit();
 //----------------------GL Thread---------------------//
 ```
 
 ### **2.2.4 TSRLogger**
-[TSRLogger](https://tencentyun.github.io/TSR/android-docs/1.8/com/tencent/mps/tie/api/TSRLogger.html) is used to receive logs from the SDK internals. Please write these logs to a file for external network problem positioning.
+[TSRLogger](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TSRLogger.html) is used to receive logs from the SDK internals. Please write these logs to a file for external network problem positioning.
 
 # **3 SDK API Description**
 You can click on the link to view the TSRSDK API documentation, which contains interface comments and usage examples.
 
-[TSRSDK ANDROID API Documentation](https://tencentyun.github.io/TSR/android-docs/1.8/index.html)
+[TSRSDK ANDROID API Documentation](https://tencentyun.github.io/TSR/android-docs/1.9/index.html)
 

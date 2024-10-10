@@ -67,7 +67,7 @@ App签名证书信息可以使用keytool命令查看，例如
 <img src=./docs/tsr-work-flow.png width=50% />
 
 ### **2.2.1 TSRSdk**
-[TSRSdk](https://tencentyun.github.io/TSR/android-docs/1.8/com/tencent/mps/tie/api/TSRSdk.html)包括init和deInit两个方法。init方法用于初始化SDK，deInit方法用于释放资源。
+[TSRSdk](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TSRSdk.html)包括init和deInit两个方法。init方法用于初始化SDK，deInit方法用于释放资源。
 
 1. 在线鉴权初始化TSRSdk，您需要传入**APPID和AUTH_ID**进行在线鉴权，还需要传入TSRSdk.TSRSdkLicenseVerifyResultCallback用于获取在线鉴权的结果。除此之外，还需要传入一个TSRLogger，用于获取SDK的日志。下面是示例代码：
 
@@ -94,7 +94,7 @@ App签名证书信息可以使用keytool命令查看，例如
 ```
 
 ### **2.2.2 TSRPass**
-[TSRPass](https://tencentyun.github.io/TSR/android-docs/1.8/com/tencent/mps/tie/api/TSRPass.html)是用于进行超分辨率渲染的类，在创建TSRPass时，您需要传入TSRAlgorithmType设置超分的算法类型。
+[TSRPass](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TSRPass.html)是用于进行超分辨率渲染的类，在创建TSRPass时，您需要传入TSRAlgorithmType设置超分的算法类型。
 
 **注意：TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。**
 
@@ -114,20 +114,24 @@ App签名证书信息可以使用keytool命令查看，例如
 TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
 
 // Initialize TSRPass and set the input image width, height and srRatio.
-tsrPass.init(inputWidth, inputHeight, srRatio);
+TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
-// Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
-// Here we set these parameters to slightly enhance the image.
-tsrPass.setParameters(52, 55, 60);
-
-// If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-// Conversion code can be written according to actual requirements.
-
-// Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
-int outputTextureId = tsrPass.render(inputTextureId);
-
-// Release resources when the TSRPass object is no longer needed.
-tsrPass.deInit();
+if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+   // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
+   // Here we set these parameters to slightly enhance the image.
+   tsrPass.setParameters(52, 55, 60);
+   
+   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
+   // Conversion code can be written according to actual requirements.
+   
+   // Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
+   int outputTextureId = tsrPass.render(inputTextureId);
+   
+   // Release resources when the TSRPass object is no longer needed.
+   tsrPass.deInit();
+} else {
+   // Do other things
+}
 
 //----------------------GL Thread---------------------//
 ```
@@ -143,26 +147,26 @@ TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY
 // TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_FAST);
 
 // Initialize TSRPass and set the input image width, height and srRatio.
-tsrPass.init(inputWidth, inputHeight, srRatio);
+TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
-// Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
-// Here we set these parameters to slightly enhance the image.
-tsrPass.setParameters(52, 55, 60);
-
-// If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-// Conversion code can be written according to actual requirements.
-
-// Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
-int outputTextureId = tsrPass.render(inputTextureId);
-
-// Release resources when the TSRPass object is no longer needed.
-tsrPass.deInit();
+if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {   
+   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
+   // Conversion code can be written according to actual requirements.
+   
+   // Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
+   int outputTextureId = tsrPass.render(inputTextureId);
+   
+   // Release resources when the TSRPass object is no longer needed.
+   tsrPass.deInit();
+} else {
+   // Do other things
+}
 
 //----------------------GL Thread---------------------//
 ```
 
 ### **2.2.3 TIEPass**
-[TIEPass](https://tencentyun.github.io/TSR/android-docs/1.8/com/tencent/mps/tie/api/TIEPass.html)是用于进行图像增强渲染的类，**只在专业版SDK可用**。在创建TIEPass时，您需要传入TIEAlgorithmType设置超分的算法类型。它包括init、render和deInit方法。在使用TIEPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用release方法释放资源。
+[TIEPass](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TIEPass.html)是用于进行图像增强渲染的类，**只在专业版SDK可用**。在创建TIEPass时，您需要传入TIEAlgorithmType设置超分的算法类型。它包括init、render和deInit方法。在使用TIEPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用release方法释放资源。
 
 在TIEAlgorithmType枚举中，有PROFESSIONAL_HIGH_QUALITY和PROFESSIONAL_FAST两个算法运行模式：
 1. PROFESSIONAL_HIGH_QUALITY（专业版-高质量）模式：PROFESSIONAL_HIGH_QUALITY模式确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
@@ -181,25 +185,30 @@ TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY
 // TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_FAST);
 
 // Initialize TIEPass and set the input image width and height.
-tiePass.init(inputWidth, inputHeight);
+TIEPass.TIEInitStatusCode initStatus = tiePass.init(inputWidth, inputHeight);
 
-// If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-// Conversion code can be written according to actual requirements.
+if (initStatus == TIEInitStatusCode.SUCCESS) {
+   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
+   // Conversion code can be written according to actual requirements.
+   
+   // Perform image enhancement rendering on the input OpenGL texture and get the enhanced texture ID.
+   int outputTextureId = tiePass.render(inputTextureId);
+   
+   // Release resources when the TIEPass object is no longer needed.
+   tiePass.deInit();
+} else {
+   // Do other things
+}
 
-// Perform image enhancement rendering on the input OpenGL texture and get the enhanced texture ID.
-int outputTextureId = tiePass.render(inputTextureId);
-
-// Release resources when the TIEPass object is no longer needed.
-tiePass.deInit();
 //----------------------GL Thread---------------------//
 ```
 
 ### **2.2.4 TSRLogger**
-[TSRLogger](https://tencentyun.github.io/TSR/android-docs/1.8/com/tencent/mps/tie/api/TSRLogger.html)用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
+[TSRLogger](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TSRLogger.html)用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
 
 # **3 SDK API描述**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/1.8/index.html)
+[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/1.9/index.html)
 
 

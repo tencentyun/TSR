@@ -38,10 +38,18 @@ Tested on high, medium, and low-end models, after opening super-resolution, the 
 <img src=docs/standard-sr-performance2-en.png width=80% />
 
 ### Professional Super Resolution
-<img src=docs/pro-sr-performance-en.png width=80% />
+#### FAST
+<img src=docs/pro-sr-performance-fast_en.png width=80% />
+
+#### HIGH QUALITY
+<img src=docs/pro-sr-performance-high-quality_en.png width=80% />
 
 ### AI Image Quality Enhancement
-<img src=docs/pro-ie-performance-en.png width=80% />
+#### FAST
+<img src=docs/pro-ie-performance-fast_en.png width=80% />
+
+#### HIGH QUALITY
+<img src=docs/pro-ie-performance-high-quality_en.png width=80% />
 
 ## 3. Use Cases
 

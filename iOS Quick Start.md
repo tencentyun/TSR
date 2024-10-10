@@ -154,16 +154,20 @@ Please note:
 
 
 
-Prior to utilizing TSRPass, it is imperative to initialize the system by invoking the method.`initWithDevice:inputWidth:inputHeight:srRatio: `
+Prior to utilizing TSRPass, it is imperative to initialize the system by invoking the method.`initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:`
 
 
 ``` plaintext
+ TSRInitStatusCode initStatus;
+
  # TSRAlgorithmTypeStandard
-  _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+  _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+ 
  # TSRAlgorithmTypeProfessionalFast
- _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+  _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+ 
  # TSRAlgorithmTypeProfessionalHighQuality
- _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+ _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
 ```
 
 
@@ -224,10 +228,12 @@ Please be advised:
 
 Before utilizing TIEPass, it is imperative to initialize it by invoking the initWithDevice:inputWidth:inputHeight: method.
 ``` plaintext
+ TIEInitStatusCode initStatus;
+
  // FAST
- _tie_pass_fast = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalFast];
+ _tie_pass_fast = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalFast initStatusCode:&initStatus];
  // HIGH_QUALITY
- _tie_pass_high_quality = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalHighQuality];
+ _tie_pass_high_quality = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalHighQuality initStatusCode:&initStatus];
 ```
 
 
@@ -254,5 +260,5 @@ TSRLogger is designed to capture internal logs from the SDK. Please ensure these
 
 You may click the link to access the API documentation for TSRSDK, which includes annotations for the interfaces and examples of how to call them.
 
-[TSRSDK IOS API Document](https://tencentyun.github.io/TSR/ios-docs/1.8/index.html)
+[TSRSDK IOS API Document](https://tencentyun.github.io/TSR/ios-docs/1.9/index.html)
 
