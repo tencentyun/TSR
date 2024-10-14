@@ -12,19 +12,15 @@
 | AI画质增强      |        | 支持   |  
 
 <br>
-<img src=./docs/pro-tsr-cmp.png width=80%/>
+<img src=./docs/pro-tsr-cmp.png/>
 
->从左到右依次为540P原视频、普通播放、超分播放(标准版)、超分播放(标准版+增强)、超分播放(专业版)。
-[链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/20240621%20%E5%AF%B9%E5%A4%96%E4%BB%8B%E7%BB%8D%E6%95%88%E6%9E%9C/index%28%E6%A8%A1%E7%89%88-%E5%8E%9F%E6%99%AE%E6%A0%87%E6%A0%87%E4%B8%93%29.html)
-  
-<br>
-<img src=./docs/pro-ie-cmp.png width=50% />  
+[视频对比](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/202409%E5%AF%B9%E5%A4%96%E8%AF%84%E6%B5%8B/%E7%94%B5%E5%BD%B1%E7%89%87%E6%AE%B5landscape/%E5%8E%9F%E6%99%AE%E6%A0%87%E6%A0%87%E4%B8%93_540land.html)
 
->从左到右依次为540P原视频、增强视频。[链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/20240621%20%E5%AF%B9%E5%A4%96%E4%BB%8B%E7%BB%8D%E6%95%88%E6%9E%9C/index%28%E6%A8%A1%E7%89%88-%E5%8E%9F%E5%A2%9E%29.html)
 
-* 标准版的优势是性能，我们的算法能以极低的耗时和功耗，实现较好的超分辨率效果。适配几乎所有性能的手机。
-* 标准版里还提供了图像增强能力，可以调整图像的亮度、色彩饱和度、对比度。
-* 专业版的优势是效果，它通过AI模型推理，能生成原图像缺失的纹理细节，实现最好的图像增强和超分辨率效果。它对设备算力有要求，建议只在中高端手机上使用。
+* 标准版的特点是性能极高，以极低的计算耗时和功耗，实现较好的超分辨率效果。适配所有性能的手机。
+*  标准版里还提供了图像普通增强的能力，可以通过参数设置，增强图像的对比度、亮度、色彩饱和度。
+*  专业版的优势是效果，它除了上采样，还通过AI模型推理生成原图像缺失的纹理细节，达到很好的图像增强和超分辨率效果。但是它对设备算力有要求，建议只在中高端手机上使用。
+
 
 ## 2.产品性能
 ### 标准版超分辨率
@@ -59,7 +55,7 @@
 <img src=docs/scenario_video_trans.png width=70% />
 
 例如，云游戏场景，利用端上实时视频超分辨率的能力，可以降低云端渲染和编码的算力，并且节省传输带宽，节约成本。如下例子，云端传输720P(5.6Mbps)的游戏画面在终端播放实时超分到1080P，观看效果接近云端传输1080P(8.2Mbps)的画面，节省30%带宽。
-<img src=docs/scenario_case_game.png width=80% />
+<img src=docs/scenario_case_game.png/>
 
 ## 4. 兼容性
 * 标准版：

@@ -13,15 +13,9 @@ The specific functionality details of each version are as follows:
 | AI Image Quality Enhancement |            | Support           |
 
 <br>
-<img src=./docs/pro-tsr-cmp.png width=80%/>
+<img src=./docs/pro-tsr-cmp_en.png/>
 
-> From left to right are 540P original video, ordinary playback, super-resolution playback (standard version), super-resolution playback (standard version + enhancement), super-resolution playback (professional version).
-[Link](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/20240621%20%E5%AF%B9%E5%A4%96%E4%BB%8B%E7%BB%8D%E6%95%88%E6%9E%9C/index%28%E6%A8%A1%E7%89%88-%E5%8E%9F%E6%99%AE%E6%A0%87%E6%A0%87%E4%B8%93%29.html)
-
-<br>
-<img src=./docs/pro-ie-cmp.png width=50% />  
-
-> From left to right are 540P original video, enhanced video. [Link](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/20240621%20%E5%AF%B9%E5%A4%96%E4%BB%8B%E7%BB%8D%E6%95%88%E6%9E%9C/index%28%E6%A8%A1%E7%89%88-%E5%8E%9F%E5%A2%9E%29.html)
+[vidoe contrast](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/personal/handleychen/202409%E5%AF%B9%E5%A4%96%E8%AF%84%E6%B5%8B/%E7%94%B5%E5%BD%B1%E7%89%87%E6%AE%B5landscape/%E5%8E%9F%E6%99%AE%E6%A0%87%E6%A0%87%E4%B8%93_540land.html)
 
 * The advantage of the standard version is performance. Our algorithm can achieve better super-resolution effects with extremely low latency and power consumption. It is suitable for almost all performance smartphones.
 * The standard version also provides image enhancement capabilities, allowing adjustment of image brightness, color saturation, and contrast.
@@ -60,7 +54,7 @@ Tested on high, medium, and low-end models, after opening super-resolution, the 
    <img src=docs/scenario_video_trans_en.png />
 
 For example, in a cloud gaming scenario, by utilizing the real-time video super-resolution capability on the terminal, the computing power of cloud rendering and encoding can be reduced, transmission bandwidth can be saved, and costs can be saved. In the following example, the terminal plays a 720P (5.6Mbps) game screen transmitted by the cloud in real-time super-resolution to 1080P, and the viewing effect is close to the 1080P (8.2Mbps) screen transmitted by the cloud, saving 30% of bandwidth.
-<img src=docs/scenario_case_game.png width=80% />
+<img src=docs/scenario_case_game_en.png/>
 
 ## 4. Compatibility
 * Standard Edition:
