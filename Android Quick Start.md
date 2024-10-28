@@ -103,19 +103,6 @@ In the TSRAlgorithmType enumeration, there are STANDARD, PROFESSIONAL_HIGH_QUALI
 
 The class includes `init`, `reInit`, `render`, and `deInit` methods. Before using TSRPass, you need to call the `init` method to initialize. If you need to update the input image dimensions or scaling factor without creating a new TSRPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
 
-#### Using the `reInit` Method
-The `reInit` method allows you to reinitialize the TSRPass with new dimensions or a new scaling ratio without the need to create a new instance. This is particularly useful when dealing with dynamic image sizes or when adjusting the super-resolution scaling factor based on runtime conditions.
-```agsl
-// Assume tsrPass has been initialized already.
-if (needToUpdateResolution) {
-    TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newWidth, newHeight, newSrRatio);
-    if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-        // Continue with rendering or other operations
-    } else {
-        // Handle reinitialization failure
-    }
-}
-```
 
 The following is an example of using STANDARD super-resolution algorithm code:
 ```
@@ -135,8 +122,13 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
    // Perform super-resolution rendering and get the enhanced texture ID.
    int outputTextureId = tsrPass.render(inputTextureId);
 
-   // Reinitialize with new parameters if needed.
-   tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+   // Reinitialize if there are changes in image dimensions or srRatio.
+   TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+      outputTextureId = tsrPass.render(inputTextureId);
+   } else {
+      // Handle reinitialization failure
+   }
 
    // Release resources when no longer needed.
    tsrPass.deInit();
@@ -163,7 +155,12 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
    int outputTextureId = tsrPass.render(inputTextureId);
 
    // Reinitialize if there are changes in image dimensions or srRatio.
-   tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+   TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+      outputTextureId = tsrPass.render(inputTextureId);
+   } else {
+      // Handle reinitialization failure
+   }
 
    // Release resources when no longer needed.
    tsrPass.deInit();
@@ -203,9 +200,14 @@ if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
    
    // Perform image enhancement rendering on the input OpenGL texture and get the enhanced texture ID.
    int outputTextureId = tiePass.render(inputTextureId);
-
+   
    // Reinitialize with new dimensions if needed.
-   tiePass.reInit(newInputWidth, newInputHeight);
+   TIEPass.TIEInitStatusCode reInitStatus = tiePass.reInit(newInputWidth, newInputHeight);
+   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+      outputTextureId = tiePass.render(inputTextureId);
+   } else {
+      // Handle reinitialization failure
+   }
 
    // Release resources when the TIEPass object is no longer needed.
    tiePass.deInit();

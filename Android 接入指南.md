@@ -128,6 +128,8 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
    TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
    if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
       outputTextureId = tsrPass.render(inputTextureId);
+   } else {
+      // Handle reinitialization failure
    }
 
    // Release resources when no longer needed.
@@ -158,6 +160,8 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
    TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
    if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
       outputTextureId = tsrPass.render(inputTextureId);
+   } else {
+      // Handle reinitialization failure
    }
 
    // Release resources when no longer needed.
@@ -202,6 +206,8 @@ if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
    TIEPass.TIEInitStatusCode reInitStatus = tiePass.reInit(newInputWidth, newInputHeight);
    if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
       outputTextureId = tiePass.render(inputTextureId);
+   } else {
+      // Handle reinitialization failure
    }
 
    // Release resources when the TIEPass object is no longer needed.
