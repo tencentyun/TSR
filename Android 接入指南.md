@@ -124,8 +124,11 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
    // Perform super-resolution rendering and get the enhanced texture ID.
    int outputTextureId = tsrPass.render(inputTextureId);
 
-   // Reinitialize with new parameters if needed.
-   tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+   // Reinitialize if there are changes in image dimensions or srRatio.
+   TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+      outputTextureId = tsrPass.render(inputTextureId);
+   }
 
    // Release resources when no longer needed.
    tsrPass.deInit();
@@ -152,7 +155,10 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
    int outputTextureId = tsrPass.render(inputTextureId);
 
    // Reinitialize if there are changes in image dimensions or srRatio.
-   tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+   TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+      outputTextureId = tsrPass.render(inputTextureId);
+   }
 
    // Release resources when no longer needed.
    tsrPass.deInit();
@@ -193,7 +199,10 @@ if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
    int outputTextureId = tiePass.render(inputTextureId);
    
    // Reinitialize with new dimensions if needed.
-   tiePass.reInit(newInputWidth, newInputHeight);
+   TIEPass.TIEInitStatusCode reInitStatus = tiePass.reInit(newInputWidth, newInputHeight);
+   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+      outputTextureId = tiePass.render(inputTextureId);
+   }
 
    // Release resources when the TIEPass object is no longer needed.
    tiePass.deInit();
