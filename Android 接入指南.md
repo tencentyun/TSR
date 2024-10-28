@@ -67,7 +67,7 @@ App签名证书信息可以使用keytool命令查看，例如
 <img src=./docs/tsr-work-flow.png width=50% />
 
 ### **2.2.1 TSRSdk**
-[TSRSdk](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TSRSdk.html)包括init和deInit两个方法。init方法用于初始化SDK，deInit方法用于释放资源。
+[TSRSdk](https://tencentyun.github.io/TSR/android-docs/1.10/com/tencent/mps/tie/api/TSRSdk.html)包括init和deInit两个方法。init方法用于初始化SDK，deInit方法用于释放资源。
 
 1. 在线鉴权初始化TSRSdk，您需要传入**APPID和AUTH_ID**进行在线鉴权，还需要传入TSRSdk.TSRSdkLicenseVerifyResultCallback用于获取在线鉴权的结果。除此之外，还需要传入一个TSRLogger，用于获取SDK的日志。下面是示例代码：
 
@@ -94,43 +94,43 @@ App签名证书信息可以使用keytool命令查看，例如
 ```
 
 ### **2.2.2 TSRPass**
-[TSRPass](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TSRPass.html)是用于进行超分辨率渲染的类，在创建TSRPass时，您需要传入TSRAlgorithmType设置超分的算法类型。
+[TSRPass](https://tencentyun.github.io/TSR/android-docs/1.10/com/tencent/mps/tie/api/TSRPass.html) 是用于进行超分辨率渲染的类，在创建 TSRPass 时，您需要传入 TSRAlgorithmType 设置超分的算法类型。
 
-**注意：TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。**
+**注意：TSRPass 不是线程安全的，必须在同一个线程中调用 TSRPass 的方法。**
 
-在TSRAlgorithmType枚举中，有STANDARD、PROFESSIONAL_HIGH_QUALITY和PROFESSIONAL_FAST三个算法运行模式：
-1. STANDARD（标准）模式：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
-2. PROFESSIONAL_HIGH_QUALITY（专业版-高质量）模式：PROFESSIONAL_HIGH_QUALITY模式确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
-3. PROFESSIONAL_FAST（专业版-快速）模式：PROFESSIONAL_FAST模式在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
-它包括了init、render和deInit方法。在使用TSRPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用deInit方法释放资源。
+在 TSRAlgorithmType 枚举中，有 STANDARD、PROFESSIONAL_HIGH_QUALITY 和 PROFESSIONAL_FAST 三个算法运行模式：
+1. **STANDARD（标准）模式**：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
+2. **PROFESSIONAL_HIGH_QUALITY（专业版-高质量）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+3. **PROFESSIONAL_FAST（专业版-快速）模式**：在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
+
+它包括了 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TSRPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TSRPass 实例的情况下更新输入图像的尺寸或缩放比例，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
 
 以下是标准版超分代码示例：
 ```
-// The code below must be executed in the same glThread.
-//----------------------GL Thread---------------------//
-
 // Create a TSRPass object using the constructor.
 TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
 
-// Initialize TSRPass and set the input image width, height and srRatio.
+// The code below must be executed in the same glThread.
+//----------------------GL Thread---------------------//
+
+// Initialize TSRPass and set the input image width, height, and srRatio.
 TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
 if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-   // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
-   // Here we set these parameters to slightly enhance the image.
+   // Optional: Set the brightness, saturation, and contrast levels.
    tsrPass.setParameters(52, 55, 60);
-   
-   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-   // Conversion code can be written according to actual requirements.
-   
-   // Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
+
+   // Perform super-resolution rendering and get the enhanced texture ID.
    int outputTextureId = tsrPass.render(inputTextureId);
-   
-   // Release resources when the TSRPass object is no longer needed.
+
+   // Reinitialize with new parameters if needed.
+   tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+
+   // Release resources when no longer needed.
    tsrPass.deInit();
 } else {
-   // Do other things
+   // Handle initialization failure
 }
 
 //----------------------GL Thread---------------------//
@@ -138,41 +138,39 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
 
 以下是专业版超分代码示例：
 ```
+// Create a TSRPass object with the desired algorithm type.
+TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
+
 // The code below must be executed in the same glThread.
 //----------------------GL Thread---------------------//
 
-// Create a TSRPass object using the constructor.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-// Alternatively, create a TSRPass object with the professional fast rendering type.
-// TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_FAST);
-
-// Initialize TSRPass and set the input image width, height and srRatio.
+// Initialize TSRPass with the specified parameters.
 TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
-if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {   
-   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-   // Conversion code can be written according to actual requirements.
-   
-   // Perform super resolution rendering on the input OpenGL texture and get the enhanced texture ID.
+if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
+   // Perform super-resolution rendering and get the enhanced texture ID.
    int outputTextureId = tsrPass.render(inputTextureId);
-   
-   // Release resources when the TSRPass object is no longer needed.
+
+   // Reinitialize if there are changes in image dimensions or srRatio.
+   tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
+
+   // Release resources when no longer needed.
    tsrPass.deInit();
 } else {
-   // Do other things
+   // Handle initialization failure
 }
 
 //----------------------GL Thread---------------------//
 ```
 
 ### **2.2.3 TIEPass**
-[TIEPass](https://tencentyun.github.io/TSR/android-docs/1.9/com/tencent/mps/tie/api/TIEPass.html)是用于进行图像增强渲染的类，**只在专业版SDK可用**。在创建TIEPass时，您需要传入TIEAlgorithmType设置超分的算法类型。它包括init、render和deInit方法。在使用TIEPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用release方法释放资源。
+[TIEPass](https://tencentyun.github.io/TSR/android-docs/1.10/com/tencent/mps/tie/api/TIEPass.html) 是用于进行图像增强渲染的类，**只在专业版SDK可用**。在创建 TIEPass 时，您需要传入 TIEAlgorithmType 设置图像增强的算法类型。它包括 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TIEPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TIEPass 实例的情况下更新输入图像的尺寸，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
-在TIEAlgorithmType枚举中，有PROFESSIONAL_HIGH_QUALITY和PROFESSIONAL_FAST两个算法运行模式：
-1. PROFESSIONAL_HIGH_QUALITY（专业版-高质量）模式：PROFESSIONAL_HIGH_QUALITY模式确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
-2. PROFESSIONAL_FAST（专业版-快速）模式：PROFESSIONAL_FAST模式在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
+在 TIEAlgorithmType 枚举中，有以下两个算法运行模式：
+1. **PROFESSIONAL_HIGH_QUALITY（专业版-高质量）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+2. **PROFESSIONAL_FAST（专业版-快速）模式**：在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
 
-**注意：TIEPass不是线程安全的，必须在同一个线程中调用TIEPass的方法。**
+**注意：TIEPass 不是线程安全的，必须在同一个线程中调用 TIEPass 的方法。**
 
 以下是代码示例：
 ```
@@ -187,17 +185,20 @@ TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY
 // Initialize TIEPass and set the input image width and height.
 TIEPass.TIEInitStatusCode initStatus = tiePass.init(inputWidth, inputHeight);
 
-if (initStatus == TIEInitStatusCode.SUCCESS) {
+if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
    // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
    // Conversion code can be written according to actual requirements.
    
    // Perform image enhancement rendering on the input OpenGL texture and get the enhanced texture ID.
    int outputTextureId = tiePass.render(inputTextureId);
    
+   // Reinitialize with new dimensions if needed.
+   tiePass.reInit(newInputWidth, newInputHeight);
+
    // Release resources when the TIEPass object is no longer needed.
    tiePass.deInit();
 } else {
-   // Do other things
+   // Handle initialization failure
 }
 
 //----------------------GL Thread---------------------//
@@ -209,6 +210,6 @@ if (initStatus == TIEInitStatusCode.SUCCESS) {
 # **3 SDK API描述**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/1.9/index.html)
+[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/1.10/index.html)
 
 
