@@ -170,7 +170,17 @@ Prior to utilizing TSRPass, it is imperative to initialize the system by invokin
  _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
 ```
 
+If you need to adjust the input image dimensions or the super-resolution magnification factor during use, you can call the `reInit` method to reinitialize.
 
+```objective-c
+// Reinitializing TSRPass with new dimensions and super-resolution ratio
+TSRInitStatusCode reInitStatus = [_tsr_pass reInit:newInputWidth inputHeight:newInputHeight srRatio:newSrRatio];
+if (reInitStatus == TSRInitStatusCodeSuccess) {
+    // Continue with rendering or other operations
+} else {
+    // Handle reinitialization failure
+}
+```
 
 Upon initializing TSRPass, you may optionally adjust the rendering parameters by invoking the method setParametersWithBrightness:saturation:contrast:.
 ``` plaintext
@@ -197,48 +207,41 @@ When you no longer require the use of TSRPass, it is necessary to invoke the deI
 
 
 ### 2.1.3 TIEPass
+### 2.1.3 TIEPass
 
+TIEPass is a class designed for image enhancement rendering, available exclusively in the Professional Edition SDK. It encompasses the methods `init`, `render`, `renderWithPixelBuffer`, `reInit` and `deInit`. Prior to utilizing TIEPass, it is imperative to invoke the `init` method for initialization. When creating TIEPass, it is necessary to input `TIEAlgorithmType` to set the algorithm type for image enhancement.
 
+Within the `TIEAlgorithmType` enumeration, there exist two algorithm execution modes:
+1. `TIEAlgorithmTypeProfessionalHighQuality`: Ensures superior image quality while demanding higher device performance. It is ideal for scenarios requiring high-quality images and is recommended for use on mid-to-high-end smartphones.
+2. `TIEAlgorithmTypeProfessionalFast`: Offers faster processing with some image quality reduction, ideal for real-time needs on mid-range smartphones.
 
-TIEPass is a class designed for image enhancement rendering, available exclusively in the Professional Edition SDK. It encompasses the methods init, render, and renderWithPixelBuffer. Prior to utilizing TIEPass, it is imperative to invoke the init method for initialization. When creating TIEPass, it is necessary to input TIEAlgorithmType to set the algorithm type for super-resolution:
+**Please be advised:**
+- TIEPass is not thread-safe and must be invoked within the same thread.
+- The Professional Edition algorithm, `TIEAlgorithmTypeProfessionalFast`, requires an iOS system version of 15.0 or higher to function effectively.
+- The Professional Edition algorithm, `TIEAlgorithmTypeProfessionalHighQuality`, necessitates an iOS system version of 16.0 or higher to be operational.
 
-
-
-Within the TIEAlgorithmType enumeration, there exist two algorithm execution modes: TIEAlgorithmTypeProfessionalHighQuality and TIEAlgorithmTypeProfessionalFast.
-
-
-1. TIEAlgorithmTypeProfessionalHighQuality mode ensures superior image quality while demanding higher device performance. It is ideal for scenarios requiring high-quality images and is recommended for use on mid-to-high-end smartphones.
-
-
-
-2. TIEAlgorithmTypeProfessionalFast mode offers faster processing with some image quality reduction, ideal for real-time needs on mid-range smartphones. It includes init, render, and deInit methods. Use init before TSRPass and deInit after to free resources.
-
-
-
-
-Please be advised:
-1. TIEPass is not thread-safe and must be invoked within the same thread.
-
-2. The Professional Edition algorithm, TIEAlgorithmTypeProfessionalFast, requires an iOS system version of 15.0 or higher to function effectively.
-
-3. The Professional Edition algorithm, TIEAlgorithmTypeProfessionalHighQuality, necessitates an iOS system version of 16.0 or higher to be operational.
-
-
-
-
-Before utilizing TIEPass, it is imperative to initialize it by invoking the initWithDevice:inputWidth:inputHeight: method.
-``` plaintext
+* Before utilizing TIEPass, it is imperative to initialize it by invoking the `initWithTIEAlgorithmType:algorithmType:device:inputWidth:inputHeight:initStatusCode:` method.
+```objective-c
  TIEInitStatusCode initStatus;
-
+ 
  // FAST
- _tie_pass_fast = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalFast initStatusCode:&initStatus];
+_tie_pass_fast = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalFast device:_device inputWidth:200 inputHeight:200  initStatusCode:&initStatus];
  // HIGH_QUALITY
- _tie_pass_high_quality = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalHighQuality initStatusCode:&initStatus];
+ _tie_pass_high_quality = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalHighQuality device:_device inputWidth:200 inputHeight:200  initStatusCode:&initStatus];
 ```
 
+* If you need to adjust the input image dimensions during use, you can call the `reInit` method to reinitialize.
+```objective-c
+// 重新初始化TIEPass以适应新的图像尺寸
+TIEInitStatusCode reInitStatus = [_tie_pass reInit:newInputWidth inputHeight:newInputHeight];
+if (reInitStatus == TIEInitStatusCodeSuccess) {
+    // 继续进行图像处理或其他操作
+} else {
+    // 处理重新初始化失败的情况
+}
+```
 
-
-When you no longer require the use of TIEPass, it is necessary to invoke the deInit method of TIEPass to release resources.
+* When you no longer require the use of TIEPass, it is necessary to invoke the deInit method of TIEPass to release resources.
 ``` plaintext
 // Release resources when the TIEPass object is no longer needed.
 [_tie_pass deInit];

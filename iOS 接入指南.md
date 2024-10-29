@@ -66,24 +66,21 @@ TSRSdk包括`initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:`和`
 ```
 ### **2.1.2 TSRPass**
 
-TSRPass是用于进行超分辨率渲染的类，它包括了init、setParametersWithBrightness、render方法。在创建TSRPass时，您需要传入TSRAlgorithmType设置超分的算法类型。
+TSRPass是用于进行超分辨率渲染的类，它包括了`init`、`setParametersWithBrightness`、`render`和`reInit`方法。在创建TSRPass时，您需要传入`TSRAlgorithmType`设置超分的算法类型。
 
-在TSRAlgorithmType枚举中，有TSRAlgorithmTypeStandard、TSRAlgorithmTypeProfessionalHighQuality和TSRAlgorithmTypeProfessionalFast三个算法运行模式：
-1. TSRAlgorithmTypeStandard（标准）模式：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
-2. TSRAlgorithmTypeProfessionalHighQuality（专业版-高质量）模式：TSRAlgorithmTypeProfessionalHighQuality模式确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
-3. TSRAlgorithmTypeProfessionalFast（专业版-快速）模式：TSRAlgorithmTypeProfessionalFast模式在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
-   它包括了init、render和deInit方法。在使用TSRPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用deInit方法释放资源。
+在`TSRAlgorithmType`枚举中，有以下三个算法运行模式：
+1. `TSRAlgorithmTypeStandard`（标准）模式：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
+2. `TSRAlgorithmTypeProfessionalHighQuality`（专业版-高质量）模式：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+3. `TSRAlgorithmTypeProfessionalFast`（专业版-快速）模式：在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
 
 **注意：**
-1. TSRPass使用Metal框架进行超分辨率渲染，需要设备支持Metal。
-2. TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。
-3. 专业版算法TSRAlgorithmTypeProfessionalFast需要iOS系统版本在15.0或以上才生效。
-4. 专业版算法TSRAlgorithmTypeProfessionalHighQuality需要iOS系统版本在16.0或以上才生效。
+- TSRPass使用Metal框架进行超分辨率渲染，需要设备支持Metal。
+- TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。
+- 专业版算法`TSRAlgorithmTypeProfessionalFast`需要iOS系统版本在15.0或以上才生效。
+- 专业版算法`TSRAlgorithmTypeProfessionalHighQuality`需要iOS系统版本在16.0或以上才生效。
 
-* 在使用TSRPass前，您需要调用`initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:`方法进行初始化。
-`TSRInitStatusCode initStatus;
-
-```
+在使用TSRPass前，您需要调用`initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:`方法进行初始化。
+```objective-c
 TIEInitStatusCode initStatus;
 
 # TSRAlgorithmTypeStandard
@@ -94,6 +91,17 @@ _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgor
 
 # TSRAlgorithmTypeProfessionalHighQuality
 _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+```
+
+如果在使用过程中需要调整输入图像的尺寸或超分辨率的放大因子，可以调用`reInit`方法进行重新初始化。
+```objective-c
+// Reinitializing TSRPass with new dimensions and super-resolution ratio
+TSRInitStatusCode reInitStatus = [_tsr_pass reInit:newInputWidth inputHeight:newInputHeight srRatio:newSrRatio];
+if (reInitStatus == TSRInitStatusCodeSuccess) {
+    // Continue with rendering or other operations
+} else {
+    // Handle reinitialization failure
+}
 ```
 
 * 初始化TSRPass且TSRInitStatusCode为TSRInitStatusCodeSuccess，您可以通过调用`setParametersWithBrightness:saturation:contrast:`调整渲染的参数值(可选)
@@ -114,27 +122,38 @@ _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:
 ```
 
 ### **2.1.3 TIEPass**
-TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。它包括init、render、renderWithPixelBuffer方法。在使用TIEPass前，您需要调用init方法进行初始化。在创建TIEPass时，您需要传入TIEAlgorithmType设置超分的算法类型:
+TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。它包括`init`、`render`、`renderWithPixelBuffer`、`reInit`和`deInit`方法。在使用TIEPass前，您需要调用`init`方法进行初始化。在创建TIEPass时，您需要传入`TIEAlgorithmType`设置图像增强的算法类型。
 
-在TIEAlgorithmType枚举中，有TIEAlgorithmTypeProfessionalHighQuality和TIEAlgorithmTypeProfessionalFast两个算法运行模式：
-1. TIEAlgorithmTypeProfessionalHighQuality（专业版-高质量）模式：TIEAlgorithmTypeProfessionalHighQuality模式确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
-2. TIEAlgorithmTypeProfessionalFast（专业版-快速）模式：TIEAlgorithmTypeProfessionalFast模式在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
-   它包括了init、render和deInit方法。在使用TSRPass前，您需要调用init方法进行初始化。在使用结束后，您需要调用deInit方法释放资源。
+在`TIEAlgorithmType`枚举中，有以下两个算法运行模式：
+1. `TIEAlgorithmTypeProfessionalHighQuality`（专业版-高质量）模式：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+2. `TIEAlgorithmTypeProfessionalFast`（专业版-快速）模式：在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
 
 **注意：**
-1. TIEPass不是线程安全的，必须在同一个线程中调用TIEPass的方法。
-2. 专业版算法TIEAlgorithmTypeProfessionalFast需要iOS系统版本在15.0或以上才生效。
-3. 专业版算法TIEAlgorithmTypeProfessionalHighQuality需要iOS系统版本在16.0或以上才生效。
+- TIEPass不是线程安全的，必须在同一个线程中调用TIEPass的方法。
+- 专业版算法`TIEAlgorithmTypeProfessionalFast`需要iOS系统版本在15.0或以上才生效。
+- 专业版算法`TIEAlgorithmTypeProfessionalHighQuality`需要iOS系统版本在16.0或以上才生效。
 
-* 在使用TIEPass前，您需要调用`initWithDevice:inputWidth:inputHeight:algorithmType:initStatusCode:`方法进行初始化。
+* 在使用TIEPass前，您需要调用`initWithTIEAlgorithmType:algorithmType:device:inputWidth:inputHeight:initStatusCode:`方法进行初始化。
 
 ```
  TIEInitStatusCode initStatus;
  
  // FAST
- _tie_pass_fast = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalFast initStatusCode:&initStatus];
+_tie_pass_fast = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalFast device:_device inputWidth:200 inputHeight:200  initStatusCode:&initStatus];
  // HIGH_QUALITY
- _tie_pass_high_quality = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalHighQuality initStatusCode:&initStatus];
+ _tie_pass_high_quality = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalHighQuality device:_device inputWidth:200 inputHeight:200  initStatusCode:&initStatus];
+```
+
+* 如果在使用过程中需要调整输入图像的尺寸，可以调用`reInit`方法进行重新初始化。
+
+```objective-c
+// 重新初始化TIEPass以适应新的图像尺寸
+TIEInitStatusCode reInitStatus = [_tie_pass reInit:newInputWidth inputHeight:newInputHeight];
+if (reInitStatus == TIEInitStatusCodeSuccess) {
+    // 继续进行图像处理或其他操作
+} else {
+    // 处理重新初始化失败的情况
+}
 ```
 
 * 当您已经不需要使用TIEPass时，需要调用TIEPass的deInit方法，释放资源。
