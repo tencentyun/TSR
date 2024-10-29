@@ -117,7 +117,7 @@ TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srR
 
 if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
    // Optional: Set the brightness, saturation, and contrast levels.
-   tsrPass.setParameters(52, 55, 60);
+   tsrPass.setParameters(52, 55, 60, 0);
 
    // Perform super-resolution rendering and get the enhanced texture ID.
    int outputTextureId = tsrPass.render(inputTextureId);
