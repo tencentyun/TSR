@@ -106,9 +106,9 @@ if (reInitStatus == TSRInitStatusCodeSuccess) {
 
 * 初始化TSRPass且TSRInitStatusCode为TSRInitStatusCodeSuccess，您可以通过调用`setParametersWithBrightness:saturation:contrast:`调整渲染的参数值(可选)
 ```
-  // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50). 
+  // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (52, 55, 60, 0). 
   // Here we set these parameters to slightly enhance the image.
- [_tsr_pass setParametersWithBrightness:52 saturation:55 contrast:60];
+ [_tsr_pass setParametersWithBrightness:52 saturation:55 contrast:60 sharpness:0];
 ```
 * `render:commmandBufffer:`方法将超分辨率渲染过程应用于输入图像，提高其质量。处理后的图像渲染在TSRPass对象内的MTLTexture上。返回的是已执行超分辨率渲染的MTLTexture。
 ```
