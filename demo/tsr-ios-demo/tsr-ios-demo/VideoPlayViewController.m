@@ -88,24 +88,41 @@
     
     TSRInitStatusCode initStatus;
     
-    _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
-    
+    _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:200 inputHeight:200 srRatio:_srRatio initStatusCode:&initStatus];
     [self checkTSRPassInitStatus:initStatus];
     
-    _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+    initStatus = [_tsr_pass_standard reInit:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+    [self checkTSRPassInitStatus:initStatus];
+    
+    _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:200 inputHeight:200 srRatio:_srRatio initStatusCode:&initStatus];
+    [self checkTSRPassInitStatus:initStatus];
+    
+    initStatus = [_tsr_pass_professional_fast reInit:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
     [self checkTSRPassInitStatus:initStatus];
 
-    _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+    _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:200 inputHeight:200 srRatio:_srRatio initStatusCode:&initStatus];
+    [self checkTSRPassInitStatus:initStatus];
+    
+    initStatus = [_tsr_pass_professional_high_quality reInit:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
     [self checkTSRPassInitStatus:initStatus];
     
     MTLTextureDescriptor *ieTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
     ieTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
     
     _ie_texture = [_device newTextureWithDescriptor:ieTextureDescriptor];
+    
     TIEInitStatusCode tieInitStatus;
-    _tie_pass_fast = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalFast initStatusCode:&tieInitStatus];
+    
+    _tie_pass_fast = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalFast device:_device inputWidth:200 inputHeight:200  initStatusCode:&tieInitStatus];
     [self checkTIEPassInitStatus:tieInitStatus];
-    _tie_pass_high_quality = [[TIEPass alloc] initWithDevice:_device inputWidth:_videoSize.width inputHeight:_videoSize.height algorithmType:TIEAlgorithmTypeProfessionalHighQuality initStatusCode:&tieInitStatus];
+    
+    tieInitStatus = [_tie_pass_fast reInit:_videoSize.width inputHeight:_videoSize.height];
+    [self checkTIEPassInitStatus:tieInitStatus];
+    
+    _tie_pass_high_quality = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalHighQuality device:_device inputWidth:200 inputHeight:200  initStatusCode:&tieInitStatus];
+    [self checkTIEPassInitStatus:tieInitStatus];
+    
+    tieInitStatus = [_tie_pass_high_quality reInit:_videoSize.width inputHeight:_videoSize.height];
     [self checkTIEPassInitStatus:tieInitStatus];
     
     _srCreateDone = true;
@@ -132,6 +149,7 @@
         if (srRatio > 0) {
             rect = CGRectMake(0, 0, _videoSize.width * srRatio / 3, _videoSize.height * srRatio / 3);
         } else {
+            _isFullScreen = true;
             // The SR setting is "Auto"
             int screenHeight = self.view.bounds.size.height * 3;
             int screenWidth = self.view.bounds.size.width * 3;
@@ -228,35 +246,35 @@
     
     // 创建命令缓冲区
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+//
+//    if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"]) {
+//        _ie_texture = [_tie_pass_fast render:_in_texture commandBuffer:commandBuffer];
+//    } else if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
+//        _ie_texture = [_tie_pass_high_quality render:_in_texture commandBuffer:commandBuffer];
+//    } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
+//        _sr_texture = [_tsr_pass_standard render:_in_texture commandBuffer:commandBuffer];
+//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-低算力)"]){
+//        _sr_texture = [_tsr_pass_professional_fast render:_in_texture commandBuffer:commandBuffer];
+//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-高算力)"]){
+//        _sr_texture = [_tsr_pass_professional_high_quality render:_in_texture commandBuffer:commandBuffer];
+//    }
 
     if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"]) {
-        _ie_texture = [_tie_pass_fast render:_in_texture commandBuffer:commandBuffer];
+        CVPixelBufferRef pb = [_tie_pass_fast renderWithPixelBuffer:pixelBuffer];
+        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
     } else if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
-        _ie_texture = [_tie_pass_high_quality render:_in_texture commandBuffer:commandBuffer];
+        CVPixelBufferRef pb = [_tie_pass_high_quality renderWithPixelBuffer:pixelBuffer];
+        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
     } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
-        _sr_texture = [_tsr_pass_standard render:_in_texture commandBuffer:commandBuffer];
+        CVPixelBufferRef pb = [_tsr_pass_standard renderWithPixelBuffer:pixelBuffer];
+        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
     } else if ([_algorithm isEqualToString:@"超分播放(专业版-低算力)"]){
-        _sr_texture = [_tsr_pass_professional_fast render:_in_texture commandBuffer:commandBuffer];
+        CVPixelBufferRef pb = [_tsr_pass_professional_fast renderWithPixelBuffer:pixelBuffer];
+        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
     } else if ([_algorithm isEqualToString:@"超分播放(专业版-高算力)"]){
-        _sr_texture = [_tsr_pass_professional_high_quality render:_in_texture commandBuffer:commandBuffer];
+        CVPixelBufferRef pb = [_tsr_pass_professional_high_quality renderWithPixelBuffer:pixelBuffer];
+        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
     }
-
-//    if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"]) {
-//        CVPixelBufferRef pb = [_tie_pass_fast renderWithPixelBuffer:pixelBuffer];
-//        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
-//    } else if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
-//        CVPixelBufferRef pb = [_tie_pass_high_quality renderWithPixelBuffer:pixelBuffer];
-//        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
-//    } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
-//        CVPixelBufferRef pb = [_tsr_pass_standard renderWithPixelBuffer:pixelBuffer];
-//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
-//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-低算力)"]){
-//        CVPixelBufferRef pb = [_tsr_pass_professional_fast renderWithPixelBuffer:pixelBuffer];
-//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
-//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-高算力)"]){
-//        CVPixelBufferRef pb = [_tsr_pass_professional_high_quality renderWithPixelBuffer:pixelBuffer];
-//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
-//    }
     
     // 创建渲染编码器
     MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
@@ -543,7 +561,7 @@
         self.whiteView.frame = CGRectMake(0, 0, size.width, size.height);
         
         CGRect rect;
-        if (self->_srRatio > 0) {
+        if (!_isFullScreen) {
             rect = CGRectMake(0, 0, self->_videoSize.width * self->_srRatio / 3, self->_videoSize.height * self->_srRatio / 3);
         } else {
             // The SR setting is "Auto"

@@ -49,6 +49,7 @@
 @property (nonatomic, assign) CGSize videoSize;
 @property (nonatomic, assign) float srRatio;
 @property (nonatomic, assign) BOOL isVideoLandscape;
+@property (nonatomic, assign) BOOL isFullScreen;
 @property (nonatomic, assign) int outputWidth;
 @property (nonatomic, assign) int outputHeight;
 @property (nonatomic, assign) bool srCreateDone;
