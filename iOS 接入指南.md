@@ -121,6 +121,22 @@ if (reInitStatus == TSRInitStatusCodeSuccess) {
 [_tsr_pass deInit];
 ```
 
+TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的专业版超分辨率（Pro SR）功能。以下是对这四个接口的详细介绍：
+
+1. **enableProSRAutoFallback:timeoutDurationMs:fallbackListener:**
+   该方法用于启用专业版超分辨率的自动回退机制。您可以设置连续超时帧数（consecutiveTimeoutFrames）和超时持续时间（timeoutDurationMs），以便在超分辨率处理未能在指定时间内完成时自动回退到默认处理方式。此外，您还可以传入一个回退监听器（fallbackListener），用于处理回退事件的回调。这使得在处理过程中能够更灵活地应对性能问题，确保用户体验的流畅性。
+
+2. **disableProSRAutoFallback:**
+   该方法用于禁用专业版超分辨率的自动回退机制。如果您希望在超分辨率处理过程中不使用自动回退功能，可以调用此方法。这对于需要严格控制渲染流程的场景非常有用。
+
+3. **benchmarkProSR:**
+   该方法用于对专业版超分辨率进行基准测试。您需要传入输入图像的宽度（inputWidth）、高度（inputHeight）和超分辨率比率（srRatio），该方法将返回一个整数值，表示在给定尺寸和超分辨率比率下的处理性能。这可以帮助开发者评估不同图像尺寸和超分辨率设置下的处理效率，从而优化应用的性能。
+
+4. **forceProSRFallback:**
+   该方法用于强制启用或禁用专业版超分辨率的回退功能。通过传入一个布尔值（enable），您可以控制是否在处理过程中强制使用回退机制。这对于调试和测试场景非常有用，允许开发者在需要时快速切换到默认处理方式。
+
+这些接口为开发者提供了灵活的控制选项，以优化超分辨率渲染的性能和用户体验。
+
 ### **2.1.3 TIEPass**
 TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。它包括`init`、`render`、`renderWithPixelBuffer`、`reInit`和`deInit`方法。在使用TIEPass前，您需要调用`init`方法进行初始化。在创建TIEPass时，您需要传入`TIEAlgorithmType`设置图像增强的算法类型。
 
@@ -162,12 +178,28 @@ if (reInitStatus == TIEInitStatusCodeSuccess) {
 [_tie_pass deInit];
 ```
 
+TIEPass类还提供了接口用于管理和优化图像增强过程中的专业版图像增强（Pro IE）功能。以下是对这四个接口的详细介绍：
+
+1. **enableProIEAutoFallback:timeoutDurationMs:fallbackListener:**
+   该方法用于启用专业版图像增强的自动回退机制。您可以设置连续超时帧数（consecutiveTimeoutFrames）和超时持续时间（timeoutDurationMs），以便在图像增强处理未能在指定时间内完成时自动回退到默认处理方式。此外，您还可以传入一个回退监听器（fallbackListener），用于处理回退事件的回调。这使得在处理过程中能够更灵活地应对性能问题，确保用户体验的流畅性。
+
+2. **disableProIEAutoFallback:**
+   该方法用于禁用专业版图像增强的自动回退机制。如果您希望在图像增强过程中不使用自动回退功能，可以调用此方法。这对于需要严格控制图像处理流程的场景非常有用。
+
+3. **benchmarkProIE:**
+   该方法用于对专业版图像增强进行基准测试。您需要传入输入图像的宽度（inputWidth）和高度（inputHeight），该方法将返回一个整数值，表示在给定尺寸下的处理性能。这可以帮助开发者评估不同图像尺寸下的处理效率，从而优化应用的性能。
+
+4. **forceProIEFallback:**
+   该方法用于强制启用或禁用专业版图像增强的回退功能。通过传入一个布尔值（enable），您可以控制是否在处理过程中强制使用回退机制。这对于调试和测试场景非常有用，允许开发者在需要时快速切换到默认处理方式。
+
+这些接口为开发者提供了灵活的控制选项，以优化图像增强的性能和用户体验。
+
 ### **2.1.4 TSRLogger**
 TSRLogger用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
 
 # **3 SDK API描述**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/1.10/index.html)
+[TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/1.12/index.html)
 
 

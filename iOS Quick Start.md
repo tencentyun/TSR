@@ -204,9 +204,22 @@ When you no longer require the use of TSRPass, it is necessary to invoke the deI
 [_tsr_pass deInit];
 ```
 
+The TSRPass class provides interfaces for managing and optimizing the professional super-resolution (Pro SR) functionality during the super-resolution rendering process. Below is a detailed introduction to these four interfaces:
 
+1. **enableProSRAutoFallback:timeoutDurationMs:fallbackListener:**
+   This method is used to enable the automatic fallback mechanism for professional super-resolution. You can set the number of consecutive timeout frames (consecutiveTimeoutFrames) and the timeout duration (timeoutDurationMs) so that if the super-resolution processing does not complete within the specified time, it will automatically fall back to the default processing method. Additionally, you can pass in a fallback listener (fallbackListener) to handle callbacks for fallback events. This allows for more flexible handling of performance issues during processing, ensuring a smooth user experience.
 
-### 2.1.3 TIEPass
+2. **disableProSRAutoFallback:**
+   This method is used to disable the automatic fallback mechanism for professional super-resolution. If you wish to avoid using the automatic fallback feature during super-resolution processing, you can call this method. This is particularly useful in scenarios where strict control over the rendering process is required.
+
+3. **benchmarkProSR:**
+   This method is used to benchmark professional super-resolution. You need to provide the input image's width (inputWidth), height (inputHeight), and super-resolution ratio (srRatio). The method will return an integer value representing the processing performance at the given size and super-resolution ratio. This can help developers assess processing efficiency under different image sizes and super-resolution settings, thereby optimizing application performance.
+
+4. **forceProSRFallback:**
+   This method is used to forcibly enable or disable the fallback functionality of professional super-resolution. By passing a boolean value (enable), you can control whether to enforce the fallback mechanism during processing. This is very useful for debugging and testing scenarios, allowing developers to quickly switch to the default processing method when needed.
+
+These interfaces provide developers with flexible control options to optimize the performance and user experience of super-resolution rendering.
+
 ### 2.1.3 TIEPass
 
 TIEPass is a class designed for image enhancement rendering, available exclusively in the Professional Edition SDK. It encompasses the methods `init`, `render`, `renderWithPixelBuffer`, `reInit` and `deInit`. Prior to utilizing TIEPass, it is imperative to invoke the `init` method for initialization. When creating TIEPass, it is necessary to input `TIEAlgorithmType` to set the algorithm type for image enhancement.
@@ -247,7 +260,21 @@ if (reInitStatus == TIEInitStatusCodeSuccess) {
 [_tie_pass deInit];
 ```
 
+The TIEPass class provides interfaces for managing and optimizing the professional image enhancement (Pro IE) functionality during the image enhancement process. Below is a detailed introduction to these four interfaces:
 
+1. **enableProIEAutoFallback:timeoutDurationMs:fallbackListener:**
+   This method is used to enable the automatic fallback mechanism for professional image enhancement. You can set the number of consecutive timeout frames (consecutiveTimeoutFrames) and the timeout duration (timeoutDurationMs) so that if the image enhancement processing does not complete within the specified time, it will automatically fall back to the default processing method. Additionally, you can pass in a fallback listener (fallbackListener) to handle callbacks for fallback events. This allows for more flexible handling of performance issues during processing, ensuring a smooth user experience.
+
+2. **disableProIEAutoFallback:**
+   This method is used to disable the automatic fallback mechanism for professional image enhancement. If you wish to avoid using the automatic fallback feature during image enhancement processing, you can call this method. This is particularly useful in scenarios where strict control over the image processing workflow is required.
+
+3. **benchmarkProIE:**
+   This method is used to benchmark professional image enhancement. You need to provide the input image's width (inputWidth) and height (inputHeight). The method will return an integer value representing the processing performance at the given size. This can help developers assess processing efficiency under different image sizes, thereby optimizing application performance.
+
+4. **forceProIEFallback:**
+   This method is used to forcibly enable or disable the fallback functionality of professional image enhancement. By passing a boolean value (enable), you can control whether to enforce the fallback mechanism during processing. This is very useful for debugging and testing scenarios, allowing developers to quickly switch to the default processing method when needed.
+
+These interfaces provide developers with flexible control options to optimize the performance and user experience of image enhancement.
 
 ### 2.1.4 TSRLogger
 
@@ -263,5 +290,5 @@ TSRLogger is designed to capture internal logs from the SDK. Please ensure these
 
 You may click the link to access the API documentation for TSRSDK, which includes annotations for the interfaces and examples of how to call them.
 
-[TSRSDK IOS API Document](https://tencentyun.github.io/TSR/ios-docs/1.10/index.html)
+[TSRSDK IOS API Document](https://tencentyun.github.io/TSR/ios-docs/1.12/index.html)
 

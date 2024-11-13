@@ -176,6 +176,22 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
 //----------------------GL Thread---------------------//
 ```
 
+The TSRPass class provides interfaces for managing and optimizing the professional super-resolution (Pro SR) functionality during the super-resolution rendering process. Below is a detailed introduction to these interfaces:
+
+1. **enableProSRAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
+   This method enables the automatic fallback mechanism for the super-resolution process and sets the corresponding parameters. This method should be called before invoking the initialization method. It configures the parameters for automatic fallback; if the number of consecutive timeout frames exceeds the specified consecutiveTimeoutFrames, the system will trigger a fallback. Note that this method only takes effect if the algorithm type used to create the TSRPass is not set to STANDARD. Additionally, a fallback listener can be provided to handle fallback events. When a fallback is triggered, the fallback listener's onFallback() method will be called, allowing the user to implement custom behavior in response to the fallback event.
+
+2. **disableProSRAutoFallback():**
+   This method disables the automatic fallback mechanism for the super-resolution process. This method should be called to turn off the automatic fallback feature that was previously enabled using enableProSRAutoFallback. Once this method is invoked, the system will no longer trigger a fallback based on the configured parameters.
+
+3. **benchmarkProSR(int inputWidth, int inputHeight, float srRatio):**
+   This method evaluates the rendering time consumption of the PROFESSIONAL algorithm. It assesses the execution time in milliseconds for the PROFESSIONAL algorithm based on the given input dimensions. This method should not be called on the main thread, as it may take approximately 2 to 5 seconds to complete. This method only takes effect if the algorithm type used to create the TSRPass is not set to STANDARD. If the execution of the algorithm fails for any reason, this method will return -1.
+
+4. **forceProSRFallback(boolean enable):**
+   This method switches between the PROFESSIONAL and STANDARD algorithms. When enable is true, the system will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm. This method only takes effect if the algorithm type used to create the TSRPass is not set to STANDARD.
+
+These interfaces provide developers with flexible control options to optimize the performance and user experience of super-resolution rendering.
+
 ### **2.2.3 TIEPass**
 [TIEPass](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TIEPass.html) is a class used for image enhancement rendering, **only available in the Professional Edition SDK**. When creating a TIEPass, you need to pass in TIEAlgorithmType to set the image enhancement algorithm type. It includes `init`, `reInit`, `render`, and `deInit` methods. Before using TIEPass, you need to call the `init` method to initialize. If you need to update the input image dimensions without creating a new TIEPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
 
@@ -229,6 +245,22 @@ if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
 
 //----------------------GL Thread---------------------//
 ```
+
+The TIEPass class provides interfaces for managing and optimizing the professional image enhancement (Pro IE) functionality during the image enhancement process. Below is a detailed introduction to these interfaces:
+
+1. **enableProIEAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
+   This method enables the automatic fallback mechanism for the image enhancement process and sets the corresponding parameters. This method should be called before invoking the initialization method. It configures the parameters for automatic fallback; if the number of consecutive timeout frames exceeds the specified consecutiveTimeoutFrames, the system will trigger a fallback. Note that this method only takes effect if the algorithm type used to create the TIEPass is not set to STANDARD. Additionally, a fallback listener can be provided to handle fallback events. When a fallback is triggered, the fallback listener's onFallback() method will be called, allowing the user to implement custom behavior in response to the fallback event.
+
+2. **disableProIEAutoFallback():**
+   This method disables the automatic fallback mechanism for the image enhancement process. This method should be called to turn off the automatic fallback feature that was previously enabled using enableProIEAutoFallback. Once this method is invoked, the system will no longer trigger a fallback based on the configured parameters.
+
+3. **benchmarkProIE(int inputWidth, int inputHeight):**
+   This method evaluates the rendering time consumption of the PROFESSIONAL algorithm. It assesses the execution time in milliseconds for the PROFESSIONAL algorithm based on the given input dimensions. This method should not be called on the main thread, as it may take approximately 2 to 5 seconds to complete. This method only takes effect if the algorithm type used to create the TIEPass is not set to STANDARD. If the execution of the algorithm fails for any reason, this method will return -1.
+
+4. **forceProIEFallback(boolean enable):**
+   This method switches between the PROFESSIONAL and STANDARD algorithms. When enable is true, the system will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm. This method only takes effect if the algorithm type used to create the TIEPass is not set to STANDARD.
+
+These interfaces provide developers with flexible control options to optimize the performance and user experience of the image enhancement process.
 
 ### **2.2.4 TSRLogger**
 [TSRLogger](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TSRLogger.html) is used to receive logs from the SDK internals. Please write these logs to a file for external network problem positioning.
