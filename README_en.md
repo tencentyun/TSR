@@ -1,4 +1,4 @@
-# Terminal Video Enhancement SDK
+# Client Video Enhancement SDK
 - [[简体中文]](README.md)
 
 ## 1. Product Introduction
