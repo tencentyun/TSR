@@ -2,7 +2,7 @@
 - [[简体中文]](README.md)
 
 ## 1. Product Introduction
-The Terminal Video Enhancement SDK, based on efficient image processing algorithms and AI model inference capabilities, realizes terminal video super-resolution and image quality enhancement functions. Super-resolution refers to efficiently upsampling the original video while maintaining the image quality as much as possible during terminal playback to adapt to the display device's playback resolution. Image quality enhancement refers to improving the visual quality of the image, making it more clear, delicate, and realistic.
+The Client Video Enhancement SDK, based on efficient image processing algorithms and AI model inference capabilities, realizes client video super-resolution and image quality enhancement functions. Super-resolution refers to efficiently upsampling the original video while maintaining the image quality as much as possible during client playback to adapt to the display device's playback resolution. Image quality enhancement refers to improving the visual quality of the image, making it more clear, delicate, and realistic.
 The specific functionality details of each version are as follows:
 
 | Function Point           | Standard Edition | Professional Edition |
@@ -47,13 +47,13 @@ Tested on high, medium, and low-end models, after opening super-resolution, the 
 
 ## 3. Use Cases
 
-1. Terminal player enhancement, improving video playback quality and smoothness experience.
+1. Client player enhancement, improving video playback quality and smoothness experience.
    <img src=docs/scenario_pipeline_en.png />
 
-2. Save costs, reduce the resolution and bitrate of video distribution, and then reduce the experience loss through terminal playback enhancement.
+2. Save costs, reduce the resolution and bitrate of video distribution, and then reduce the experience loss through client playback enhancement.
    <img src=docs/scenario_video_trans_en.png />
 
-For example, in a cloud gaming scenario, by utilizing the real-time video super-resolution capability on the terminal, the computing power of cloud rendering and encoding can be reduced, transmission bandwidth can be saved, and costs can be saved. In the following example, the terminal plays a 720P (5.6Mbps) game screen transmitted by the cloud in real-time super-resolution to 1080P, and the viewing effect is close to the 1080P (8.2Mbps) screen transmitted by the cloud, saving 30% of bandwidth.
+For example, in a cloud gaming scenario, by utilizing the real-time video super-resolution capability on the client, the computing power of cloud rendering and encoding can be reduced, transmission bandwidth can be saved, and costs can be saved. In the following example, the client plays a 720P (5.6Mbps) game screen transmitted by the cloud in real-time super-resolution to 1080P, and the viewing effect is close to the 1080P (8.2Mbps) screen transmitted by the cloud, saving 30% of bandwidth.
 <img src=docs/scenario_case_game_en.png/>
 
 ## 4. Compatibility
