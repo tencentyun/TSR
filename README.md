@@ -63,11 +63,11 @@
 
 ## 4. 兼容性
 * 标准版：
-  - Android： 5.0及以上系统版本；
-  - iOS：iPhone 5s且iOS 12及以上。
+  - Android：系统版本Android 5.0及以上；
+  - iOS：iPhone 5s及以上机型，且系统版本在iOS 12及以上。
 * 专业版：
-  - Android： 5.0及以上系统版本，且支持OpenCL 1.2及以上版本；
-  - iOS：16及以上。
+  - Android： 系统版本Android 5.0及以上，且支持OpenCL 1.2及以上版本；
+  - iOS：系统版本iOS 16及以上。
 
 ## 5. 包大小
 * 标准版：Android AAR约 0.3MB（单arm64-v8a架构）；iOS Framework 0.4MB。
