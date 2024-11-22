@@ -100,8 +100,8 @@
   </tr>
   <tr align=center>
     <td>Android</td>
-    <td><img src=docs/android-demo-qrcode.png/></td>
-    <td><a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk">MPSDemo</a></td>
+    <td><img src="./docs/android-demo-qrcode.png"/></td>
+    <td> <a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk">MPSDemo</a> </td>
   </tr>
 </table>
 </div>
