@@ -49,7 +49,7 @@
     <th>说明 </th>
   </tr>
   <tr style="height:180px">
-    <td style="text-align: center">性能</td>
+    <td style="align: center">性能</td>
     <td>
       <li>场景广泛：适用各种分辨率的处理。支持360P至4K的超分辨率处理，以及360P至1080P的画质增强处理。
       <li>高效处理：标准版算法在2016年千元机上处理720P超分1.5倍至1080P平均每帧耗时为1ms以内；专业版算法在2020年千元机上处理540P超分2倍至1080P平均帧耗时为20ms，720P超分1.5倍平均帧耗时为29ms。
@@ -57,7 +57,7 @@
     </td>
   </tr>
   <tr style="height:180px">
-    <td style="text-align: center">兼容性</td>
+    <td style="align: center">兼容性</td>
     <td><li>支持市面上绝大多数Android与iOS主流机型。</td>
   </tr>
 </table>
@@ -89,7 +89,7 @@
 
 ## 6. 体验Demo
 
-<div style="text-align:center">
+<div style="align:center">
 <table>
   <tr>
     <th style="width: 150px;margin:auto">系统</th>
@@ -99,7 +99,7 @@
   <tr>
     <td>Android</td>
     <td><img src="./docs/android-demo-qrcode.png"/></td>
-    <td><a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk">MPSDemo</a></td>
+    <td><a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk" style="width: 150px;">MPSDemo</a></td>
   </tr>
 </table>
 </div>
