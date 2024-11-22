@@ -48,16 +48,16 @@
     <th width=100px>类目</th>
     <th>说明 </th>
   </tr>
-  <tr style="height:180px">
-    <td style="align: center">性能</td>
+  <tr height=180px;>
+    <td align=center>性能</td>
     <td>
       <li>场景广泛：适用各种分辨率的处理。支持360P至4K的超分辨率处理，以及360P至1080P的画质增强处理。
       <li>高效处理：标准版算法在2016年千元机上处理720P超分1.5倍至1080P平均每帧耗时为1ms以内；专业版算法在2020年千元机上处理540P超分2倍至1080P平均帧耗时为20ms，720P超分1.5倍平均帧耗时为29ms。
       <li>使用灵活：具备根据设备性能自适应选择算法的能力，在清晰播放的同时拒绝卡顿。
     </td>
   </tr>
-  <tr style="height:180px">
-    <td style="align: center">兼容性</td>
+  <tr height=180px;>
+    <td align=center>兼容性</td>
     <td><li>支持市面上绝大多数Android与iOS主流机型。</td>
   </tr>
 </table>
@@ -89,17 +89,17 @@
 
 ## 6. 体验Demo
 
-<div style="align:center">
+<div align=center>
 <table>
   <tr>
-    <th style="width: 150px;margin:auto">系统</th>
-    <th style="width: 150px;">二维码</th>
-    <th style="width: 150px;">链接</th>
+    <th width=150px;>系统</th>
+    <th width=150px;>二维码</th>
+    <th width=150px;>链接</th>
   </tr>
   <tr>
     <td>Android</td>
     <td><img src=docs/android-demo-qrcode.png width=30% /></td>
-    <td><a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk" style="width: 150px;">MPSDemo</a></td>
+    <td><a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk">MPSDemo</a></td>
   </tr>
 </table>
 </div>
