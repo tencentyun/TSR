@@ -1,5 +1,5 @@
 # 终端视频增强SDK
-[[English]](README_en.md)
+[[English]](https://github.com/tencentyun/TSR/blob/main/README_en.md)
 
 终端视频增强SDK，基于高效的图像处理算法和AI模型推理能力，实现终端视频超分辨率、画质增强等功能。超分辨率是指在终端播放时，在尽量保持画质的前提下将原始视频进行高效的上采样，以适应显示设备的播放分辨率。画质增强是指改善图像的视觉质量，使其更加清晰细腻和真实。  
 
@@ -105,11 +105,11 @@
   </tr>
 </table>
 </div>
-
+<br>
 <div style="display:flex;">
   <img src=docs/android-demo-1.png width="30%" /> 
   <img src=docs/android-demo-2.png width="30%" margin-left=40px />
 </div>
 
 ## 7. 接入指引
-参考[Android](Android%20接入指南.md)、[iOS](iOS%20接入指南.md)接入指南。
+参考[Android](https://github.com/tencentyun/TSR/blob/main/Android%20%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md)、[iOS](https://github.com/tencentyun/TSR/blob/main/iOS%20%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md)接入指南。
