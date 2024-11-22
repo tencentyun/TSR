@@ -92,11 +92,11 @@
 ## 6. 体验Demo
 
 <div>
-<table align=center>
+<table>
   <tr>
-    <th width=150px;>系统</th>
-    <th width=150px;>二维码</th>
-    <th width=150px;>链接</th>
+    <th width=150px;align=center>系统</th>
+    <th width=150px;align=center>二维码</th>
+    <th width=150px;align=center>链接</th>
   </tr>
   <tr>
     <td>Android</td>
