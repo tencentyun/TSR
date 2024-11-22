@@ -92,7 +92,7 @@
 ## 6. 体验Demo
 
 <div>
-<table>
+<table align=center>
   <tr>
     <th width=150px;>系统</th>
     <th width=150px;>二维码</th>
