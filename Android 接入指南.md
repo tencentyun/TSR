@@ -25,8 +25,10 @@ App签名证书信息可以使用keytool命令查看，例如
 
 授权方案分为授权申请和授权验证两个过程，其中授权申请在授权有效期内，只会进行一次。授权服务开通后，您可以在初始化TSRSDK时使用在线方式进行鉴权，APP需要有访问网络权限。授权服务具有有效期限，当授权过期失效后需要重新获取授权。
 
-### 1.1.2 **开通MPS控制台**
+### 1.1.2 **开通测试授权**
 为了服务能够正常授权，您还需要在腾讯云官网开通【媒体处理（MPS）控制台】。开通链接：https://console.cloud.tencent.com/mps
+
+开通【媒体处理（MPS）控制台】后，可以参照[文档教程](https://doc.weixin.qq.com/doc/w3_AOcASwZGACk0FEPdUPJSfWATJijrR?scode=AJEAIQdfAAoiwZesQAAcEALgZGALo)。的方式，自行开通测试授权。
 
 ## 1.2 **Demo工程编译运行**
 
