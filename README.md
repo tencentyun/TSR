@@ -81,8 +81,8 @@
 | <img src=./docs/android-demo-qrcode.png width=30% />|
 
 <div style="display:flex;">
-  <img src="./docs/android-demo-1.png" width="30%" /> 
-  <img src="./docs/android-demo-2.png" width="30%" />
+  <img src=docs/android-demo-1.png width="30%" /> 
+  <img src=docs/android-demo-2.png width="30%" />
 </div>
 
 ## 7. 接入指引
