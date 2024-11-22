@@ -45,7 +45,7 @@
 ## 2. 产品优势
 <table>
   <tr>
-    <th style="width:100px">类目</th>
+    <th width=100px>类目</th>
     <th>说明 </th>
   </tr>
   <tr style="height:180px">
@@ -98,7 +98,7 @@
   </tr>
   <tr>
     <td>Android</td>
-    <td><img src="./docs/android-demo-qrcode.png"/></td>
+    <td><img src=docs/android-demo-qrcode.png width=30% /></td>
     <td><a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk" style="width: 150px;">MPSDemo</a></td>
   </tr>
 </table>
