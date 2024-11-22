@@ -8,9 +8,9 @@
 
 
 终端视频增强SDK分为标准版与专业版：
-* 标准版的特点是高性能，能够以较低的计算耗时和功耗实现良好的超分辨率效果，适配各种性能的手机。
+* 标准版的特点是能够以较低的计算耗时和功耗实现良好的超分辨率效果，适配各种性能的手机。
 
-* 专业版的优势在于图像效果。除了进行上采样外，专业版还利用AI模型推理生成原图像缺失的纹理细节，从而实现图像增强和超分辨率处理。需要注意的是，专业版对设备的算力有一定要求，建议在中高端手机上使用。
+* 专业版的优势在于图像效果更佳。除了进行上采样外，专业版还利用AI模型推理生成原图像缺失的纹理细节，从而实现图像增强和超分辨率处理。需要注意的是，专业版对设备的算力有一定要求，建议在中高端手机上使用。
 
 各版本具体功能详情如下： 
 
@@ -43,10 +43,24 @@
 使用超分辨率算法将不同分辨率的视频统一为相同分辨率，然后进行高清合成。如果采用默认的放大算法，低分辨率视频可能会变得模糊。而使用超分辨率算法进行放大，则能更好地保持视频的清晰度。
 
 ## 2. 产品优势
-| 类目           | 说明 | 
-| ---------------- | ------ | 
-| 性能       | <li>场景广泛：适用各种分辨率的处理，支持360P至4K的超分辨率处理，以及360P至1080P的画质增强处理。<li>高效处理：标准版算法在2016年千元机上处理720P超分1.5倍至1080P平均每帧耗时为1ms以内；专业版算法在2020年千元机上处理540P超分2倍至1080P平均帧耗时为20ms，720P超分1.5倍平均帧耗时为29ms。<li>使用灵活：具备根据设备性能自适应选择算法的能力，在清晰播放的同时拒绝卡顿。|
-| 兼容性   | <li>支持市面上绝大多数Android与iOS主流机型。 |
+<table>
+  <tr>
+    <th style="width:100px">类目</th>
+    <th>说明 </th>
+  </tr>
+  <tr style="height:180px">
+    <td style="text-align: center">性能</td>
+    <td>
+      <li>场景广泛：适用各种分辨率的处理。支持360P至4K的超分辨率处理，以及360P至1080P的画质增强处理。
+      <li>高效处理：标准版算法在2016年千元机上处理720P超分1.5倍至1080P平均每帧耗时为1ms以内；专业版算法在2020年千元机上处理540P超分2倍至1080P平均帧耗时为20ms，720P超分1.5倍平均帧耗时为29ms。
+      <li>使用灵活：具备根据设备性能自适应选择算法的能力，在清晰播放的同时拒绝卡顿。
+    </td>
+  </tr>
+  <tr style="height:180px">
+    <td style="text-align: center">兼容性</td>
+    <td><li>支持市面上绝大多数Android与iOS主流机型。</td>
+  </tr>
+</table>
 
 
 ## 3.产品性能
@@ -74,15 +88,25 @@
 * 专业版：Android AAR约 2.1MB（单arm64-v8a架构）；iOS Framework 1.9MB。
 
 ## 6. 体验Demo
-[下载链接](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/SRPlayer.apk)  
-用手机系统浏览器打开，下载安装   
-|Android|
-| :- |
-| <img src=./docs/android-demo-qrcode.png width=30% />|
+
+<div style="text-align:center">
+<table>
+  <tr>
+    <th style="width: 150px;margin:auto">系统</th>
+    <th style="width: 150px;">二维码</th>
+    <th style="width: 150px;">链接</th>
+  </tr>
+  <tr>
+    <td>Android</td>
+    <td><img src="./docs/android-demo-qrcode.png"/></td>
+    <td><a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk">MPSDemo</a></td>
+  </tr>
+</table>
+</div>
 
 <div style="display:flex;">
   <img src=docs/android-demo-1.png width="30%" /> 
-  <img src=docs/android-demo-2.png width="30%" />
+  <img src=docs/android-demo-2.png width="30%" style="margin-left: 40px" />
 </div>
 
 ## 7. 接入指引
