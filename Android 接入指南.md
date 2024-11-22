@@ -100,10 +100,9 @@ App签名证书信息可以使用keytool命令查看，例如
 
 **注意：TSRPass 不是线程安全的，必须在同一个线程中调用 TSRPass 的方法。**
 
-在 TSRAlgorithmType 枚举中，有 STANDARD、PROFESSIONAL_HIGH_QUALITY 和 PROFESSIONAL_FAST 三个算法运行模式：
+在 TSRAlgorithmType 枚举中，有 STANDARD和PROFESSIONAL_HIGH_QUALITY两个算法运行模式：
 1. **STANDARD（标准）模式**：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
 2. **PROFESSIONAL_HIGH_QUALITY（专业版-高质量）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
-3. **PROFESSIONAL_FAST（专业版-快速）模式**：在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
 
 它包括了 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TSRPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TSRPass 实例的情况下更新输入图像的尺寸或缩放比例，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
@@ -199,9 +198,6 @@ TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的�
 ### **2.2.3 TIEPass**
 [TIEPass](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TIEPass.html) 是用于进行图像增强渲染的类，**只在专业版SDK可用**。在创建 TIEPass 时，您需要传入 TIEAlgorithmType 设置图像增强的算法类型。它包括 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TIEPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TIEPass 实例的情况下更新输入图像的尺寸，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
-在 TIEAlgorithmType 枚举中，有以下两个算法运行模式：
-1. **PROFESSIONAL_HIGH_QUALITY（专业版-高质量）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
-2. **PROFESSIONAL_FAST（专业版-快速）模式**：在牺牲一些图像质量的同时，确保了更快的处理速度。它适合于有高实时性要求的场景，并推荐在中档智能手机上使用。
 
 **注意：TIEPass 不是线程安全的，必须在同一个线程中调用 TIEPass 的方法。**
 
@@ -209,9 +205,6 @@ TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的�
 ```
 // Create a TIEPass object using the constructor.
 TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-
-// Alternatively, create a TIEPass object with the professional fast rendering type.
-// TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_FAST);
 
 // Before initializing the TIEPass, configure the maximum input resolution for super-resolution processing.
 // This configuration step is crucial as it helps to allocate memory and optimize performance.
