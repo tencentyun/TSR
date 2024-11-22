@@ -89,7 +89,7 @@
 
 ## 6. 体验Demo
 
-<div align=center>
+<div>
 <table>
   <tr>
     <th width=150px;>系统</th>
@@ -98,7 +98,7 @@
   </tr>
   <tr>
     <td>Android</td>
-    <td><img src=docs/android-demo-qrcode.png width=30% /></td>
+    <td><img src=docs/android-demo-qrcode.png/></td>
     <td><a href="https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk">MPSDemo</a></td>
   </tr>
 </table>
