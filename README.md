@@ -108,7 +108,7 @@
 
 <div style="display:flex;">
   <img src=docs/android-demo-1.png width="30%" /> 
-  <img src=docs/android-demo-2.png width="30%" style="margin-left: 40px" />
+  <img src=docs/android-demo-2.png width="30%" margin-left=40px />
 </div>
 
 ## 7. 接入指引
