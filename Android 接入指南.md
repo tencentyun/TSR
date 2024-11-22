@@ -69,7 +69,7 @@ App签名证书信息可以使用keytool命令查看，例如
 <img src=./docs/tsr-work-flow.png width=50% />
 
 ### **2.2.1 TSRSdk**
-[TSRSdk](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TSRSdk.html)包括init和deInit两个方法。init方法用于初始化SDK，deInit方法用于释放资源。
+[TSRSdk](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRSdk.html)包括init和deInit两个方法。init方法用于初始化SDK，deInit方法用于释放资源。
 
 1. 在线鉴权初始化TSRSdk，您需要传入**APPID和AUTH_ID**进行在线鉴权，还需要传入TSRSdk.TSRSdkLicenseVerifyResultCallback用于获取在线鉴权的结果。除此之外，还需要传入一个TSRLogger，用于获取SDK的日志。下面是示例代码：
 
@@ -96,7 +96,7 @@ App签名证书信息可以使用keytool命令查看，例如
 ```
 
 ### **2.2.2 TSRPass**
-[TSRPass](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TSRPass.html) 是用于进行超分辨率渲染的类，在创建 TSRPass 时，您需要传入 TSRAlgorithmType 设置超分的算法类型。
+[TSRPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRPass.html) 是用于进行超分辨率渲染的类，在创建 TSRPass 时，您需要传入 TSRAlgorithmType 设置超分的算法类型。
 
 **注意：TSRPass 不是线程安全的，必须在同一个线程中调用 TSRPass 的方法。**
 
@@ -196,7 +196,7 @@ TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的�
 这些接口为开发者提供了灵活的控制选项，以优化超分辨率渲染的性能和用户体验。
 
 ### **2.2.3 TIEPass**
-[TIEPass](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TIEPass.html) 是用于进行图像增强渲染的类，**只在专业版SDK可用**。在创建 TIEPass 时，您需要传入 TIEAlgorithmType 设置图像增强的算法类型。它包括 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TIEPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TIEPass 实例的情况下更新输入图像的尺寸，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
+[TIEPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TIEPass.html) 是用于进行图像增强渲染的类，**只在专业版SDK可用**。在创建 TIEPass 时，您需要传入 TIEAlgorithmType 设置图像增强的算法类型。它包括 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TIEPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TIEPass 实例的情况下更新输入图像的尺寸，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
 
 **注意：TIEPass 不是线程安全的，必须在同一个线程中调用 TIEPass 的方法。**
@@ -259,11 +259,11 @@ TIEPass类提供了接口用于管理和优化图像增强过程中的专业版�
 这些接口为开发者提供了灵活的控制选项，以优化图像增强过程的性能和用户体验。
 
 ### **2.2.4 TSRLogger**
-[TSRLogger](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TSRLogger.html)用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
+[TSRLogger](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRLogger.html)用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
 
 # **3 SDK API描述**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/1.12/index.html)
+[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/latest/index.html)
 
 
