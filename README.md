@@ -72,6 +72,8 @@
 <img src=docs/standard-sr-performance.png width=70% />
 
 ### 专业版
+<img src=docs/pro-sr-performance.png width=70% />
+ 
 <img src=docs/pro-ie-performance.png width=70% />
 
 
