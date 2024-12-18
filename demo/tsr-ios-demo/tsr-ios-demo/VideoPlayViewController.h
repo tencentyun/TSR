@@ -27,6 +27,8 @@
 @property (nonatomic, strong) UIButton *proIEHighQualityButton;
 @property (nonatomic, strong) UIButton *playDirectlyButton;
 @property (nonatomic, strong) UIButton *standardSRButton;
+@property (nonatomic, strong) UIButton *standardIEButton;
+
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) MTKView *mtkView;
 @property (nonatomic, strong) UIView *whiteView;
@@ -42,6 +44,7 @@
 @property (nonatomic, strong) TSRPass* tsr_pass_standard;
 @property (nonatomic, strong) TSRPass* tsr_pass_professional_fast;
 @property (nonatomic, strong) TSRPass* tsr_pass_professional_high_quality;
+@property (nonatomic, strong) TIEPass* tie_pass_standard;
 @property (nonatomic, strong) TIEPass* tie_pass_fast;
 @property (nonatomic, strong) TIEPass* tie_pass_high_quality;
 
@@ -49,7 +52,6 @@
 @property (nonatomic, assign) CGSize videoSize;
 @property (nonatomic, assign) float srRatio;
 @property (nonatomic, assign) BOOL isVideoLandscape;
-@property (nonatomic, assign) BOOL isFullScreen;
 @property (nonatomic, assign) int outputWidth;
 @property (nonatomic, assign) int outputHeight;
 @property (nonatomic, assign) bool srCreateDone;

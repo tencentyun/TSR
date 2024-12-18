@@ -88,22 +88,14 @@
     
     TSRInitStatusCode initStatus;
     
-    _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:200 inputHeight:200 srRatio:_srRatio initStatusCode:&initStatus];
-    [self checkTSRPassInitStatus:initStatus];
+    _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
     
-    initStatus = [_tsr_pass_standard reInit:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
-    [self checkTSRPassInitStatus:initStatus];
-    
-    _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:200 inputHeight:200 srRatio:_srRatio initStatusCode:&initStatus];
-    [self checkTSRPassInitStatus:initStatus];
-    
-    initStatus = [_tsr_pass_professional_fast reInit:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
-    [self checkTSRPassInitStatus:initStatus];
+    _tsr_pass_professional_fast = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalFast device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
 
-    _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:200 inputHeight:200 srRatio:_srRatio initStatusCode:&initStatus];
-    [self checkTSRPassInitStatus:initStatus];
+    _tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
     
     initStatus = [_tsr_pass_professional_high_quality reInit:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
+
     [self checkTSRPassInitStatus:initStatus];
     
     MTLTextureDescriptor *ieTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
@@ -112,18 +104,12 @@
     _ie_texture = [_device newTextureWithDescriptor:ieTextureDescriptor];
     
     TIEInitStatusCode tieInitStatus;
+    _tie_pass_standard = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
     
-    _tie_pass_fast = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalFast device:_device inputWidth:200 inputHeight:200  initStatusCode:&tieInitStatus];
-    [self checkTIEPassInitStatus:tieInitStatus];
+    _tie_pass_fast = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalFast device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
     
-    tieInitStatus = [_tie_pass_fast reInit:_videoSize.width inputHeight:_videoSize.height];
-    [self checkTIEPassInitStatus:tieInitStatus];
-    
-    _tie_pass_high_quality = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalHighQuality device:_device inputWidth:200 inputHeight:200  initStatusCode:&tieInitStatus];
-    [self checkTIEPassInitStatus:tieInitStatus];
-    
-    tieInitStatus = [_tie_pass_high_quality reInit:_videoSize.width inputHeight:_videoSize.height];
-    [self checkTIEPassInitStatus:tieInitStatus];
+    _tie_pass_high_quality = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height  initStatusCode:&tieInitStatus];
+    [_tie_pass_high_quality setParametersWithBrightness:52 saturation:55 contrast:60 sharpness:0];
     
     _srCreateDone = true;
 }
@@ -149,7 +135,6 @@
         if (srRatio > 0) {
             rect = CGRectMake(0, 0, _videoSize.width * srRatio / 3, _videoSize.height * srRatio / 3);
         } else {
-            _isFullScreen = true;
             // The SR setting is "Auto"
             int screenHeight = self.view.bounds.size.height * 3;
             int screenWidth = self.view.bounds.size.width * 3;
@@ -246,35 +231,44 @@
     
     // 创建命令缓冲区
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
-//
-//    if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"]) {
-//        _ie_texture = [_tie_pass_fast render:_in_texture commandBuffer:commandBuffer];
-//    } else if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
-//        _ie_texture = [_tie_pass_high_quality render:_in_texture commandBuffer:commandBuffer];
-//    } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
-//        _sr_texture = [_tsr_pass_standard render:_in_texture commandBuffer:commandBuffer];
-//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-低算力)"]){
-//        _sr_texture = [_tsr_pass_professional_fast render:_in_texture commandBuffer:commandBuffer];
-//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-高算力)"]){
-//        _sr_texture = [_tsr_pass_professional_high_quality render:_in_texture commandBuffer:commandBuffer];
-//    }
-
+    NSDate *startTime = [NSDate date];
     if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"]) {
-        CVPixelBufferRef pb = [_tie_pass_fast renderWithPixelBuffer:pixelBuffer];
-        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+        _ie_texture = [_tie_pass_fast render:_in_texture commandBuffer:commandBuffer];
     } else if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
-        CVPixelBufferRef pb = [_tie_pass_high_quality renderWithPixelBuffer:pixelBuffer];
-        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+        _ie_texture = [_tie_pass_high_quality render:_in_texture commandBuffer:commandBuffer];
     } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
-        CVPixelBufferRef pb = [_tsr_pass_standard renderWithPixelBuffer:pixelBuffer];
-        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+        _sr_texture = [_tsr_pass_standard render:_in_texture commandBuffer:commandBuffer];
     } else if ([_algorithm isEqualToString:@"超分播放(专业版-低算力)"]){
-        CVPixelBufferRef pb = [_tsr_pass_professional_fast renderWithPixelBuffer:pixelBuffer];
-        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+        _sr_texture = [_tsr_pass_professional_fast render:_in_texture commandBuffer:commandBuffer];
     } else if ([_algorithm isEqualToString:@"超分播放(专业版-高算力)"]){
-        CVPixelBufferRef pb = [_tsr_pass_professional_high_quality renderWithPixelBuffer:pixelBuffer];
-        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+        _sr_texture = [_tsr_pass_professional_high_quality render:_in_texture commandBuffer:commandBuffer];
     }
+
+
+//    if ([_algorithm isEqualToString:@"增强播放(标准版)"]) {
+//        CVPixelBufferRef pb = [_tie_pass_standard renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+//    } else if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"]) {
+//        CVPixelBufferRef pb = [_tie_pass_fast renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+//    } else if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
+//        CVPixelBufferRef pb = [_tie_pass_high_quality renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+//    } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
+//        CVPixelBufferRef pb = [_tsr_pass_standard renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-低算力)"]){
+//        CVPixelBufferRef pb = [_tsr_pass_professional_fast renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-高算力)"]){
+//        CVPixelBufferRef pb = [_tsr_pass_professional_high_quality renderWithPixelBuffer:pixelBuffer];
+//        [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+//    }
+//    
+    NSDate *endTime = [NSDate date];
+    NSTimeInterval executionTime = [endTime timeIntervalSinceDate:startTime];
+    double executionTimeInMs = executionTime * 1000.0;
+    NSLog(@"excutiontimeMS: %f", executionTimeInMs);
     
     // 创建渲染编码器
     MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
@@ -289,7 +283,7 @@
     [renderEncoder setRenderPipelineState:_pipelineState];
     
     // 设置纹理
-    if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"] || [_algorithm isEqualToString:@"增强播放(专业版-高算力)"]) {
+    if ([_algorithm isEqualToString:@"增强播放(专业版-低算力)"] || [_algorithm isEqualToString:@"增强播放(专业版-高算力)"] || [_algorithm isEqualToString:@"增强播放(标准版)"]) {
         [renderEncoder setFragmentTexture:_ie_texture atIndex:0];
     } else if ([_algorithm isEqualToString:@"普通播放"]) {
         [renderEncoder setFragmentTexture:_in_texture atIndex:0];
@@ -407,7 +401,14 @@
     [self.standardSRButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [self.standardSRButton addTarget:self action:@selector(standardSRButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.standardSRButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
-
+    
+    // 创建 Standard IE 按钮
+    self.standardIEButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.standardIEButton setTitle:@"增强播放(标准版)" forState:UIControlStateNormal];
+    [self.standardIEButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [self.standardIEButton addTarget:self action:@selector(standardIEButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    self.standardIEButton.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
+    
     // 获取屏幕的宽度和高度
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
@@ -424,17 +425,22 @@
     // 设置文本切换按钮的位置和大小
     CGFloat algorithmSwitchButtonX = playPauseButtonX * 2 + buttonWidth; // 计算文本切换按钮的 X 坐标
 
-    if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"] || [_algorithm isEqualToString:@"增强播放(专业版-低算力)"] || [_algorithm isEqualToString:@"普通播放"]) {
+    if ([_algorithm isEqualToString:@"增强播放(专业版-高算力)"] || [_algorithm isEqualToString:@"增强播放(专业版-低算力)"] || [_algorithm isEqualToString:@"普通播放"]
+        || [_algorithm isEqualToString:@"增强播放(标准版)"]) {
         self.proIEHighQualityButton.frame = CGRectMake(algorithmSwitchButtonX, buttonY, buttonWidth, buttonHeight);
         
         CGFloat ieFastButtonY = buttonY - buttonHeight - 20; // 在 srSwitchButton 上方 40 个点
         self.proIEFastButton.frame = CGRectMake(algorithmSwitchButtonX, ieFastButtonY, buttonWidth, buttonHeight);
 
-        CGFloat playDirectlyButtonY = ieFastButtonY - buttonHeight - 20; // 在 srSwitchButton 上方 40 个点
+        CGFloat standardIEButtonY = ieFastButtonY - buttonHeight - 20; // 在 srSwitchButton 上方 40 个点
+        self.standardIEButton.frame = CGRectMake(algorithmSwitchButtonX, standardIEButtonY, buttonWidth, buttonHeight);
+        
+        CGFloat playDirectlyButtonY = standardIEButtonY - buttonHeight - 20; // 在 srSwitchButton 上方 40 个点
         self.playDirectlyButton.frame = CGRectMake(algorithmSwitchButtonX, playDirectlyButtonY, buttonWidth, buttonHeight);
 
         [self.view addSubview:self.proIEHighQualityButton];
         [self.view addSubview:self.proIEFastButton];
+        [self.view addSubview:self.standardIEButton];
         [self.view addSubview:self.playDirectlyButton];
     } else {
         self.proSRHighQualityButton.frame = CGRectMake(algorithmSwitchButtonX, buttonY, buttonWidth, buttonHeight);
@@ -523,10 +529,13 @@
     self.infoLabel.text = _algorithm;
 }
 
+bool enable = false;
 // 添加 Pro SR 按钮的事件处理方法
 - (void)proSRFastButtonTapped:(UIButton *)sender {
-    _algorithm = @"超分播放(专业版-低算力)";
-    self.infoLabel.text = _algorithm;
+//    _algorithm = @"超分播放(专业版-低算力)";
+//    self.infoLabel.text = _algorithm;
+    enable = !enable;
+    [_tsr_pass_professional_high_quality forceProSRFallback:enable];
 }
 
 - (void)proSRHighQualityButtonTapped:(UIButton *)sender {
@@ -534,10 +543,18 @@
     self.infoLabel.text = _algorithm;
 }
 
+// 添加 Standard IE 按钮的事件处理方法
+- (void)standardIEButtonTapped:(UIButton *)sender {
+    _algorithm = @"增强播放(标准版)";
+    self.infoLabel.text = _algorithm;
+}
+
 // 添加 Pro IE 按钮的事件处理方法
 - (void)proIEFastButtonTapped:(UIButton *)sender {
-    _algorithm = @"增强播放(专业版-低算力)";
-    self.infoLabel.text = _algorithm;
+//    _algorithm = @"增强播放(专业版-低算力)";
+//    self.infoLabel.text = _algorithm;
+    enable = !enable;
+    [_tie_pass_high_quality forceProIEFallback:enable];
 }
 
 - (void)proIEHighQualityButtonTapped:(UIButton *)sender {
@@ -561,7 +578,7 @@
         self.whiteView.frame = CGRectMake(0, 0, size.width, size.height);
         
         CGRect rect;
-        if (!_isFullScreen) {
+        if (self->_srRatio > 0) {
             rect = CGRectMake(0, 0, self->_videoSize.width * self->_srRatio / 3, self->_videoSize.height * self->_srRatio / 3);
         } else {
             // The SR setting is "Auto"
