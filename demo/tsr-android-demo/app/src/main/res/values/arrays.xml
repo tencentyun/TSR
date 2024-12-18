@@ -1,8 +1,10 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="video_names">
-        <item>540x960_vertical.mp4</item>
-        <item>848x480_horizontal.mp4</item>
+        <item>game.mp4</item>
+        <item>landscape.mp4</item>
+        <item>movie(horizontal).mp4</item>
+        <item>movie(vertical).mp4</item>
     </string-array>
 
     <string-array name="sr_ratio">
@@ -20,10 +22,9 @@
         <item>Normal</item>
         <item>Super-Resolution(STD)</item>
         <item>Super-Resolution(STD-Enhanced Params)</item>
-        <item>Super-Resolution(PRO-High Quality)</item>
-        <item>Super-Resolution(PRO-Fast)</item>
-        <item>Enhanced(PRO-High Quality)</item>
-        <item>Enhanced(PRO-Fast)</item>
+        <item>Super-Resolution(PRO)</item>
+        <item>Enhanced(STD)</item>
+        <item>Enhanced(PRO)</item>
     </string-array>
 
     <string-array name="compare_algorithm">
@@ -31,10 +32,9 @@
         <item>Normal</item>
         <item>Super-Resolution(STD)</item>
         <item>Super-Resolution(STD-Enhanced Params)</item>
-        <item>Super-Resolution(PRO-High Quality)</item>
-        <item>Super-Resolution(PRO-Fast)</item>
-        <item>Enhanced(PRO-High Quality)</item>
-        <item>Enhanced(PRO-Fast)</item>
+        <item>Super-Resolution(PRO)</item>
+        <item>Enhanced(STD)</item>
+        <item>Enhanced(PRO)</item>
     </string-array>
 
     <string-array name="codecs">

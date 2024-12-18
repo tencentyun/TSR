@@ -7,7 +7,7 @@
 
     <application
             android:name="com.tencent.mps.srplayer.SRApplication"
-            android:allowBackup="true"
+            android:allowBackup="false"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/backup_rules"
             android:hardwareAccelerated="true"

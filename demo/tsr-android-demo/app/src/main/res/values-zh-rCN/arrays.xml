@@ -1,8 +1,10 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="video_names">
-        <item>540x960_vertical.mp4</item>
-        <item>848x480_horizontal.mp4</item>
+        <item>game.mp4</item>
+        <item>landscape.mp4</item>
+        <item>movie(horizontal).mp4</item>
+        <item>movie(vertical).mp4</item>
     </string-array>
 
     <string-array name="sr_ratio">
@@ -20,10 +22,9 @@
         <item>普通播放</item>
         <item>超分播放(标准版)</item>
         <item>超分播放(标准版+增强参数)</item>
-        <item>超分播放(专业版-高算力)</item>
-        <item>超分播放(专业版-低算力)</item>
-        <item>增强播放(专业版-高算力)</item>
-        <item>增强播放(专业版-低算力)</item>
+        <item>超分播放(专业版)</item>
+        <item>增强播放(标准版)</item>
+        <item>增强播放(专业版)</item>
     </string-array>
 
     <string-array name="compare_algorithm">
@@ -31,10 +32,9 @@
         <item>普通播放</item>
         <item>超分播放(标准版)</item>
         <item>超分播放(标准版+增强参数)</item>
-        <item>超分播放(专业版-高算力)</item>
-        <item>超分播放(专业版-低算力)</item>
-        <item>增强播放(专业版-高算力)</item>
-        <item>增强播放(专业版-低算力)</item>
+        <item>超分播放(专业版)</item>
+        <item>增强播放(标准版)</item>
+        <item>增强播放(专业版)</item>
     </string-array>
 
     <string-array name="codecs">
