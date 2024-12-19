@@ -58,10 +58,19 @@ The following is the compiled App installation package of the Demo project, whic
 <uses-permission android:name="android.permission.INTERNET"/>
 
 // If Android targetSdkVersion is greater than or equal to 31, you need to add the following tags, otherwise the professional version features will not be available
-<application>
-<uses-native-library android:name="libOpenCL.so" android:required="false"/>
-<uses-library android:name="libOpenCL-pixel.so" android:required="false"/>
-</application>
+ <application>
+     <uses-native-library
+         android:name="libOpenCL.so"
+         android:required="false" />
+
+     <uses-native-library
+         android:name="libOpenCL-car.so"
+         android:required="false" />
+
+     <uses-native-library
+         android:name="libOpenCL-pixel.so"
+         android:required="false" />
+ </application>
 ```
 
 ## **2.2 Program Flow**
