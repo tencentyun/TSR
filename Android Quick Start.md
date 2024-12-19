@@ -60,6 +60,7 @@ The following is the compiled App installation package of the Demo project, whic
 // If Android targetSdkVersion is greater than or equal to 31, you need to add the following tags, otherwise the professional version features will not be available
 <application>
 <uses-native-library android:name="libOpenCL.so" android:required="false"/>
+<uses-library android:name="libOpenCL-pixel.so" android:required="false"/>
 </application>
 ```
 
