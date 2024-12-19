@@ -63,6 +63,7 @@ App签名证书信息可以使用keytool命令查看，例如
  //如果 Android targetSdkVersion 大于等于 31，需要添加以下标签，否则专业版功能无法使用
  <application>
  <uses-native-library android:name="libOpenCL.so" android:required="false"/>
+ <uses-library android:name="libOpenCL-pixel.so" android:required="false"/>
  </application>
 ```
 ## **2.2 程序流程**
