@@ -67,7 +67,7 @@
         }
     }
   };
-  TSRSdk.getInstance().init(appId, authId, callback, logger);
+  TSRSdk.getInstance().init(context, appId, authId, callback, logger);
 ```
 
 
