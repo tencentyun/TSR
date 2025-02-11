@@ -93,7 +93,7 @@ App签名证书信息可以使用keytool命令查看，例如
         }
     }
   };
-  TSRSdk.getInstance().init(appId, authId, callback, logger);
+  TSRSdk.getInstance().init(context, appId, authId, callback, logger);
 ```
 
 

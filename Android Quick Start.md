@@ -90,7 +90,7 @@ The following is the compiled App installation package of the Demo project, whic
         }
     }
   };
-  TSRSdk.getInstance().init(appId, authId, callback, logger);
+  TSRSdk.getInstance().init(context, appId, authId, callback, logger);
 ```
 
 2. When you no longer need to use TSRSdk, you need to call the deInit method of TSRSdk to release resources. <font color="red">**Note: Before calling the deInit method of TSRSdk, make sure that all TSRPasses have released resources, otherwise unexpected problems may occur.**</font>
