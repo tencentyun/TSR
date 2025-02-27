@@ -84,9 +84,11 @@
 
 **注意：TSRPass 不是线程安全的，必须在同一个线程中调用 TSRPass 的方法。**
 
-在 TSRAlgorithmType 枚举中，有 STANDARD和PROFESSIONAL_HIGH_QUALITY两个算法运行模式：
+在 TSRAlgorithmType 枚举中，有 STANDARD、STANDARD_COLOR_RETOUCHING_EXT、PROFESSIONAL和PROFESSIONAL四个算法运行模式：
 1. **STANDARD（标准）模式**：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
-2. **PROFESSIONAL_HIGH_QUALITY（专业版-高质量）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+2. **STANDARD_COLOR_RETOUCHING_EXT（标准-色彩调节）模式**：在标准版超分辨率的基础上优化色彩表现。
+3. **PROFESSIONAL（专业）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+4. **PROFESSIONAL_COLOR_RETOUCHING_EXT（专业-色彩调节）模式**：在专业版超分辨率的基础上优化色彩表现。
 
 它包括了 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TSRPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TSRPass 实例的情况下更新输入图像的尺寸或缩放比例，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
@@ -103,9 +105,6 @@ TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
 TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
 if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-   // Optional: Set the brightness, saturation, contrast and sharpness levels.
-   tsrPass.setParameters(52, 55, 60, 0);
-
    // Perform super-resolution rendering and get the enhanced texture ID.
    int outputTextureId = tsrPass.render(inputTextureId);
 
@@ -129,7 +128,7 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
 以下是专业版超分代码示例：
 ```
 // Create a TSRPass object with the desired algorithm type.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
+TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
 
 // Before initializing the TSRPass, configure the maximum input resolution for super-resolution processing.
 // This configuration step is crucial as it helps to allocate memory and optimize performance.
@@ -188,7 +187,7 @@ TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的�
 以下是代码示例：
 ```
 // Create a TIEPass object using the constructor.
-TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
+TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
 
 // Before initializing the TIEPass, configure the maximum input resolution for super-resolution processing.
 // This configuration step is crucial as it helps to allocate memory and optimize performance.
@@ -248,6 +247,6 @@ TIEPass类提供了接口用于管理和优化图像增强过程中的专业版�
 # **3 SDK API描述**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/latest/index.html)
+[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/1.15/index.html)
 
 

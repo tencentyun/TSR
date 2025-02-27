@@ -80,11 +80,11 @@ The following is the compiled App installation package of the Demo project, whic
 
 **Note: TSRPass is not thread-safe, and the methods of TSRPass must be called in the same thread.**
 
-In the TSRAlgorithmType enumeration, there are STANDARD, PROFESSIONAL_HIGH_QUALITY, and PROFESSIONAL_FAST three algorithm running modes:
+In the TSRAlgorithmType enumeration, there are STANDARD, STANDARD_COLOR_RETOUCHING_EXT, PROFESSIONAL, and PROFESSIONAL_COLOR_RETOUCHING_EXT four algorithm running modes:
 1. **STANDARD** mode: Provides fast super-resolution processing speed, suitable for scenes with high real-time requirements. In this mode, significant image quality improvement can be achieved.
-2. **PROFESSIONAL_HIGH_QUALITY** mode: Ensures high image quality while requiring higher device performance. It is suitable for scenes with high image quality requirements and is recommended for use on mid-to-high-end smartphones.
-3. **PROFESSIONAL_FAST** mode: Ensures faster processing speed while sacrificing some image quality. It is suitable for scenes with high real-time requirements and is recommended for use on mid-range smartphones.
-
+2. **STANDARD_COLOR_RETOUCHING_EXT** mode: The STANDARD mode integrates color retouching functionality on top of super-resolution processing, enhancing visual color performance while preserving real-time capabilities.
+3. **PROFESSIONAL** mode: Ensures faster processing speed while sacrificing some image quality. It is suitable for scenes with high real-time requirements and is recommended for use on mid-range smartphones.
+4. **PROFESSIONAL_COLOR_RETOUCHING_EXT** mode: The PROFESSIONAL mode integrates color retouching functionality on top of super-resolution processing, enhancing visual color performance.
 The class includes `init`, `reInit`, `render`, and `deInit` methods. Before using TSRPass, you need to call the `init` method to initialize. If you need to update the input image dimensions or scaling factor without creating a new TSRPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
 
 
@@ -100,8 +100,6 @@ TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
 TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
 if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-   // Optional: Set the brightness, saturation, contrast and sharpness levels.
-   tsrPass.setParameters(52, 55, 60, 0);
 
    // Perform super-resolution rendering and get the enhanced texture ID.
    int outputTextureId = tsrPass.render(inputTextureId);
@@ -126,7 +124,7 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
 The following is an example of using PROFESSIONAL super-resolution algorithm code:
 ```
 // Create a TSRPass object with the desired algorithm type.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
+TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
 
 // Before initializing the TSRPass, configure the maximum input resolution for super-resolution processing.
 // This configuration step is crucial as it helps to allocate memory and optimize performance.
@@ -180,8 +178,8 @@ These interfaces provide developers with flexible control options to optimize th
 [TIEPass](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TIEPass.html) is a class used for image enhancement rendering, **only available in the Professional Edition SDK**. When creating a TIEPass, you need to pass in TIEAlgorithmType to set the image enhancement algorithm type. It includes `init`, `reInit`, `render`, and `deInit` methods. Before using TIEPass, you need to call the `init` method to initialize. If you need to update the input image dimensions without creating a new TIEPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
 
 In the TIEAlgorithmType enumeration, there are two algorithm running modes:
-1. **PROFESSIONAL_HIGH_QUALITY** (Professional Edition - High Quality) mode: Ensures high image quality while requiring higher device performance. It is suitable for scenes with high image quality requirements and is recommended for use on mid-to-high-end smartphones.
-2. **PROFESSIONAL_FAST** (Professional Edition - Fast) mode: Ensures faster processing speed while sacrificing some image quality. It is suitable for scenes with high real-time requirements and is recommended for use on mid-range smartphones.
+1. **STANDARD**: The standard mode is the basic color enhancement mode, which has corresponding enhancements to brightness, contrast and saturation. The enhancement speed is very fast and is recommended for use on low-to-mid-end smartphones.
+2. **PROFESSIONAL**: The PROFESSIONAL mode ensures high image quality while requiring higher device performance. This mode is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Configuration requirements: The device must have total RAM >= 4GB and available RAM >= 512MB; otherwise, it will revert to the STANDARD version of the algorithm.
 
 **Note: TIEPass is not thread-safe, and TIEPass methods must be called in the same thread.**
 
@@ -189,10 +187,7 @@ The following is a code example:
 
 ```
 // Create a TIEPass object using the constructor.
-TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-
-// Alternatively, create a TIEPass object with the professional fast rendering type.
-// TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_FAST);
+TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
 
 // Before initializing the TIEPass, configure the maximum input resolution for super-resolution processing.
 // This configuration step is crucial as it helps to allocate memory and optimize performance.
@@ -252,5 +247,5 @@ These interfaces provide developers with flexible control options to optimize th
 # **3 SDK API Description**
 You can click on the link to view the TSRSDK API documentation, which contains interface comments and usage examples.
 
-[TSRSDK ANDROID API Documentation](https://tencentyun.github.io/TSR/android-docs/1.12/index.html)
+[TSRSDK ANDROID API Documentation](https://tencentyun.github.io/TSR/android-docs/1.15/index.html)
 
