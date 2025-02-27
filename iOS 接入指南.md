@@ -68,25 +68,30 @@ TSRSdk包括`initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:`和`
 ```
 ### **2.1.2 TSRPass**
 
-TSRPass是用于进行超分辨率渲染的类，它包括了`init`、`setParametersWithBrightness`、`render`和`reInit`方法。在创建TSRPass时，您需要传入`TSRAlgorithmType`设置超分的算法类型。
+TSRPass是用于进行超分辨率渲染的类，它包括了`init`、`render`和`reInit`方法。在创建TSRPass时，您需要传入`TSRAlgorithmType`设置超分的算法类型。
 
-在`TSRAlgorithmType`枚举中，有以下两个算法运行模式：
-1. `TSRAlgorithmTypeStandard`（标准）模式：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
-2. `TSRAlgorithmTypeProfessionalHighQuality`（专业版-高质量）模式：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+在`TSRAlgorithmType`枚举中，有以下四个算法运行模式：
+1. **TSRAlgorithmTypeStandard**：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
+2. **TSRAlgorithmTypeStandardColorRetouchingExt**：在标准版超分辨率的基础上优化色彩表现。
+3. **TSRAlgorithmTypeProfessional**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+4. **TSRAlgorithmTypeProfessionalColorRetouchingExt**：在专业版超分辨率的基础上优化色彩表现。
+
 **注意：**
-- TSRPass使用Metal框架进行超分辨率渲染，需要设备支持Metal。
+- TSRPass使用OpenGL框架进行超分辨率渲染，需要设备支持OpenGL ES 3.0。
 - TSRPass不是线程安全的，必须在同一个线程中调用TSRPass的方法。
-- 专业版算法`TSRAlgorithmTypeProfessionalHighQuality`需要iOS系统版本在16.0或以上才生效。
+- 专业版算法`TSRAlgorithmTypeProfessional`需要iOS系统版本在16.0或以上才生效。
 
-在使用TSRPass前，您需要调用`initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:`方法进行初始化。
+在使用TSRPass前，您需要调用`initWithTSRAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:`方法进行初始化。
 ```objective-c
-TIEInitStatusCode initStatus;
+ TSRInitStatusCode initStatus;
 
-# TSRAlgorithmTypeStandard
-_tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+ _tsr_pass_standard = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeStandard glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+ 
+ _tsr_pass_standard_ext = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeStandardColorRetouchingExt glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+ 
+ _tsr_pass_professional = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeProfessional glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
 
-# TSRAlgorithmTypeProfessionalHighQuality
-_tsr_pass_professional_high_quality = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+ _tsr_pass_professional_ext = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeProfessionalColorRetouchingExt glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
 ```
 
 如果在使用过程中需要调整输入图像的尺寸或超分辨率的放大因子，可以调用`reInit`方法进行重新初始化。
@@ -100,12 +105,6 @@ if (reInitStatus == TSRInitStatusCodeSuccess) {
 }
 ```
 
-* 初始化TSRPass且TSRInitStatusCode为TSRInitStatusCodeSuccess，您可以通过调用`setParametersWithBrightness:saturation:contrast:`调整渲染的参数值(可选)
-```
-  // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (52, 55, 60, 0). 
-  // Here we set these parameters to slightly enhance the image.
- [_tsr_pass setParametersWithBrightness:52 saturation:55 contrast:60 sharpness:0];
-```
 * `render:commmandBufffer:`方法将超分辨率渲染过程应用于输入图像，提高其质量。处理后的图像渲染在TSRPass对象内的MTLTexture上。返回的是已执行超分辨率渲染的MTLTexture。
 ```
    _sr_texture = [_tsr_pass render:_in_texture commandBuffer:commandBuffer];
@@ -138,14 +137,18 @@ TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。
 
 **注意：**
 - TIEPass不是线程安全的，必须在同一个线程中调用TIEPass的方法。
-- 专业版算法`TIEAlgorithmTypeProfessionalHighQuality`需要iOS系统版本在16.0或以上才生效。
+- 专业版算法`TIEAlgorithmTypeProfessional`需要iOS系统版本在16.0或以上才生效。
 
-* 在使用TIEPass前，您需要调用`initWithTIEAlgorithmType:algorithmType:device:inputWidth:inputHeight:initStatusCode:`方法进行初始化。
+* 在使用TIEPass前，您需要调用`initWithTIEAlgorithmType:algorithmType:glContext:inputWidth:inputHeight:initStatusCode:`方法进行初始化。
 
 ```
- TIEInitStatusCode initStatus;
+ TIEInitStatusCode tieInitStatus;
  
- _tie_pass_high_quality = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessionalHighQuality device:_device inputWidth:200 inputHeight:200  initStatusCode:&initStatus];
+ // STANDARD
+_tie_pass_standard = [[TIEPass alloc] initWithAlgorithmType:TIEAlgorithmTypeStandard glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
+ 
+ // PROFESSIONAL
+ _tie_pass_professional = [[TIEPass alloc] initWithAlgorithmType:TIEAlgorithmTypeProfessional glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
 ```
 
 * 如果在使用过程中需要调整输入图像的尺寸，可以调用`reInit`方法进行重新初始化。
@@ -188,6 +191,6 @@ TSRLogger用于接收SDK内部的日志，请将这些日志写到文件，以�
 # **3 SDK API描述**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/latest/index.html)
+[TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/1.15/index.html)
 
 
