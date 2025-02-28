@@ -19,22 +19,24 @@
     </string-array>
 
     <string-array name="video_algorithm">
-        <item>Normal</item>
-        <item>Super-Resolution(STD)</item>
-        <item>Super-Resolution(STD-Enhanced Params)</item>
-        <item>Super-Resolution(PRO)</item>
-        <item>Enhanced(STD)</item>
-        <item>Enhanced(PRO)</item>
+        <item>None</item>
+        <item>Standard Enhancement</item>
+        <item>Standard SR</item>
+        <item>Standard SR+Enhancement</item>
+        <item>Professional Enhancement</item>
+        <item>Professional SR</item>
+        <item>Professional SR+Enhancement</item>
     </string-array>
 
     <string-array name="compare_algorithm">
         <item>No Comparison</item>
-        <item>Normal</item>
-        <item>Super-Resolution(STD)</item>
-        <item>Super-Resolution(STD-Enhanced Params)</item>
-        <item>Super-Resolution(PRO)</item>
-        <item>Enhanced(STD)</item>
-        <item>Enhanced(PRO)</item>
+        <item>None</item>
+        <item>Standard Enhancement</item>
+        <item>Standard SR</item>
+        <item>Standard SR+Enhancement</item>
+        <item>Professional Enhancement</item>
+        <item>Professional SR</item>
+        <item>Professional SR+Enhancement</item>
     </string-array>
 
     <string-array name="codecs">

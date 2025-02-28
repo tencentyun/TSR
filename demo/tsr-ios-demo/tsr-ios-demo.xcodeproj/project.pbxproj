@@ -21,15 +21,23 @@
 		4D24119B2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */; };
 		4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D2411A72B60C1F800720192 /* girl-544x960.mp4 */; };
 		4D2411AA2B60C21100720192 /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411A92B60C21100720192 /* shader.metal */; };
-		4DF5FCD02BB2779000A333C6 /* 720P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */; };
-		4DF5FCD12BB2779000A333C6 /* 540P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */; };
-		4DF5FCD22BB2779000A333C6 /* 4K.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */; };
-		4DF5FCD32BB2779000A333C6 /* 576P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */; };
-		4DF5FCD42BB2779000A333C6 /* 864P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */; };
-		4DF5FCD52BB2779000A333C6 /* 1080P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */; };
+		4D38C76E2BB1561D00A57626 /* 540P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C7682BB155FF00A57626 /* 540P.mp4 */; };
+		4D38C76F2BB1561D00A57626 /* 1080P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C7692BB1560500A57626 /* 1080P.mp4 */; };
+		4D38C7702BB1561D00A57626 /* 720P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76A2BB1560C00A57626 /* 720P.mp4 */; };
+		4D38C7712BB1561D00A57626 /* 4K.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76B2BB1561200A57626 /* 4K.mp4 */; };
+		4D38C7722BB1561D00A57626 /* 864P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76C2BB1561900A57626 /* 864P.mp4 */; };
+		4D38C7732BB1561D00A57626 /* 576P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76D2BB1561D00A57626 /* 576P.mp4 */; };
+		4D812D652D6DBE220097ED2C /* VideoRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D812D642D6DBE220097ED2C /* VideoRenderer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4D1E30A32BBD4E1F00BC3F66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 4D7FE6C42B5FB4E500E683AC;
+			remoteInfo = "tsr-client";
+		};
 		4D24118B2B60C1D300720192 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4D2411672B60C1D000720192 /* Project object */;
@@ -44,6 +52,20 @@
 			remoteGlobalIDString = 4D24116E2B60C1D000720192;
 			remoteInfo = "tsr-ios-demo";
 		};
+		4DB63CE62B625C4F00E563DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4D7FE6C52B5FB4E500E683AC;
+			remoteInfo = "tsr-client";
+		};
+		4DB63CE82B625C4F00E563DE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4D7FE6CF2B5FB4E500E683AC;
+			remoteInfo = "tsr-clientTests";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +75,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				4DB63CF02B625D5300E563DE /* tsr_client.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -83,12 +106,15 @@
 		4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tsr_ios_demoUITestsLaunchTests.m; sourceTree = "<group>"; };
 		4D2411A72B60C1F800720192 /* girl-544x960.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "girl-544x960.mp4"; sourceTree = "<group>"; };
 		4D2411A92B60C21100720192 /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
-		4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720P.mp4; sourceTree = "<group>"; };
-		4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 540P.mp4; sourceTree = "<group>"; };
-		4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4K.mp4; sourceTree = "<group>"; };
-		4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 576P.mp4; sourceTree = "<group>"; };
-		4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 864P.mp4; sourceTree = "<group>"; };
-		4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1080P.mp4; sourceTree = "<group>"; };
+		4D38C7682BB155FF00A57626 /* 540P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 540P.mp4; sourceTree = "<group>"; };
+		4D38C7692BB1560500A57626 /* 1080P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1080P.mp4; sourceTree = "<group>"; };
+		4D38C76A2BB1560C00A57626 /* 720P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720P.mp4; sourceTree = "<group>"; };
+		4D38C76B2BB1561200A57626 /* 4K.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4K.mp4; sourceTree = "<group>"; };
+		4D38C76C2BB1561900A57626 /* 864P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 864P.mp4; sourceTree = "<group>"; };
+		4D38C76D2BB1561D00A57626 /* 576P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 576P.mp4; sourceTree = "<group>"; };
+		4D812D622D6DBE060097ED2C /* VideoRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoRenderer.h; sourceTree = "<group>"; };
+		4D812D642D6DBE220097ED2C /* VideoRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoRenderer.m; sourceTree = "<group>"; };
+		4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "tsr-client.xcodeproj"; path = "../tsr-client/tsr-client.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D1E30A52BBD4E2300BC3F66 /* tsr_client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +146,7 @@
 		4D2411662B60C1D000720192 = {
 			isa = PBXGroup;
 			children = (
+				4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */,
 				4D2411712B60C1D000720192 /* tsr-ios-demo */,
 				4D24118D2B60C1D300720192 /* tsr-ios-demoTests */,
 				4D2411972B60C1D300720192 /* tsr-ios-demoUITests */,
@@ -140,12 +168,12 @@
 		4D2411712B60C1D000720192 /* tsr-ios-demo */ = {
 			isa = PBXGroup;
 			children = (
-				4DF5FCCC2BB2778E00A333C6 /* 4K.mp4 */,
-				4DF5FCCB2BB2778C00A333C6 /* 540P.mp4 */,
-				4DF5FCCD2BB2778E00A333C6 /* 576P.mp4 */,
-				4DF5FCCA2BB2778C00A333C6 /* 720P.mp4 */,
-				4DF5FCCE2BB2778F00A333C6 /* 864P.mp4 */,
-				4DF5FCCF2BB2779000A333C6 /* 1080P.mp4 */,
+				4D38C76B2BB1561200A57626 /* 4K.mp4 */,
+				4D38C7682BB155FF00A57626 /* 540P.mp4 */,
+				4D38C76D2BB1561D00A57626 /* 576P.mp4 */,
+				4D38C76A2BB1560C00A57626 /* 720P.mp4 */,
+				4D38C76C2BB1561900A57626 /* 864P.mp4 */,
+				4D38C7692BB1560500A57626 /* 1080P.mp4 */,
 				4D2411A92B60C21100720192 /* shader.metal */,
 				4D2411A72B60C1F800720192 /* girl-544x960.mp4 */,
 				4D2411722B60C1D000720192 /* AppDelegate.h */,
@@ -163,6 +191,8 @@
 				4D02E2132B6365DA0019EA2F /* SettingsViewController.m */,
 				4D1E68E52B67C6BB00B8FA8E /* Logger.h */,
 				4D1E68E72B67C6E200B8FA8E /* Logger.m */,
+				4D812D622D6DBE060097ED2C /* VideoRenderer.h */,
+				4D812D642D6DBE220097ED2C /* VideoRenderer.m */,
 			);
 			path = "tsr-ios-demo";
 			sourceTree = "<group>";
@@ -182,6 +212,15 @@
 				4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */,
 			);
 			path = "tsr-ios-demoUITests";
+			sourceTree = "<group>";
+		};
+		4DB63CE22B625C4F00E563DE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4DB63CE72B625C4F00E563DE /* tsr_client.framework */,
+				4DB63CE92B625C4F00E563DE /* tsr-clientTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		4DB63CEE2B625D5300E563DE /* Frameworks */ = {
@@ -206,6 +245,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4D1E30A42BBD4E1F00BC3F66 /* PBXTargetDependency */,
 			);
 			name = "tsr-ios-demo";
 			productName = "tsr-ios-demo";
@@ -281,6 +321,12 @@
 			mainGroup = 4D2411662B60C1D000720192;
 			productRefGroup = 4D2411702B60C1D000720192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4DB63CE22B625C4F00E563DE /* Products */;
+					ProjectRef = 4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				4D24116E2B60C1D000720192 /* tsr-ios-demo */,
@@ -290,21 +336,38 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		4DB63CE72B625C4F00E563DE /* tsr_client.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = tsr_client.framework;
+			remoteRef = 4DB63CE62B625C4F00E563DE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4DB63CE92B625C4F00E563DE /* tsr-clientTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "tsr-clientTests.xctest";
+			remoteRef = 4DB63CE82B625C4F00E563DE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		4D24116D2B60C1D000720192 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DF5FCD22BB2779000A333C6 /* 4K.mp4 in Resources */,
-				4DF5FCD32BB2779000A333C6 /* 576P.mp4 in Resources */,
+				4D38C7702BB1561D00A57626 /* 720P.mp4 in Resources */,
+				4D38C7712BB1561D00A57626 /* 4K.mp4 in Resources */,
 				4D2411822B60C1D200720192 /* LaunchScreen.storyboard in Resources */,
+				4D38C76F2BB1561D00A57626 /* 1080P.mp4 in Resources */,
 				4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */,
-				4DF5FCD12BB2779000A333C6 /* 540P.mp4 in Resources */,
-				4DF5FCD52BB2779000A333C6 /* 1080P.mp4 in Resources */,
-				4DF5FCD42BB2779000A333C6 /* 864P.mp4 in Resources */,
+				4D38C76E2BB1561D00A57626 /* 540P.mp4 in Resources */,
 				4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */,
 				4D24117D2B60C1D000720192 /* Main.storyboard in Resources */,
-				4DF5FCD02BB2779000A333C6 /* 720P.mp4 in Resources */,
+				4D38C7722BB1561D00A57626 /* 864P.mp4 in Resources */,
+				4D38C7732BB1561D00A57626 /* 576P.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +392,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D812D652D6DBE220097ED2C /* VideoRenderer.m in Sources */,
 				4D24117A2B60C1D000720192 /* VideoPlayViewController.m in Sources */,
 				4D2411742B60C1D000720192 /* AppDelegate.m in Sources */,
 				4D2411852B60C1D200720192 /* main.m in Sources */,
@@ -359,6 +423,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4D1E30A42BBD4E1F00BC3F66 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "tsr-client";
+			targetProxy = 4D1E30A32BBD4E1F00BC3F66 /* PBXContainerItemProxy */;
+		};
 		4D24118C2B60C1D300720192 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4D24116E2B60C1D000720192 /* tsr-ios-demo */;
@@ -539,7 +608,7 @@
 					"-fprofile-instr-generate",
 					"-lstdc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -579,7 +648,7 @@
 					"-fprofile-instr-generate",
 					"-lstdc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

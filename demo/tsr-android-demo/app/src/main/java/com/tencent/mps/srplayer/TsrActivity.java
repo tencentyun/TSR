@@ -25,11 +25,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -45,14 +42,17 @@ import com.tencent.mps.srplayer.utils.FileUtils;
 import com.tencent.mps.srplayer.utils.FpsUtil;
 import com.tencent.mps.srplayer.utils.ProgressDialogUtils;
 import com.tencent.mps.tie.api.TIEPass;
+import com.tencent.mps.tie.api.TIEPass.TIEInitStatusCode;
 import com.tencent.mps.tie.api.TSRPass;
+import com.tencent.mps.tie.api.TSRPass.TSRAlgorithmType;
+import com.tencent.mps.tie.api.TSRPass.TSRInitStatusCode;
 import com.tencent.mps.tie.api.TSRSdk;
 import com.tencent.mps.tie.api.TSRSdk.TSRSdkLicenseStatus;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -75,6 +75,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private final Context mContext = this;
     int totalCost = 0;
     int i = 0;
+    ExecutorService mSingleThreadExecutor = Executors.newSingleThreadExecutor();
     // Flag indicating if the video is currently paused
     private boolean mIsPause;
     // Flag indicating if there is a new frame
@@ -133,17 +134,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     private boolean mIsFullScreenRender;
     private Handler mHandler;
     private HandlerThread mHandlerThread;
-    // TSRPass parameters
-    private float mBrightness = 52;
-    private float mSaturation = 55;
-    private float mContrast = 60;
-    private float mSharpness = 0;
-    // TSRPass parameters view
-    private RadioButton mBrightnessRadioButton;
-    private RadioButton mContrastRadioButton;
-    private RadioButton mSaturationRadioButton;
-    private RadioButton mSharpnessRadioButton;
-    private CheckBox mParamsSettingCheckBox;
     // Double swipe to exit
     private long mBackPressed;
 
@@ -282,7 +272,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Algorithm.initializeDescriptions(mContext);
-        initParamSettingView();
 
         mIsFullScreenRender = false;
 
@@ -292,29 +281,33 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         mIsRecordVideo = getIntent().getBooleanExtra("export_video", false);
         String algorithm = getIntent().getStringExtra("algorithm");
         switch (Objects.requireNonNull(algorithm)) {
-            case "Normal":
-            case "普通播放":
+            case "None":
+            case "无":
                 mAlgorithm = Algorithm.NORMAL;
                 break;
-            case "Super-Resolution(STD)":
-            case "超分播放(标准版)":
+            case "Standard SR":
+            case "标准版超分":
                 mAlgorithm = Algorithm.SR_STD;
                 break;
-            case "Super-Resolution(STD-Enhanced Params)":
-            case "超分播放(标准版+增强参数)":
+            case "Standard SR+Enhancement":
+            case "标准版超分+增强":
                 mAlgorithm = Algorithm.SR_STD_EH;
                 break;
-            case "Super-Resolution(PRO)":
-            case "超分播放(专业版)":
-                mAlgorithm = Algorithm.SR_PRO_HQ;
+            case "Professional SR":
+            case "专业版超分":
+                mAlgorithm = Algorithm.SR_PRO;
                 break;
-            case "Enhanced(PRO)":
-            case "增强播放(专业版)":
-                mAlgorithm = Algorithm.IE_PRO_HQ;
+            case "Professional Enhancement":
+            case "专业版增强":
+                mAlgorithm = Algorithm.IE_PRO;
                 break;
-            case "Enhanced(STD)":
-            case "增强播放(标准版)":
+            case "Standard Enhancement":
+            case "标准版增强":
                 mAlgorithm = Algorithm.IE_STD;
+                break;
+            case "Professional SR+Enhancement":
+            case "专业版超分+增强":
+                mAlgorithm = Algorithm.SR_PRO_EH;
                 break;
         }
         String compareAlgorithm = getIntent().getStringExtra("compare_algorithm");
@@ -323,29 +316,33 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             case "不对比":
                 mCompareAlgorithm = Algorithm.NONE;
                 break;
-            case "Normal":
-            case "普通播放":
+            case "None":
+            case "无":
                 mCompareAlgorithm = Algorithm.NORMAL;
                 break;
-            case "Super-Resolution(STD)":
-            case "超分播放(标准版)":
+            case "Standard SR":
+            case "标准版超分":
                 mCompareAlgorithm = Algorithm.SR_STD;
                 break;
-            case "Super-Resolution(STD-Enhanced Params)":
-            case "超分播放(标准版+增强参数)":
+            case "Standard SR+Enhancement":
+            case "标准版超分+增强":
                 mCompareAlgorithm = Algorithm.SR_STD_EH;
                 break;
-            case "Super-Resolution(PRO)":
-            case "超分播放(专业版)":
-                mCompareAlgorithm = Algorithm.SR_PRO_HQ;
+            case "Professional SR":
+            case "专业版超分":
+                mCompareAlgorithm = Algorithm.SR_PRO;
                 break;
-            case "Enhanced(PRO)":
-            case "增强播放(专业版)":
-                mCompareAlgorithm = Algorithm.IE_PRO_HQ;
+            case "Professional Enhancement":
+            case "专业版增强":
+                mCompareAlgorithm = Algorithm.IE_PRO;
                 break;
-            case "Enhanced(STD)":
-            case "增强播放(标准版)":
+            case "Standard Enhancement":
+            case "标准版增强":
                 mCompareAlgorithm = Algorithm.IE_STD;
+                break;
+            case "Professional SR+Enhancement":
+            case "专业版超分+增强":
+                mCompareAlgorithm = Algorithm.SR_PRO_EH;
                 break;
         }
 
@@ -357,10 +354,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mIsFullScreenRender = true;
         } else {
             mSrRatio = Float.parseFloat(srRatio);
-        }
-
-        if (!(mAlgorithm == Algorithm.SR_STD_EH || mCompareAlgorithm == Algorithm.SR_STD_EH)) {
-            mParamsSettingCheckBox.setVisibility(View.GONE);
         }
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -391,53 +384,106 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         Log.i(TAG, "rotation = " + mRotation);
 
         // Init TSRSdk
-        TSRSdk.getInstance().init(mAppId, mAuthId, status -> {
+        TSRSdk.getInstance().init(getApplicationContext(), mAppId, mAuthId, status -> {
             if (status == TSRSdkLicenseStatus.AVAILABLE) {
                 Log.i(TAG, "Online verify sdk license success: " + status);
+                if (mAlgorithm == Algorithm.NORMAL) {
+                    runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
+                }
                 // Initialize the Pass for super-resolution/enhanced rendering
                 if (mAlgorithm == Algorithm.SR_STD) {
                     mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
+                    runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
                 } else if (mAlgorithm == Algorithm.SR_STD_EH) {
-                    mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
-                    // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
-                    // Here we set these parameters to slightly enhance the image.
-                    mTSRPass.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
-                } else if (mAlgorithm == Algorithm.SR_PRO_HQ) {
-                    mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-                    mTSRPass.configureProSRMaxInputResolution(1920, 1920);
-                    mTSRPass.enableProSRAutoFallback(10, 33,
-                            (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
-                    mTSRPass.disableProSRAutoFallback();
+                    mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD_COLOR_RETOUCHING_EXT);
+                    runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
+                } else if (mAlgorithm == Algorithm.SR_PRO) {
+                    mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
+                    mSingleThreadExecutor.execute(() -> {
+                        TSRInitStatusCode initStatus = mTSRPass.configureProSRMaxInputResolution(1920, 1920);
+                        if (initStatus == TSRInitStatusCode.SUCCESS) {
+                            mTSRPass.enableProSRAutoFallback(10, 33,
+                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
+                            mTSRPass.disableProSRAutoFallback();
+                        } else {
+                            mTSRPass.forceProSRFallback(true);
+                        }
+                        runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
+                    });
+                } else if (mAlgorithm == Algorithm.SR_PRO_EH) {
+                    mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_COLOR_RETOUCHING_EXT);
+                    mSingleThreadExecutor.execute(() -> {
+                        TSRInitStatusCode initStatus = mTSRPass.configureProSRMaxInputResolution(1920, 1920);
+                        if (initStatus == TSRInitStatusCode.SUCCESS) {
+                            mTSRPass.enableProSRAutoFallback(10, 33,
+                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
+                            mTSRPass.disableProSRAutoFallback();
+                        } else {
+                            mTSRPass.forceProSRFallback(true);
+                        }
+                        runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
+                    });
                 } else if (mAlgorithm == Algorithm.IE_STD) {
                     mTIEPass = new TIEPass(TIEPass.TIEAlgorithmType.STANDARD);
-                    mTIEPass.configureProIEMaxInputResolution(1920, 1920);
-                } else if (mAlgorithm == Algorithm.IE_PRO_HQ) {
-                    mTIEPass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-                    mTIEPass.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
-                    mTIEPass.configureProIEMaxInputResolution(1920, 1920);
-                    mTIEPass.enableProIEAutoFallback(10, 33,
-                            (width, height) -> Log.i(TAG, "TIE onFallback: " + width + "x" + height));
-                    mTIEPass.disableProIEAutoFallback();
+                    runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
+                } else if (mAlgorithm == Algorithm.IE_PRO) {
+                    mTIEPass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
+                    mSingleThreadExecutor.execute(() -> {
+                        TIEInitStatusCode initStatus = mTIEPass.configureProIEMaxInputResolution(1920, 1920);
+                        if (initStatus == TIEInitStatusCode.SUCCESS) {
+                            mTIEPass.enableProIEAutoFallback(10, 33,
+                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
+                            mTIEPass.disableProIEAutoFallback();
+                        } else {
+                            mTIEPass.forceProIEFallback(true);
+                        }
+                        runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
+                    });
                 }
 
                 if (mCompareAlgorithm == Algorithm.SR_STD) {
                     mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
                 } else if (mCompareAlgorithm == Algorithm.SR_STD_EH) {
-                    mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
-                    // Optional. Sets the brightness, saturation and contrast level of the TSRPass. The default value is set to (50, 50, 50).
-                    // Here we set these parameters to slightly enhance the image.
-                    mTSRPassCmp.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
-                } else if (mCompareAlgorithm == Algorithm.SR_PRO_HQ) {
-                    mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-                    mTSRPassCmp.configureProSRMaxInputResolution(1920, 1920);
+                    mTSRPassCmp = new TSRPass(TSRAlgorithmType.STANDARD_COLOR_RETOUCHING_EXT);
+                } else if (mCompareAlgorithm == Algorithm.SR_PRO) {
+                    mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
+                    mSingleThreadExecutor.execute(() -> {
+                        TSRInitStatusCode initStatus = mTSRPassCmp.configureProSRMaxInputResolution(1920, 1920);
+                        if (initStatus == TSRInitStatusCode.SUCCESS) {
+                            mTSRPassCmp.enableProSRAutoFallback(10, 33,
+                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
+                            mTSRPassCmp.disableProSRAutoFallback();
+                        } else {
+                            mTSRPassCmp.forceProSRFallback(true);
+                        }
+                    });
+                } else if (mCompareAlgorithm == Algorithm.SR_PRO_EH) {
+                    mTSRPassCmp = new TSRPass(TSRAlgorithmType.PROFESSIONAL_COLOR_RETOUCHING_EXT);
+                    mSingleThreadExecutor.execute(() -> {
+                        TSRInitStatusCode initStatus = mTSRPassCmp.configureProSRMaxInputResolution(1920, 1920);
+                        if (initStatus == TSRInitStatusCode.SUCCESS) {
+                            mTSRPassCmp.enableProSRAutoFallback(10, 33,
+                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
+                            mTSRPassCmp.disableProSRAutoFallback();
+                        } else {
+                            mTSRPassCmp.forceProSRFallback(true);
+                        }
+                    });
                 } else if (mCompareAlgorithm == Algorithm.IE_STD) {
                     mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.STANDARD);
-                    mTIEPassCmp.configureProIEMaxInputResolution(1920, 1920);
-                } else if (mCompareAlgorithm == Algorithm.IE_PRO_HQ) {
-                    mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL_HIGH_QUALITY);
-                    mTIEPassCmp.configureProIEMaxInputResolution(1920, 1920);
+                } else if (mCompareAlgorithm == Algorithm.IE_PRO) {
+                    mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
+                    mSingleThreadExecutor.execute(() -> {
+                        TIEInitStatusCode initStatus = mTIEPassCmp.configureProIEMaxInputResolution(1920, 1920);
+                        if (initStatus == TIEInitStatusCode.SUCCESS) {
+                            mTIEPassCmp.enableProIEAutoFallback(10, 33,
+                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
+                            mTIEPassCmp.disableProIEAutoFallback();
+                        } else {
+                            mTIEPassCmp.forceProIEFallback(true);
+                        }
+                    });
                 }
-                runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
             } else {
                 Log.i(TAG, "Online verify sdk license failed: " + status);
                 runOnUiThread(() -> {
@@ -490,27 +536,21 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
 
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-        String version = GLES30.glGetString(GL10.GL_VERSION);
-        Log.i(TAG, "OpenGL ES Version: " + version);
-        float versionCode = Float.parseFloat(version.split(" ")[2]);
-
-        if (versionCode >= 3.1) {
-            mVideoFrameDrawer = new VideoFrameDrawer();
-            mCompareTexDrawer = new CompareTexDrawer();
-            try {
-                mVideoFrameDrawer.createOnGLThread(mContext);
-                mCompareTexDrawer.createOnGLThread(mContext);
-            } catch (IOException e) {
-                Log.e(TAG, Objects.requireNonNull(e.getMessage()));
-            }
-
-            if (mIsRecordVideo) {
-                configureMediaRecorder(mFileName, mOutputWidth,
-                        mOutputHeight, mFrameRate, mExportBitrateMbps, mExportCodecType);
-            }
-
-            startDecode();
+        mVideoFrameDrawer = new VideoFrameDrawer();
+        mCompareTexDrawer = new CompareTexDrawer();
+        try {
+            mVideoFrameDrawer.createOnGLThread(mContext);
+            mCompareTexDrawer.createOnGLThread(mContext);
+        } catch (IOException e) {
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
+
+        if (mIsRecordVideo) {
+            configureMediaRecorder(mFileName, mOutputWidth,
+                    mOutputHeight, mFrameRate, mExportBitrateMbps, mExportCodecType);
+        }
+
+        startDecode();
     }
 
     @Override
@@ -555,7 +595,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                             (dialogInterface, i) -> {
                             }));
             }
-        } else if (mAlgorithm == Algorithm.IE_PRO_HQ || mAlgorithm == Algorithm.IE_STD) {
+        } else if (mAlgorithm == Algorithm.IE_PRO || mAlgorithm == Algorithm.IE_STD) {
             long ss = System.currentTimeMillis();
             TIEPass.TIEInitStatusCode error = mTIEPass.init(200, 200);
             long start = System.currentTimeMillis();
@@ -619,7 +659,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                             }));
             }
 
-        } else if (mCompareAlgorithm == Algorithm.IE_PRO_HQ || mCompareAlgorithm == Algorithm.IE_STD) {
+        } else if (mCompareAlgorithm == Algorithm.IE_PRO || mCompareAlgorithm == Algorithm.IE_STD) {
             TIEPass.TIEInitStatusCode error = mTIEPassCmp.init(mFrameWidth, mFrameHeight);
             String errorMsg = "";
             switch (error) {
@@ -646,18 +686,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                             (dialogInterface, i) -> {
                             }));
             }
-        }
-
-        String openglEsVersion = GLES30.glGetString(GL10.GL_VERSION);
-        Pattern pattern = Pattern.compile("-?\\d+\\.\\d+");
-        Matcher matcher = pattern.matcher(openglEsVersion);
-        if (matcher.find() && Float.parseFloat(matcher.group()) < 3.1) {
-            runOnUiThread(() -> DialogUtils.showSimpleConfirmDialog(mContext,
-                    String.format(
-                            "The current device's OpenGL ES version is too low, which is %s.\nTSRSDK requires OpenGL ES 3.1 or above to run properly.",
-                            openglEsVersion),
-                    (dialogInterface, i) -> finish()));
-            return;
         }
 
         if (mCompareTexDrawer != null) {
@@ -713,7 +741,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                 break;
             case SR_STD:
             case SR_STD_EH:
-            case SR_PRO_HQ:
+            case SR_PRO:
+            case SR_PRO_EH:
                 if (mTSRPass == null) {
                     Log.w(TAG, "mTSRPass is null!");
                     break;
@@ -731,7 +760,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     }
                 }
                 break;
-            case IE_PRO_HQ:
+            case IE_PRO:
             case IE_STD:
                 if (mTIEPass == null) {
                     Log.w(TAG, "mTIEPass is null!");
@@ -740,7 +769,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                 processTextureId = mTIEPass.render(tex2dId);
                 break;
         }
-
 
 
         /* Step 4: Use the TSRPass's output texture to do your own render. */
@@ -766,7 +794,8 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     break;
                 case SR_STD:
                 case SR_STD_EH:
-                case SR_PRO_HQ:
+                case SR_PRO:
+                case SR_PRO_EH:
                     if (mTSRPassCmp == null) {
                         Log.w(TAG, "mTSRPassCmp is null!");
                         mVideoFrameDrawer.draw(processTextureId);
@@ -775,7 +804,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     cmpTextureId = mTSRPassCmp.render(tex2dId);
                     mCompareTexDrawer.draw(processTextureId, cmpTextureId);
                     break;
-                case IE_PRO_HQ:
+                case IE_PRO:
                 case IE_STD:
                     if (mTIEPassCmp == null) {
                         Log.w(TAG, "mTIEPass is null!");
@@ -820,24 +849,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mTexOESToTex2DPass.release();
         }
         if (mGLSurfaceView != null) {
-            mGLSurfaceView.queueEvent(() -> {
-                if (mTIEPass != null) {
-                    mTIEPass.deInit();
-                    mTIEPass = null;
-                }
-                if (mTIEPassCmp != null) {
-                    mTIEPassCmp.deInit();
-                    mTIEPassCmp = null;
-                }
-                if (mTSRPass != null) {
-                    mTSRPass.deInit();
-                    mTSRPass = null;
-                }
-                if (mTSRPassCmp != null) {
-                    mTSRPassCmp.deInit();
-                    mTSRPassCmp = null;
-                }
-            });
             mGLSurfaceView = null;
         }
         if (mMediaRecorder != null) {
@@ -883,6 +894,22 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             mVideoFrameDrawer = null;
         }
         FpsUtil.reset();
+        if (mTIEPass != null) {
+            mTIEPass.deInit();
+            mTIEPass = null;
+        }
+        if (mTIEPassCmp != null) {
+            mTIEPassCmp.deInit();
+            mTIEPassCmp = null;
+        }
+        if (mTSRPass != null) {
+            mTSRPass.deInit();
+            mTSRPass = null;
+        }
+        if (mTSRPassCmp != null) {
+            mTSRPassCmp.deInit();
+            mTSRPassCmp = null;
+        }
         TSRSdk.getInstance().deInit();
     }
 
@@ -1013,113 +1040,28 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     }
 
     private void dumpFrame(int textureId) {
-        if (mAlgorithm == Algorithm.SR_STD || mAlgorithm == Algorithm.NORMAL ||
-                mAlgorithm == Algorithm.SR_STD_EH) {
-            mMediaRecorder.encodeFrame(textureId, System.nanoTime());
-            if (mPlayFrameCount == mVideoFrameCount) {
-                mMediaRecorder.stop();
-            }
-        } else {
-            if (mPlayFrameCount > 1) {
-                mMediaRecorder.encodeFrame(textureId, System.nanoTime());
-                if (mPlayFrameCount == mVideoFrameCount) {
-                    int lastId = -1;
-                    if (isSrAlgorithm(mAlgorithm)) {
-                        lastId = mTSRPass.render(textureId);
-                    } else {
-                        lastId = mTIEPass.render(textureId);
-                    }
-
-                    try {
-                        Thread.sleep((long) (1000 / mFrameRate));
-                    } catch (InterruptedException e) {
-                        Log.i(TAG, "sleep exception: " + e.getMessage());
-                    }
-                    mMediaRecorder.encodeFrame(lastId, System.nanoTime());
-                    mMediaRecorder.stop();
-                }
-            }
+        mMediaRecorder.encodeFrame(textureId, System.nanoTime());
+        if (mPlayFrameCount == mVideoFrameCount) {
+            mMediaRecorder.stop();
         }
         runOnUiThread(() -> ProgressDialogUtils.updateText(
                 "Exporting..." + (int) ((float) mPlayFrameCount / mVideoFrameCount * 100) + "%"));
     }
 
-    private void initParamSettingView() {
-        mBrightnessRadioButton = findViewById(R.id.radio_btn_brightness);
-        mBrightnessRadioButton.setText(getString(R.string.brightness) + ":" + (int) mBrightness);
-        mSaturationRadioButton = findViewById(R.id.radio_btn_saturation);
-        mSaturationRadioButton.setText(getString(R.string.saturation) + ":" + (int) mSaturation);
-        mContrastRadioButton = findViewById(R.id.radio_btn_contrast);
-        mContrastRadioButton.setText(getString(R.string.contrast) + ":" + (int) mContrast);
-        mSharpnessRadioButton = findViewById(R.id.radio_btn_sharpness);
-        mSharpnessRadioButton.setText(getString(R.string.sharpness) + ":" + (int) mSharpness);
-        mParamsSettingCheckBox = findViewById(R.id.color_setting);
-        LinearLayout layout = findViewById(R.id.color_setting_view);
-        mParamsSettingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            layout.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
-        Button upValueButton = findViewById(R.id.up_value_button);
-        upValueButton.setOnClickListener(v -> {
-            if (mBrightnessRadioButton.isChecked()) {
-                mBrightness += 1;
-            } else if (mContrastRadioButton.isChecked()) {
-                mContrast += 1;
-            } else if (mSaturationRadioButton.isChecked()) {
-                mSaturation += 1;
-            } else if (mSharpnessRadioButton.isChecked()) {
-                mSharpness += 1;
-            }
-            updateValue();
-        });
-        Button downValueButton = findViewById(R.id.down_value_button);
-        downValueButton.setOnClickListener(v -> {
-            if (mBrightnessRadioButton.isChecked()) {
-                mBrightness -= 1;
-            } else if (mContrastRadioButton.isChecked()) {
-                mContrast -= 1;
-            } else if (mSaturationRadioButton.isChecked()) {
-                mSaturation -= 1;
-            } else if (mSharpnessRadioButton.isChecked()) {
-                mSharpness -= 1;
-            }
-            updateValue();
-        });
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void updateValue() {
-        mBrightness = standardValue(mBrightness);
-        mSaturation = standardValue(mSaturation);
-        mContrast = standardValue(mContrast);
-        mSharpness = standardValue(mSharpness);
-        if (mTSRPass != null) {
-            mTSRPass.setParameters(mBrightness, mSaturation, mContrast, mSharpness);
-        }
-        runOnUiThread(() -> {
-            mBrightnessRadioButton.setText(getString(R.string.brightness) + ":" + (int) mBrightness);
-            mSaturationRadioButton.setText(getString(R.string.saturation) + ":" + (int) mSaturation);
-            mContrastRadioButton.setText(getString(R.string.contrast) + ":" + (int) mContrast);
-            mSharpnessRadioButton.setText(getString(R.string.sharpness) + ":" + (int) mSharpness);
-        });
-    }
-
-    private float standardValue(float value) {
-        return Math.max((float) 0, Math.min((float) 100, value)); // 限制value在0和100之间
-    }
-
     private boolean isSrAlgorithm(Algorithm algorithm) {
         return algorithm == Algorithm.SR_STD || algorithm == Algorithm.SR_STD_EH ||
-                algorithm == Algorithm.SR_PRO_HQ;
+                algorithm == Algorithm.SR_PRO || algorithm == Algorithm.SR_PRO_EH;
     }
 
     public enum Algorithm {
         NONE, // no render
         NORMAL, // render directly
+        IE_STD, // Enhanced(STD)
         SR_STD, // Super-Resolution(STD)
         SR_STD_EH, // Super-Resolution(STD-Enhanced Params)
-        SR_PRO_HQ, // Super-Resolution(PRO)
-        IE_STD, // Enhanced(STD)
-        IE_PRO_HQ;// Enhanced(PRO)
+        IE_PRO,// Enhanced(PRO)
+        SR_PRO, // Super-Resolution(PRO)
+        SR_PRO_EH;
 
         private String description;
 
@@ -1130,11 +1072,13 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             if (descriptions.length >= Algorithm.values().length) {
                 Algorithm.NONE.setDescription(descriptions[0]);
                 Algorithm.NORMAL.setDescription(descriptions[1]);
-                Algorithm.SR_STD.setDescription(descriptions[2]);
-                Algorithm.SR_STD_EH.setDescription(descriptions[3]);
-                Algorithm.SR_PRO_HQ.setDescription(descriptions[4]);
-                Algorithm.IE_STD.setDescription(descriptions[5]);
-                Algorithm.IE_PRO_HQ.setDescription(descriptions[6]);
+                Algorithm.IE_STD.setDescription(descriptions[2]);
+                Algorithm.SR_STD.setDescription(descriptions[3]);
+                Algorithm.SR_STD_EH.setDescription(descriptions[4]);
+                Algorithm.IE_PRO.setDescription(descriptions[5]);
+                Algorithm.SR_PRO.setDescription(descriptions[6]);
+                Algorithm.SR_PRO_EH.setDescription(descriptions[7]);
+
             } else {
                 throw new IllegalStateException(
                         "The array length in arrays.xml does not match the number of enum constants.");

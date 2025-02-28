@@ -46,7 +46,7 @@
     [self.view addSubview:self.videoNameLabel];
     
     // 初始化数据
-    self.data = @[@"alb", @"4K", @"1080P", @"864P", @"720P", @"576P", @"540P", @"girl-544x960"];
+    self.data = @[@"4K", @"1080P", @"864P", @"720P", @"576P", @"540P", @"girl-544x960"];
     
     // 创建并设置UICollectionViewFlowLayout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -93,8 +93,8 @@
     [self.view addSubview:_selectAlgorithmLabel];
     
     // 初始化 algorithmOptions 数据源数组
-    self.algorithmOptions = @[@"普通播放", @"超分播放(标准版)", @"超分播放(专业版-低算力)", @"超分播放(专业版-高算力)",
-                              @"增强播放(标准版)",@"增强播放(专业版-低算力)", @"增强播放(专业版-高算力)"];
+    self.algorithmOptions = @[@"普通播放", @"超分播放(标准版)", @"超分播放(标准版-增强)", @"超分播放(专业版)", @"超分播放(专业版-增强)",
+                              @"增强播放(标准版)",@"增强播放(专业版)"];
     // 创建 UIPickerView
     top += 50;
     self.algorithmPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(left, top, self.view.bounds.size.width - 40, 100)];

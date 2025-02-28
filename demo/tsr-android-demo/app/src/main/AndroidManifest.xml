@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
             android:name="com.tencent.mps.srplayer.SRApplication"
@@ -20,12 +21,16 @@
             tools:targetApi="31">
 
         <uses-native-library
-            android:name="libOpenCL.so"
-            android:required="false" />
+                android:name="libOpenCL.so"
+                android:required="false" />
+
+        <uses-library
+                android:name="libOpenCL-pixel.so"
+                android:required="false" />
 
         <activity
-            android:name=".SettingsActivity"
-            android:exported="true" >
+                android:name=".SettingsActivity"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,15 +38,15 @@
             </intent-filter>
 
             <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+                    android:name="android.app.lib_name"
+                    android:value="" />
         </activity>
         <activity
-            android:name=".TsrActivity"
-            android:exported="true" >
+                android:name=".TsrActivity"
+                android:exported="true">
             <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+                    android:name="android.app.lib_name"
+                    android:value="" />
         </activity>
     </application>
 
