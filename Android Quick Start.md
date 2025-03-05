@@ -40,12 +40,7 @@ Configure the SDK and authorization file obtained in the "SDK Authorization Appl
 
    ![verification-params.png](./docs/verification-params.png)
 
-3. Sign the APK
-- In Android Studio, find【File】-> 【Project Structure】-> 【Modules】-> 【Signing Configs】and configure your signature certificate.
-- Or you can use the certificate to generate a signed APK in【Build】-> 【Generate Signed Bundle / APK】
-- No matter which method you use, <font color="red">**please make sure that the configured signature certificate is consistent with the information provided to us.**</font>
-
-4. Run the demo
+3. Run the demo
 
 ## **1.3 Demo App Experience**
 The following is the compiled App installation package of the Demo project, which can be [downloaded](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/SRPlayer.apk) and installed directly for experience.
