@@ -42,13 +42,7 @@ App签名证书信息可以使用keytool命令查看，例如
 
    ![verification-params.png](./docs/verification-params.png)
 
-
-3. 对APK进行签名
-- 在Android Studio中，找到【File】-> 【Project Structure】 -> 【Modules】-> 【Signing Configs】中配置您的签名证书。
-- 或者您可以在【Build】-> 【Generate Signed Bundle / APK】使用证书生成签名的APK
-- 无论您使用哪种方式，<font color="red">**请确保配置的签名证书与提供给我们的信息一致。**</font>
-
-4. 运行demo
+3. 运行demo
 
 ## **1.3 Demo App体验**
 以下是Demo工程编译好的App安装包，可以直接进行[下载](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk)安装体验。
