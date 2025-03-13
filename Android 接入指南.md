@@ -1,8 +1,8 @@
 # **1 快速开始**
 ## 1.1 **SDK授权申请**
-为了服务能够正常授权，您还需要在腾讯云官网开通【媒体处理（MPS）控制台】。开通链接：https://console.cloud.tencent.com/mps
+为了服务能够正常授权，您还需要在腾讯云官网开通【媒体处理（MPS）控制台】。开通链接：[https://console.cloud.tencent.com/mps](https://console.cloud.tencent.com/mps)
 
-开通【媒体处理（MPS）控制台】后，可以参照[文档教程](https://doc.weixin.qq.com/doc/w3_AOcASwZGACk0FEPdUPJSfWATJijrR?scode=AJEAIQdfAAoiwZesQAAcEALgZGALo)。的方式，自行开通测试授权。
+开通【媒体处理（MPS）控制台】后，可以参照[文档教程](https://cloud.tencent.com/document/product/862/109789?from=copy)。的方式，自行开通测试授权。
 
 ## 1.2 **Demo工程编译运行**
 
