@@ -1,31 +1,5 @@
 # **1 Quick Start**
 ## 1.1 **SDK Authorization Application**
-### 1.1.1 **Information required for authorization**
-Please contact your Tencent Cloud business to open the service. You need to provide the following information of the App that will integrate the SDK: Tencent Cloud account APPID, App signature certificate information (serial number, publisher, and owner of the signature certificate), App package name.
-
-APPID can be found in your Tencent Cloud【Account Center】->【Account Information】->【Basic Information】.
-App signature certificate information can be viewed using the keytool command, for example:
-```keytool -list -v -keystore test.keystore```
-
-![cert.png](./docs/cert.png)
-
-In addition, you also need to inform the SDK version to be accessed. The SDK version is divided into standard and professional editions:
-* Standard Edition: Provides standard super-resolution function, achieves fast super-resolution processing speed, suitable for scenes with high real-time requirements. In this mode, significant image quality improvement can be achieved.
-* Professional Edition: The functions provided include standard super-resolution, professional super-resolution, and professional image enhancement. Professional super-resolution and image enhancement are suitable for scenes with high-quality requirements, but with certain requirements for device performance, it is recommended to use on mid-to-high-end smartphones.
-
-Information provided
-| Information | Value |
-| :- | :- |
-| APPID | 12345678 |
-| Package name | com.tencent.mps.srplayer |
-| Serial number | 17ccecf2 |
-| Owner | test |
-| Publisher | test |
-| SDK version | Standard Edition/Professional Edition |
-
-The authorization scheme is divided into two processes: authorization application and authorization verification. The authorization application will only be performed once during the authorization validity period. After the authorization service is opened, you can use the online method for authentication when initializing TSRSDK. The APP needs to have access to the network. The authorization service has a validity period. When the authorization expires, it needs to re-obtain the authorization.
-
-### 1.1.2 **Open MPS Console**
 In order for the service to authorize normally, you also need to open the【Media Processing (MPS) Console】on the Tencent Cloud official website. Open link: https://console.cloud.tencent.com/mps
 
 ## 1.2 **Demo Project Compilation and Running**
