@@ -21,12 +21,14 @@
 
 @implementation VideoRenderer
 
-- (instancetype)initWithContext:(EAGLContext *)context  inputWidth: (int)inputWidth inputHeight: (int)inputHeight {
+- (instancetype)initWithContext:(EAGLContext *)context inputWidth: (int)inputWidth inputHeight: (int)inputHeight outputWidth: (int)outputWidth outputHeight: (int)outputHeight {
     self = [super init];
     if (self) {
         _glContext = context;
         _inputWidth = inputWidth;
         _inputHeight = inputHeight;
+        _outputWidth = outputWidth;
+        _outputHeight = outputHeight;
     }
     return self;
 }
@@ -49,7 +51,7 @@
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glUniform1i(_textureUniform, 0);
-    glViewport(0, 0, _inputWidth, _inputHeight);
+    glViewport(0, 0, _outputWidth, _outputHeight);
     
     // 设置纹理参数
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

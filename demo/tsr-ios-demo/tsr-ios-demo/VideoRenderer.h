@@ -17,9 +17,11 @@
 @property (nonatomic, strong) EAGLContext *glContext;
 @property (nonatomic, assign) int inputWidth;
 @property (nonatomic, assign) int inputHeight;
+@property (nonatomic, assign) int outputWidth;
+@property (nonatomic, assign) int outputHeight;
 
 
-- (instancetype)initWithContext:(EAGLContext *)context inputWidth: (int)inputWidth inputHeight: (int)inputHeight;
+- (instancetype)initWithContext:(EAGLContext *)context inputWidth: (int)inputWidth inputHeight: (int)inputHeight outputWidth: (int)outputWidth outputHeight: (int)outputHeight;
 - (void)setupGL;
 - (void)render:(GLuint)texture;
 - (void)cleanupGL;

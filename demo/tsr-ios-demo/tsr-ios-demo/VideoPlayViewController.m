@@ -97,7 +97,7 @@
         // 创建 OpenGL ES 上下文
         _glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
         CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, _glContext, NULL, &_textureCache);
-        self.renderer = [[VideoRenderer alloc] initWithContext:_glContext inputWidth:_videoSize.width inputHeight:_videoSize.height];
+        self.renderer = [[VideoRenderer alloc] initWithContext:_glContext inputWidth:_videoSize.width inputHeight:_videoSize.height outputWidth:_outputWidth outputHeight:_outputHeight];
         [self.renderer setupGL];
         // 设置MTKView
         _glkView = [[GLKView alloc] initWithFrame:rect context:_glContext];
