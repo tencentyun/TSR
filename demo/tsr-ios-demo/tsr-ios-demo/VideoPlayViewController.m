@@ -68,6 +68,8 @@
         
         CGRect rect;
         if (srRatio > 0) {
+            _outputWidth = _videoSize.width * srRatio;
+            _outputHeight = _videoSize.height * srRatio;
             rect = CGRectMake(0, 0, _videoSize.width * srRatio / 3, _videoSize.height * srRatio / 3);
         } else {
             // The SR setting is "Auto"
