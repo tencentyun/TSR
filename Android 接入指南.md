@@ -87,47 +87,15 @@
 它包括了 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TSRPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TSRPass 实例的情况下更新输入图像的尺寸或缩放比例，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
 
-以下是标准版超分代码示例：
+以下是超分代码示例：
 ```
 // Create a TSRPass object using the constructor.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
+TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL); // STANDARD, STANDARD_COLOR_RETOUCHING_EXT, PROFESSIONAL, PROFESSIONAL_COLOR_RETOUCHING_EXT
 
 // The code below must be executed in the same glThread.
 //----------------------GL Thread---------------------//
 
 // Initialize TSRPass and set the input image width, height, and srRatio.
-TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
-
-if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-   // Perform super-resolution rendering and get the enhanced texture ID.
-   int outputTextureId = tsrPass.render(inputTextureId);
-
-   // Reinitialize if there are changes in image dimensions or srRatio.
-   TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
-   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-      outputTextureId = tsrPass.render(inputTextureId);
-   } else {
-      // Handle reinitialization failure
-   }
-
-   // Release resources when no longer needed.
-   tsrPass.deInit();
-} else {
-   // Handle initialization failure
-}
-
-//----------------------GL Thread---------------------//
-```
-
-以下是专业版超分代码示例：
-```
-// Create a TSRPass object with the desired algorithm type.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
-
-// The code below must be executed in the same glThread.
-//----------------------GL Thread---------------------//
-
-// Initialize TSRPass with the specified parameters.
 TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
 if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
