@@ -31,13 +31,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4D1E30A32BBD4E1F00BC3F66 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 4D7FE6C42B5FB4E500E683AC;
-			remoteInfo = "tsr-client";
-		};
 		4D24118B2B60C1D300720192 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4D2411672B60C1D000720192 /* Project object */;
@@ -52,20 +45,6 @@
 			remoteGlobalIDString = 4D24116E2B60C1D000720192;
 			remoteInfo = "tsr-ios-demo";
 		};
-		4DB63CE62B625C4F00E563DE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4D7FE6C52B5FB4E500E683AC;
-			remoteInfo = "tsr-client";
-		};
-		4DB63CE82B625C4F00E563DE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4D7FE6CF2B5FB4E500E683AC;
-			remoteInfo = "tsr-clientTests";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,7 +54,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4DB63CF02B625D5300E563DE /* tsr_client.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,7 +92,6 @@
 		4D38C76D2BB1561D00A57626 /* 576P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 576P.mp4; sourceTree = "<group>"; };
 		4D812D622D6DBE060097ED2C /* VideoRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoRenderer.h; sourceTree = "<group>"; };
 		4D812D642D6DBE220097ED2C /* VideoRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoRenderer.m; sourceTree = "<group>"; };
-		4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "tsr-client.xcodeproj"; path = "../tsr-client/tsr-client.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,7 +99,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D1E30A52BBD4E2300BC3F66 /* tsr_client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,7 +122,6 @@
 		4D2411662B60C1D000720192 = {
 			isa = PBXGroup;
 			children = (
-				4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */,
 				4D2411712B60C1D000720192 /* tsr-ios-demo */,
 				4D24118D2B60C1D300720192 /* tsr-ios-demoTests */,
 				4D2411972B60C1D300720192 /* tsr-ios-demoUITests */,
@@ -214,15 +189,6 @@
 			path = "tsr-ios-demoUITests";
 			sourceTree = "<group>";
 		};
-		4DB63CE22B625C4F00E563DE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				4DB63CE72B625C4F00E563DE /* tsr_client.framework */,
-				4DB63CE92B625C4F00E563DE /* tsr-clientTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		4DB63CEE2B625D5300E563DE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,7 +211,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				4D1E30A42BBD4E1F00BC3F66 /* PBXTargetDependency */,
 			);
 			name = "tsr-ios-demo";
 			productName = "tsr-ios-demo";
@@ -321,12 +286,6 @@
 			mainGroup = 4D2411662B60C1D000720192;
 			productRefGroup = 4D2411702B60C1D000720192 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 4DB63CE22B625C4F00E563DE /* Products */;
-					ProjectRef = 4DB63CE12B625C4F00E563DE /* tsr-client.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				4D24116E2B60C1D000720192 /* tsr-ios-demo */,
@@ -335,23 +294,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		4DB63CE72B625C4F00E563DE /* tsr_client.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = tsr_client.framework;
-			remoteRef = 4DB63CE62B625C4F00E563DE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4DB63CE92B625C4F00E563DE /* tsr-clientTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "tsr-clientTests.xctest";
-			remoteRef = 4DB63CE82B625C4F00E563DE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4D24116D2B60C1D000720192 /* Resources */ = {
@@ -423,11 +365,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4D1E30A42BBD4E1F00BC3F66 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "tsr-client";
-			targetProxy = 4D1E30A32BBD4E1F00BC3F66 /* PBXContainerItemProxy */;
-		};
 		4D24118C2B60C1D300720192 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4D24116E2B60C1D000720192 /* tsr-ios-demo */;
