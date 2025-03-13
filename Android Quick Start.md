@@ -121,11 +121,6 @@ The following is an example of using PROFESSIONAL super-resolution algorithm cod
 // Create a TSRPass object with the desired algorithm type.
 TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
 
-// Before initializing the TSRPass, configure the maximum input resolution for super-resolution processing.
-// This configuration step is crucial as it helps to allocate memory and optimize performance.
-// Here, we set the maximum resolution to 1920x1920 pixels.
-TSRPass.TSRInitStatusCode configStatus = tsrPass.configureProSRMaxInputResolution(1920, 1920);
-
 // The code below must be executed in the same glThread.
 //----------------------GL Thread---------------------//
 
@@ -183,12 +178,6 @@ The following is a code example:
 ```
 // Create a TIEPass object using the constructor.
 TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
-
-// Before initializing the TIEPass, configure the maximum input resolution for super-resolution processing.
-// This configuration step is crucial as it helps to allocate memory and optimize performance.
-// Here, we set the maximum resolution to 1920x1920 pixels.
-TIEInitStatusCode configStatus = tiePass.configureProIEMaxInputResolution(1920, 1920);
-
 
 // The code below must be executed in the same glThread.
 //----------------------GL Thread---------------------//
