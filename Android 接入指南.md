@@ -199,6 +199,6 @@ TIEPass类提供了接口用于管理和优化图像增强过程中的专业版�
 # **3 SDK API描述**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
-[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/1.15/index.html)
+[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/latest/index.html)
 
 

@@ -277,5 +277,5 @@ TSRLogger is designed to capture internal logs from the SDK. Please ensure these
 
 You may click the link to access the API documentation for TSRSDK, which includes annotations for the interfaces and examples of how to call them.
 
-[TSRSDK IOS API Document](https://tencentyun.github.io/TSR/ios-docs/1.15/index.html)
+[TSRSDK IOS API Document](https://tencentyun.github.io/TSR/ios-docs/latest/index.html)
 

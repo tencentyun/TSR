@@ -46,7 +46,7 @@ The following is the compiled App installation package of the Demo project, whic
 <img src=./docs/tsr-work-flow.png width=50% />
 
 ### **2.2.1 TSRSdk**
-[TSRSdk](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TSRSdk.html) includes init and deInit methods. The init method is used to initialize the SDK, and the deInit method is used to release resources.
+[TSRSdk](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRSdk.html) includes init and deInit methods. The init method is used to initialize the SDK, and the deInit method is used to release resources.
 
 1. To initialize the TSRSdk for online authentication, you need to pass in the APPID and AUTH_ID for online authorization, and also pass in the TSRSdk.TSRSdkLicenseVerifyResultCallback to obtain the results of online authentication. In addition, you need to pass in a TSRLogger to obtain the SDK logs. Here is an example code:
 ```
@@ -71,7 +71,7 @@ The following is the compiled App installation package of the Demo project, whic
 ```
 
 ### **2.2.2 TSRPass**
-[TSRPass](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TSRPass.html) is a class used for super-resolution rendering. When creating a TSRPass, you need to pass in TSRAlgorithmType to set the super-resolution algorithm type.
+[TSRPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRPass.html) is a class used for super-resolution rendering. When creating a TSRPass, you need to pass in TSRAlgorithmType to set the super-resolution algorithm type.
 
 **Note: TSRPass is not thread-safe, and the methods of TSRPass must be called in the same thread.**
 
@@ -134,7 +134,7 @@ The TSRPass class provides interfaces for managing and optimizing the profession
 These interfaces provide developers with flexible control options to optimize the performance and user experience of super-resolution rendering.
 
 ### **2.2.3 TIEPass**
-[TIEPass](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TIEPass.html) is a class used for image enhancement rendering, **only available in the Professional Edition SDK**. When creating a TIEPass, you need to pass in TIEAlgorithmType to set the image enhancement algorithm type. It includes `init`, `reInit`, `render`, and `deInit` methods. Before using TIEPass, you need to call the `init` method to initialize. If you need to update the input image dimensions without creating a new TIEPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
+[TIEPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TIEPass.html) is a class used for image enhancement rendering, **only available in the Professional Edition SDK**. When creating a TIEPass, you need to pass in TIEAlgorithmType to set the image enhancement algorithm type. It includes `init`, `reInit`, `render`, and `deInit` methods. Before using TIEPass, you need to call the `init` method to initialize. If you need to update the input image dimensions without creating a new TIEPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
 
 In the TIEAlgorithmType enumeration, there are two algorithm running modes:
 1. **STANDARD**: The standard mode is the basic color enhancement mode, which has corresponding enhancements to brightness, contrast and saturation. The enhancement speed is very fast and is recommended for use on low-to-mid-end smartphones.
@@ -195,10 +195,10 @@ The TIEPass class provides interfaces for managing and optimizing the profession
 These interfaces provide developers with flexible control options to optimize the performance and user experience of the image enhancement process.
 
 ### **2.2.4 TSRLogger**
-[TSRLogger](https://tencentyun.github.io/TSR/android-docs/1.12/com/tencent/mps/tie/api/TSRLogger.html) is used to receive logs from the SDK internals. Please write these logs to a file for external network problem positioning.
+[TSRLogger](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRLogger.html) is used to receive logs from the SDK internals. Please write these logs to a file for external network problem positioning.
 
 # **3 SDK API Description**
 You can click on the link to view the TSRSDK API documentation, which contains interface comments and usage examples.
 
-[TSRSDK ANDROID API Documentation](https://tencentyun.github.io/TSR/android-docs/1.15/index.html)
+[TSRSDK ANDROID API Documentation](https://tencentyun.github.io/TSR/android-docs/latest/index.html)
 
