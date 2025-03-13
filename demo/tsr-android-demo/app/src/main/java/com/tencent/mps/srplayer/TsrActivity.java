@@ -387,58 +387,19 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         TSRSdk.getInstance().init(getApplicationContext(), mAppId, mAuthId, status -> {
             if (status == TSRSdkLicenseStatus.AVAILABLE) {
                 Log.i(TAG, "Online verify sdk license success: " + status);
-                if (mAlgorithm == Algorithm.NORMAL) {
-                    runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
-                }
                 // Initialize the Pass for super-resolution/enhanced rendering
                 if (mAlgorithm == Algorithm.SR_STD) {
                     mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
-                    runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
                 } else if (mAlgorithm == Algorithm.SR_STD_EH) {
                     mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD_COLOR_RETOUCHING_EXT);
-                    runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
                 } else if (mAlgorithm == Algorithm.SR_PRO) {
                     mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
-                    mSingleThreadExecutor.execute(() -> {
-                        TSRInitStatusCode initStatus = mTSRPass.configureProSRMaxInputResolution(1920, 1920);
-                        if (initStatus == TSRInitStatusCode.SUCCESS) {
-                            mTSRPass.enableProSRAutoFallback(10, 33,
-                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
-                            mTSRPass.disableProSRAutoFallback();
-                        } else {
-                            mTSRPass.forceProSRFallback(true);
-                        }
-                        runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
-                    });
                 } else if (mAlgorithm == Algorithm.SR_PRO_EH) {
                     mTSRPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL_COLOR_RETOUCHING_EXT);
-                    mSingleThreadExecutor.execute(() -> {
-                        TSRInitStatusCode initStatus = mTSRPass.configureProSRMaxInputResolution(1920, 1920);
-                        if (initStatus == TSRInitStatusCode.SUCCESS) {
-                            mTSRPass.enableProSRAutoFallback(10, 33,
-                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
-                            mTSRPass.disableProSRAutoFallback();
-                        } else {
-                            mTSRPass.forceProSRFallback(true);
-                        }
-                        runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
-                    });
                 } else if (mAlgorithm == Algorithm.IE_STD) {
                     mTIEPass = new TIEPass(TIEPass.TIEAlgorithmType.STANDARD);
-                    runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
                 } else if (mAlgorithm == Algorithm.IE_PRO) {
                     mTIEPass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
-                    mSingleThreadExecutor.execute(() -> {
-                        TIEInitStatusCode initStatus = mTIEPass.configureProIEMaxInputResolution(1920, 1920);
-                        if (initStatus == TIEInitStatusCode.SUCCESS) {
-                            mTIEPass.enableProIEAutoFallback(10, 33,
-                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
-                            mTIEPass.disableProIEAutoFallback();
-                        } else {
-                            mTIEPass.forceProIEFallback(true);
-                        }
-                        runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
-                    });
                 }
 
                 if (mCompareAlgorithm == Algorithm.SR_STD) {
@@ -447,43 +408,14 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
                     mTSRPassCmp = new TSRPass(TSRAlgorithmType.STANDARD_COLOR_RETOUCHING_EXT);
                 } else if (mCompareAlgorithm == Algorithm.SR_PRO) {
                     mTSRPassCmp = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
-                    mSingleThreadExecutor.execute(() -> {
-                        TSRInitStatusCode initStatus = mTSRPassCmp.configureProSRMaxInputResolution(1920, 1920);
-                        if (initStatus == TSRInitStatusCode.SUCCESS) {
-                            mTSRPassCmp.enableProSRAutoFallback(10, 33,
-                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
-                            mTSRPassCmp.disableProSRAutoFallback();
-                        } else {
-                            mTSRPassCmp.forceProSRFallback(true);
-                        }
-                    });
                 } else if (mCompareAlgorithm == Algorithm.SR_PRO_EH) {
                     mTSRPassCmp = new TSRPass(TSRAlgorithmType.PROFESSIONAL_COLOR_RETOUCHING_EXT);
-                    mSingleThreadExecutor.execute(() -> {
-                        TSRInitStatusCode initStatus = mTSRPassCmp.configureProSRMaxInputResolution(1920, 1920);
-                        if (initStatus == TSRInitStatusCode.SUCCESS) {
-                            mTSRPassCmp.enableProSRAutoFallback(10, 33,
-                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
-                            mTSRPassCmp.disableProSRAutoFallback();
-                        } else {
-                            mTSRPassCmp.forceProSRFallback(true);
-                        }
-                    });
                 } else if (mCompareAlgorithm == Algorithm.IE_STD) {
                     mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.STANDARD);
                 } else if (mCompareAlgorithm == Algorithm.IE_PRO) {
                     mTIEPassCmp = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
-                    mSingleThreadExecutor.execute(() -> {
-                        TIEInitStatusCode initStatus = mTIEPassCmp.configureProIEMaxInputResolution(1920, 1920);
-                        if (initStatus == TIEInitStatusCode.SUCCESS) {
-                            mTIEPassCmp.enableProIEAutoFallback(10, 33,
-                                    (width, height) -> Log.i(TAG, "TSR onFallback: " + width + "x" + height));
-                            mTIEPassCmp.disableProIEAutoFallback();
-                        } else {
-                            mTIEPassCmp.forceProIEFallback(true);
-                        }
-                    });
                 }
+                runOnUiThread(() -> initView(mIsRecordVideo, mAlgorithm, mCompareAlgorithm));
             } else {
                 Log.i(TAG, "Online verify sdk license failed: " + status);
                 runOnUiThread(() -> {
