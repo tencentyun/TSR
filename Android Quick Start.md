@@ -86,7 +86,7 @@ The class includes `init`, `reInit`, `render`, and `deInit` methods. Before usin
 The following is an example of using STANDARD super-resolution algorithm code:
 ```
 // Create a TSRPass object using the constructor.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD);
+TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD); // STANDARD, STANDARD_COLOR_RETOUCHING_EXT, PROFESSIONAL, PROFESSIONAL_COLOR_RETOUCHING_EXT
 
 // The code below must be executed in the same glThread.
 //----------------------GL Thread---------------------//
@@ -116,37 +116,6 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
 //----------------------GL Thread---------------------//
 ```
 
-The following is an example of using PROFESSIONAL super-resolution algorithm code:
-```
-// Create a TSRPass object with the desired algorithm type.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL);
-
-// The code below must be executed in the same glThread.
-//----------------------GL Thread---------------------//
-
-// Initialize TSRPass with the specified parameters.
-TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
-
-if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-   // Perform super-resolution rendering and get the enhanced texture ID.
-   int outputTextureId = tsrPass.render(inputTextureId);
-
-   // Reinitialize if there are changes in image dimensions or srRatio.
-   TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
-   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-      outputTextureId = tsrPass.render(inputTextureId);
-   } else {
-      // Handle reinitialization failure
-   }
-
-   // Release resources when no longer needed.
-   tsrPass.deInit();
-} else {
-   // Handle initialization failure
-}
-
-//----------------------GL Thread---------------------//
-```
 
 The TSRPass class provides interfaces for managing and optimizing the professional super-resolution (Pro SR) functionality during the super-resolution rendering process. Below is a detailed introduction to these interfaces:
 
