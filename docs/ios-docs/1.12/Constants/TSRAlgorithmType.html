@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>TSRAlgorithmType Constants Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">TSRSDK </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Tencent</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">TSRAlgorithmType Constants Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Declared in</th>
+	<td>TSRPass.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+
+                    
+                    <h3 class="subsubtitle method-title">TSRAlgorithmType</h3>
+                    
+					
+					
+                    <div class="section">
+                        <!-- display enum values -->
+                        
+                        <h4 class="method-subtitle">Definition</h4>
+                        <code>typedef NS_ENUM(NSInteger, TSRAlgorithmType ) {<br>
+                            
+                            &nbsp;&nbsp; <a href="">TSRAlgorithmTypeStandard</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">TSRAlgorithmTypeProfessional</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">)</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">__attribute__</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">(</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">(</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">deprecated</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">(</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">&quot;Use TSRAlgorithmTypeProfessionalHighQuality or TSRAlgorithmTypeProfessionalFast instead.&quot;</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">)</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">)</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">)</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">TSRAlgorithmTypeProfessionalHighQuality</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">)</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">TSRAlgorithmTypeProfessionalFast</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">)</a>,<br>
+                            
+                            };</code>
+                    
+                    </div>
+                    
+                    <div class="section section-methods">
+                        <h4 class="method-subtitle">Constants</h4>
+                        <dl class="termdef">
+                            
+                            <dt><a name="" title="TSRAlgorithmTypeStandard"></a><code>TSRAlgorithmTypeStandard</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRAlgorithmTypeProfessional"></a><code>TSRAlgorithmTypeProfessional</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title=")"></a><code>)</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="__attribute__"></a><code>__attribute__</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="("></a><code>(</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="("></a><code>(</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="deprecated"></a><code>deprecated</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="("></a><code>(</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="&quot;Use TSRAlgorithmTypeProfessionalHighQuality or TSRAlgorithmTypeProfessionalFast instead.&quot;"></a><code>&quot;Use TSRAlgorithmTypeProfessionalHighQuality or TSRAlgorithmTypeProfessionalFast instead.&quot;</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title=")"></a><code>)</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title=")"></a><code>)</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title=")"></a><code>)</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRAlgorithmTypeProfessionalHighQuality"></a><code>TSRAlgorithmTypeProfessionalHighQuality</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title=")"></a><code>)</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TSRAlgorithmTypeProfessionalFast"></a><code>TSRAlgorithmTypeProfessionalFast</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title=")"></a><code>)</code></dt>
+<dd>
+
+
+<p>The TSRAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TSRAlgorithmTypeStandard -> The TSRAlgorithmTypeStandard mode provides fast super-resolution processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TSRAlgorithmTypeProfessional -> Deprecated. Currently equivalent to TSRAlgorithmTypeProfessionalHighQuality. Only available on iOS 15.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalHighQuality -> The TSRAlgorithmTypeProfessionalHighQuality mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Only available on iOS 16.0 or newer.</p>
+
+<p>TSRAlgorithmTypeProfessionalFast -> The TSRAlgorithmTypeProfessionalFast mode ensures faster processing speed while sacrificing some image quality. It is suitable for scenarios with high real-time requirements and is recommended for use on mid-range smartphones. Only available on iOS 15.0 or newer.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TSRPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                        </dl>
+                    </div>
+                    
+
+                    
+                    
+
+                    
+
+                    
+                    <div class="method-subsection declared-in-section">
+                        <h4 class="method-subtitle">Declared In</h4>
+                        <p><code class="declared-in-ref">TSRPass.h</code></p>
+                    </div>
+                    
+                    
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2024 Tencent. All rights reserved. Updated: 2024-11-14</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

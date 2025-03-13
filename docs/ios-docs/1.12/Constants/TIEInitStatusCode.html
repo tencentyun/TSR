@@ -87,15 +87,15 @@
                             
                             &nbsp;&nbsp; <a href="">TIEInitStatusCodeSuccess</a> = 0,<br>
                             
-                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeSDKLicenseStatusNotAvailable</a> = -10002,<br>
+                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeMetalInitFailed</a> = -11001,<br>
                             
-                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeAlgorithmTypeInvalid</a> = -10003,<br>
+                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeSDKLicenseStatusNotAvailable</a> = -11002,<br>
                             
-                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeMLModelInitFailed</a> = -10004,<br>
+                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeAlgorithmTypeInvalid</a> = -11003,<br>
                             
-                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeInputResolutionInvalid</a> = -10006,<br>
+                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeMLModelInitFailed</a> = -11004,<br>
                             
-                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeInternalErr</a> = -10009,<br>
+                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeInputResolutionInvalid</a> = -11005,<br>
                             
                             };</code>
                     
@@ -113,6 +113,8 @@
 
 <p>TIEInitStatusCodeSuccess -> Initialization was successful.</p>
 
+<p>TIEInitStatusCodeMetalInitFailed -> Metal initialization failed, fallback to normal playback.</p>
+
 <p>TIEInitStatusCodeSDKLicenseStatusNotAvailable -> SDK license verification failed or was not verified, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
@@ -121,7 +123,34 @@
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
-<p>TIEInitStatusCodeInternalErr -> Internal error.</p>
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TIEPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TIEInitStatusCodeMetalInitFailed"></a><code>TIEInitStatusCodeMetalInitFailed</code></dt>
+<dd>
+
+
+<p>Enum representing various initialization errors for <a href="../Classes/TIEPass.html">TIEPass</a>.</p>
+
+<p>TIEInitStatusCodeSuccess -> Initialization was successful.</p>
+
+<p>TIEInitStatusCodeMetalInitFailed -> Metal initialization failed, fallback to normal playback.</p>
+
+<p>TIEInitStatusCodeSDKLicenseStatusNotAvailable -> SDK license verification failed or was not verified, fallback to normal playback.</p>
+
+<p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
+
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
+
+<p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
 
 
@@ -142,6 +171,8 @@
 
 <p>TIEInitStatusCodeSuccess -> Initialization was successful.</p>
 
+<p>TIEInitStatusCodeMetalInitFailed -> Metal initialization failed, fallback to normal playback.</p>
+
 <p>TIEInitStatusCodeSDKLicenseStatusNotAvailable -> SDK license verification failed or was not verified, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
@@ -149,8 +180,6 @@
 <p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
-
-<p>TIEInitStatusCodeInternalErr -> Internal error.</p>
 
 
 
@@ -171,6 +200,8 @@
 
 <p>TIEInitStatusCodeSuccess -> Initialization was successful.</p>
 
+<p>TIEInitStatusCodeMetalInitFailed -> Metal initialization failed, fallback to normal playback.</p>
+
 <p>TIEInitStatusCodeSDKLicenseStatusNotAvailable -> SDK license verification failed or was not verified, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
@@ -178,8 +209,6 @@
 <p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
-
-<p>TIEInitStatusCodeInternalErr -> Internal error.</p>
 
 
 
@@ -200,6 +229,8 @@
 
 <p>TIEInitStatusCodeSuccess -> Initialization was successful.</p>
 
+<p>TIEInitStatusCodeMetalInitFailed -> Metal initialization failed, fallback to normal playback.</p>
+
 <p>TIEInitStatusCodeSDKLicenseStatusNotAvailable -> SDK license verification failed or was not verified, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
@@ -207,8 +238,6 @@
 <p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
-
-<p>TIEInitStatusCodeInternalErr -> Internal error.</p>
 
 
 
@@ -229,34 +258,7 @@
 
 <p>TIEInitStatusCodeSuccess -> Initialization was successful.</p>
 
-<p>TIEInitStatusCodeSDKLicenseStatusNotAvailable -> SDK license verification failed or was not verified, fallback to normal playback.</p>
-
-<p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
-
-<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
-
-<p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
-
-<p>TIEInitStatusCodeInternalErr -> Internal error.</p>
-
-
-
-
-
-    
-	<p>
-		Declared In <code class="declared-in-ref">TIEPass.h</code>.
-	</p>
-	
-</dd>
-                            
-                            <dt><a name="" title="TIEInitStatusCodeInternalErr"></a><code>TIEInitStatusCodeInternalErr</code></dt>
-<dd>
-
-
-<p>Enum representing various initialization errors for <a href="../Classes/TIEPass.html">TIEPass</a>.</p>
-
-<p>TIEInitStatusCodeSuccess -> Initialization was successful.</p>
+<p>TIEInitStatusCodeMetalInitFailed -> Metal initialization failed, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeSDKLicenseStatusNotAvailable -> SDK license verification failed or was not verified, fallback to normal playback.</p>
 
@@ -265,8 +267,6 @@
 <p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
-
-<p>TIEInitStatusCodeInternalErr -> Internal error.</p>
 
 
 
@@ -303,7 +303,7 @@
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-02-27</p>
+						<p class="copyright">Copyright &copy; 2024 Tencent. All rights reserved. Updated: 2024-11-14</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
