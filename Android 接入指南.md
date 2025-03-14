@@ -122,7 +122,7 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
 TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的专业版超分辨率（Pro SR）功能。以下是对这些接口的详细介绍：
 
 1. **enableProSRAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
-   该方法用于启用超分辨率处理的自动回退机制，并设置相应的参数。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续超时帧数超过指定的consecutiveTimeoutFrames，系统将触发回退。请注意，此方法仅在创建TSRPass时使用的算法类型不设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
+   该方法用于启用超分辨率处理的自动回退机制。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续consecutiveTimeoutFrames帧耗时超过指定的timeoutDurationMs，系统将触发回退至标准版算法，保证播放流畅，避免由于设备性能不足导致卡顿。请注意，此方法仅在创建TSRPass时使用的算法类型不设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
 
 2. **disableProSRAutoFallback():**
    该方法用于禁用超分辨率处理的自动回退机制。此方法应在之前使用enableProSRAutoFallback启用的自动回退功能关闭后调用。一旦调用此方法，系统将不再根据配置的参数触发回退。
@@ -180,15 +180,15 @@ if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
 TIEPass类提供了接口用于管理和优化图像增强过程中的专业版图像增强（Pro IE）功能。以下是对这些接口的详细介绍：
 
 1. **enableProIEAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
-   该方法用于启用图像增强过程的自动回退机制，并设置相应的参数。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续超时帧数超过指定的consecutiveTimeoutFrames，系统将触发回退。请注意，此方法仅在创建TIEPass时使用的算法类型设置为PROFESSIONAL时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
-
-2. **disableProIEAutoFallback():**
+    该方法用于启用超分辨率处理的自动回退机制。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续consecutiveTimeoutFrames帧耗时超过指定的timeoutDurationMs，系统将触发回退至标准版算法，保证播放流畅，避免由于设备性能不足导致卡顿。请注意，此方法仅在创建TSRPass时使用的算法类型不设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
+   
+3. **disableProIEAutoFallback():**
    该方法用于禁用图像增强过程的自动回退机制。此方法应在之前使用enableProIEAutoFallback启用的自动回退功能关闭后调用。一旦调用此方法，系统将不再根据配置的参数触发回退。
 
-3. **benchmarkProIE(int inputWidth, int inputHeight):**
+4. **benchmarkProIE(int inputWidth, int inputHeight):**
    该方法用于评估专业版算法的渲染时间消耗。此方法根据给定的输入尺寸评估专业版算法的执行时间（以毫秒为单位）。此方法不应在主线程上调用，因为它可能需要大约2到5秒才能完成。此方法仅在创建TIEPass时使用的算法类型不设置为STANDARD时生效。如果算法执行因任何原因失败，此方法将返回-1。
 
-4. **forceProIEFallback(boolean enable):**
+5. **forceProIEFallback(boolean enable):**
    该方法用于在专业版和标准算法之间切换。当enable为true时，系统将切换到标准算法；否则，将使用专业版算法。此方法仅在创建TIEPass时使用的算法类型不设置为STANDARD时生效。
 
 这些接口为开发者提供了灵活的控制选项，以优化图像增强过程的性能和用户体验。
