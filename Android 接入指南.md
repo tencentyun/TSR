@@ -122,7 +122,7 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
 TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的专业版超分辨率（Pro SR）功能。以下是对这些接口的详细介绍：
 
 1. **enableProSRAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
-   该方法用于启用超分辨率处理的自动回退机制。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续consecutiveTimeoutFrames帧耗时超过指定的timeoutDurationMs，系统将触发回退至标准版算法，保证播放流畅，避免由于设备性能不足导致卡顿。请注意，此方法仅在创建TSRPass时使用的算法类型不设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
+   该方法用于启用超分辨率处理的自动回退机制。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续consecutiveTimeoutFrames帧耗时超过指定的timeoutDurationMs，系统将触发回退至标准版算法，保证播放流畅，避免由于设备性能不足导致卡顿。请注意，此方法仅在创建TSRPass时使用的算法类型设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
 
 2. **disableProSRAutoFallback():**
    该方法用于禁用超分辨率处理的自动回退机制。此方法应在之前使用enableProSRAutoFallback启用的自动回退功能关闭后调用。一旦调用此方法，系统将不再根据配置的参数触发回退。
@@ -180,7 +180,7 @@ if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
 TIEPass类提供了接口用于管理和优化图像增强过程中的专业版图像增强（Pro IE）功能。以下是对这些接口的详细介绍：
 
 1. **enableProIEAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
-    该方法用于启用超分辨率处理的自动回退机制。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续consecutiveTimeoutFrames帧耗时超过指定的timeoutDurationMs，系统将触发回退至标准版算法，保证播放流畅，避免由于设备性能不足导致卡顿。请注意，此方法仅在创建TSRPass时使用的算法类型不设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
+    该方法用于启用超分辨率处理的自动回退机制。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续consecutiveTimeoutFrames帧耗时超过指定的timeoutDurationMs，系统将触发回退至标准版算法，保证播放流畅，避免由于设备性能不足导致卡顿。请注意，此方法仅在创建TSRPass时使用的算法类型设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
    
 3. **disableProIEAutoFallback():**
    该方法用于禁用图像增强过程的自动回退机制。此方法应在之前使用enableProIEAutoFallback启用的自动回退功能关闭后调用。一旦调用此方法，系统将不再根据配置的参数触发回退。
