@@ -72,6 +72,8 @@
 		
 		<option value="//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:">- initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:</option>
 		
+		<option value="//api/name/initWithRenderPassConfig:glContext:initStatusCode:">- initWithRenderPassConfig:glContext:initStatusCode:</option>
+		
 		<option value="//api/name/reInit:inputHeight:srRatio:">- reInit:inputHeight:srRatio:</option>
 		
 		<option value="//api/name/render:">- render:</option>
@@ -218,6 +220,191 @@
 
 			
 
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TSRPass.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/initWithRenderPassConfig:glContext:initStatusCode:" title="initWithRenderPassConfig:glContext:initStatusCode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithRenderPassConfig:glContext:initStatusCode:">&ndash;&nbsp;initWithRenderPassConfig:glContext:initStatusCode:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Initializes super-resolution render pass using dictionary configuration</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithRenderPassConfig:(NSDictionary *)<em>config</em> glContext:(EAGLContext *)<em>glContext</em> initStatusCode:(TSRInitStatusCode *)<em>statusCode</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>config</code></th>
+						<td><p>Configuration dictionary containing all required keys</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>glContext</code></th>
+						<td><p>OpenGL ES context, must match rendering thread</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>statusCode</code></th>
+						<td><p>Pointer to output initialization status code</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Supported configuration parameters:</p>
+
+<h2>Basic Parameters (Required)</h2>
+
+
+<table>
+<thead>
+<tr>
+<th> Key </th>
+<th> Type </th>
+<th> Constraints </th>
+<th> Default </th>
+<th> Required </th>
+<th> Description </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/algorithmType">algorithmType</a> </td>
+<td> NSNumber (<a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a>) </td>
+<td> Valid enum value </td>
+<td> None </td>
+<td> Required </td>
+<td> Algorithm type selection </td>
+</tr>
+<tr>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/inputWidth">inputWidth</a> </td>
+<td> NSNumber (int32_t) </td>
+<td> 8 ≤ value ≤ 4096 </td>
+<td> None </td>
+<td> Required </td>
+<td> Input texture width in pixels </td>
+</tr>
+<tr>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/inputHeight">inputHeight</a> </td>
+<td> NSNumber (int32_t) </td>
+<td> 8 ≤ value ≤ 4096 </td>
+<td> None </td>
+<td> Required </td>
+<td> Input texture height in pixels </td>
+</tr>
+<tr>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.srRatio </td>
+<td> NSNumber (float) </td>
+<td> 1.0 ≤ value ≤ 4.0 </td>
+<td> None </td>
+<td> Required </td>
+<td> Output scale factor (output = input * srRatio) </td>
+</tr>
+</tbody>
+</table>
+
+
+<h2>Auto Fallback Configuration (Optional)</h2>
+
+
+<table>
+<thead>
+<tr>
+<th> Key </th>
+<th> Type </th>
+<th> Constraints  </th>
+<th> Description </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.<a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> </td>
+<td> NSInteger </td>
+<td> ≥1 </td>
+<td>  Consecutive timeout frames threshold </td>
+</tr>
+<tr>
+<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.timeoutDurationMs </td>
+<td> NSInteger </td>
+<td> ≥1 </td>
+<td> Timeout duration per frame (milliseconds) </td>
+</tr>
+<tr>
+<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.listener </td>
+<td> Block </td>
+<td> - </td>
+<td> Callback format: <code>^(NSInteger width, NSInteger height)</code> </td>
+</tr>
+</tbody>
+</table>
+<div class="note"><p><strong>Note:</strong> Example:</p>
+
+<p><code>
+<a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a> *fallbackConfig = [<a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a> configWithConsecutiveTimeoutFrames:5
+timeoutDurationMs:100
+listener:^(NSInteger w, NSInteger h) {
+NSLog(@&ldquo;Fallback: %ldx%ld&rdquo;, w, h);
+}];</p>
+
+<p>NSDictionary *config = @{
+RenderPassConfig.algorithmType: @(TSRAlgorithmTypeProfessional),
+RenderPassConfig.inputWidth: @1920,
+RenderPassConfig.inputHeight: @1080,
+RenderPassConfig.srRatio: @2.0f,
+RenderPassConfig.autoFallbackConfig: fallbackConfig
+};</p>
+
+<p>TSRPass* tsrPass = [[TSRPass alloc] initWith<a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>:config glContext:context initStatusCode:&amp;initStatus];
+</code></p></div>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection see-also-section">
+				<h4 class="method-subtitle">See Also</h4>
+				<ul>
+					
+					<li><code><p><a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a></p></code></li>
+					
+					<li><code><p><a href="../Constants/TSRInitStatusCode.html">TSRInitStatusCode</a></p></code></li>
+					
+					<li><code><p><a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a></p></code></li>
+					
+				</ul>
+			</div>
 			
 
 			
@@ -801,7 +988,7 @@ This method should be called when the TSRPass object is no longer needed, to fre
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-02-27</p>
+						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-03-20</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
