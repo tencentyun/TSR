@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>TSRPass Class Reference</title>
+	<title>TSRPassMetal Class Reference</title>
 
 	<link rel="stylesheet" href="../css/style.css">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
@@ -70,15 +70,15 @@
 		
 		<option value="//api/name/forceProSRFallback:">- forceProSRFallback:</option>
 		
-		<option value="//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:">- initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:</option>
-		
-		<option value="//api/name/initWithRenderPassConfig:glContext:initStatusCode:">- initWithRenderPassConfig:glContext:initStatusCode:</option>
+		<option value="//api/name/initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:">- initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:</option>
 		
 		<option value="//api/name/reInit:inputHeight:srRatio:">- reInit:inputHeight:srRatio:</option>
 		
-		<option value="//api/name/render:">- render:</option>
+		<option value="//api/name/render:commandBuffer:">- render:commandBuffer:</option>
 		
 		<option value="//api/name/renderWithPixelBuffer:">- renderWithPixelBuffer:</option>
+		
+		<option value="//api/name/setParametersWithBrightness:saturation:contrast:sharpness:">- setParametersWithBrightness:saturation:contrast:sharpness:</option>
 		
 	</optgroup>
 	
@@ -95,7 +95,7 @@
 		<div id="overview_contents" class="container">
 			<div id="content">
 				<main role="main">
-					<h1 class="title">TSRPass Class Reference</h1>
+					<h1 class="title">TSRPassMetal Class Reference</h1>
 
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
@@ -104,7 +104,7 @@
 	<td>NSObject</td>
 </tr><tr>
 	<th>Declared in</th>
-	<td>TSRPass.h<br />TSRPass.mm</td>
+	<td>TSRPassMetal.h<br />TSRPassMetal.mm</td>
 </tr>
 						</tbody></table></div>
 					
@@ -114,18 +114,19 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>The TSRPass class provides methods for performing super-resolution rendering on input images using the OpenGL ES 3.0</p>
+						<p>The <a href="../Classes/TSRPass.html">TSRPass</a> class provides methods for performing super-resolution rendering on input images using the Metal framework.</p>
 
-<p>TSRPass is responsible for initializing the super-resolution rendering process with the specified input image size and super-resolution ratio. It also provides a render method that applies the super-resolution process to the input image and returns the processed image as an OpenGL texture.</p>
+<p><a href="../Classes/TSRPass.html">TSRPass</a> is responsible for initializing the super-resolution rendering process with the specified input image size and super-resolution ratio. It also provides a render method that applies the super-resolution process to
+the input image and returns the processed image as an MTLTexture object.</p>
 
 <p><b>Note: </b></p>
 
 
 <ol>
-<li>This class uses the OpenGL ES 3.0 for performing super-resolution rendering and requires a device that supports OpenGL ES 3.0.</li>
-<li>All methods of TSRPass must be called within the same OpenGL context.</li>
-<li>The <a href="#//api/name/render:">render:</a> and <a href="#//api/name/renderWithPixelBuffer:">renderWithPixelBuffer:</a> method should not be called before the initWithAlgorithmType:inputWidth:inputHeight:glContext:srRatio:initStatusCode: method, and it should not be called after the <a href="#//api/name/deInit">deInit</a> method.</li>
-<li>Initializing the TSRPass with TSRAlgorithmTypeProfessional or TSRAlgorithmTypeProfessionalColorRetouchingExt is only available on iOS 16.0 or newer. If the iOS version is older, it will fallback to TSRAlgorithmTypeStandard.</li>
+<li>This class uses the Metal framework for performing super-resolution rendering and requires a device that supports Metal.</li>
+<li>All methods of <a href="../Classes/TSRPass.html">TSRPass</a> must be called within the same thread.</li>
+<li>The <a href="#//api/name/render:commandBuffer:">render:commandBuffer:</a> and <a href="#//api/name/renderWithPixelBuffer:">renderWithPixelBuffer:</a> method should not be called before the <a href="#//api/name/initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:">initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:</a> method, and it should not be called after the <a href="#//api/name/deInit">deInit</a> method.</li>
+<li>Initializing the <a href="../Classes/TSRPass.html">TSRPass</a> with TSRAlgorithmTypeProfessional is only available on iOS 15.0 or newer. If the iOS version is older, it will fallback to TSRAlgorithmTypeStandard.</li>
 </ol>
 
 
@@ -133,10 +134,10 @@
 
 
 <ol>
-<li>Create a TSRPass instance using the initWith<a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a>:inputWidth:inputHeight:srRatio:initStatusCode: method.</li>
-<li>Call the <a href="#//api/name/render:">render:</a> method with the input image&rsquo;s OpenGL texture to perform super-resolution rendering.</li>
-<li>Obtain the processed image as OpenGL texture from the return value of the <a href="#//api/name/render:">render:</a> method.</li>
-<li><a href="#//api/name/deInit">deInit</a> method should be called when the TSRPass object is no longer needed, to free up the memory and other resources.</li>
+<li>Create a <a href="../Classes/TSRPass.html">TSRPass</a> instance using the <a href="#//api/name/initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:">initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:</a> method.</li>
+<li>Call the <a href="#//api/name/render:commandBuffer:">render:commandBuffer:</a> method with the input image&rsquo;s MTLTexture and an MTLCommandBuffer to perform super-resolution rendering.</li>
+<li>Obtain the processed image as an MTLTexture from the return value of the <a href="#//api/name/render:commandBuffer:">render:commandBuffer:</a> method.</li>
+<li><a href="#//api/name/deInit">deInit</a> method should be called when the <a href="../Classes/TSRPass.html">TSRPass</a> object is no longer needed, to free up the memory and other resources.</li>
 </ol>
 
 					</div>
@@ -154,8 +155,8 @@
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:" title="initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:">&ndash;&nbsp;initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:</a></code>
+	<a name="//api/name/initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:" title="initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:">&ndash;&nbsp;initWithTSRAlgorithmType:device:inputWidth:inputHeight:srRatio:initStatusCode:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -165,12 +166,12 @@
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Init TSRPass object for super-resolution.</p>
+				<p>Init <a href="../Classes/TSRPass.html">TSRPass</a> object for super-resolution.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithAlgorithmType:(TSRAlgorithmType)<em>algorithmType</em> glContext:(EAGLContext *)<em>context</em> inputWidth:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> srRatio:(float_t)<em>srRatio</em> initStatusCode:(TSRInitStatusCode *)<em>initStatusCode</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithTSRAlgorithmType:(TSRAlgorithmType)<em>algorithmType</em> device:(id&lt;MTLDevice&gt;)<em>device</em> inputWidth:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> srRatio:(float_t)<em>srRatio</em> initStatusCode:(TSRInitStatusCode *)<em>initStatusCode</em></code></div>
 
 		    
 			
@@ -180,7 +181,12 @@
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>algorithmType</code></th>
-						<td><p>The <a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a> enum value representing the algorithm running mode to be used.</p></td>
+						<td><p>The <a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a> enum value representing the algorithm running mode to be used. It can be either STANDARD (fast mode) or PROFESSIONAL (quality mode). STANDARD mode prioritizes better performance in terms of speed, possibly sacrificing some result accuracy. PROFESSIONAL mode prioritizes result accuracy, even if the running speed is slower.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>device</code></th>
+						<td><p>The MTLDevice which you are using.</p></td>
 					</tr>
 				
 					<tr>
@@ -214,7 +220,7 @@
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Init TSRPass object for super-resolution.</p>
+				<p>Init <a href="../Classes/TSRPass.html">TSRPass</a> object for super-resolution.</p>
 			</div>
 			
 
@@ -225,193 +231,7 @@
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/initWithRenderPassConfig:glContext:initStatusCode:" title="initWithRenderPassConfig:glContext:initStatusCode:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithRenderPassConfig:glContext:initStatusCode:">&ndash;&nbsp;initWithRenderPassConfig:glContext:initStatusCode:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Initializes super-resolution render pass using dictionary configuration</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithRenderPassConfig:(NSDictionary *)<em>config</em> glContext:(EAGLContext *)<em>glContext</em> initStatusCode:(TSRInitStatusCode *)<em>statusCode</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>config</code></th>
-						<td><p>Configuration dictionary containing all required keys</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>glContext</code></th>
-						<td><p>OpenGL ES context, must match rendering thread</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>statusCode</code></th>
-						<td><p>Pointer to output initialization status code</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>Supported configuration parameters:</p>
-
-<h2>Basic Parameters (Required)</h2>
-
-
-<table>
-<thead>
-<tr>
-<th> Key </th>
-<th> Type </th>
-<th> Constraints </th>
-<th> Default </th>
-<th> Required </th>
-<th> Description </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/algorithmType">algorithmType</a> </td>
-<td> NSNumber (<a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a>) </td>
-<td> Valid enum value </td>
-<td> None </td>
-<td> Required </td>
-<td> Algorithm type selection </td>
-</tr>
-<tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/inputWidth">inputWidth</a> </td>
-<td> NSNumber (int32_t) </td>
-<td> 8 ≤ value ≤ 4096 </td>
-<td> None </td>
-<td> Required </td>
-<td> Input texture width in pixels </td>
-</tr>
-<tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/inputHeight">inputHeight</a> </td>
-<td> NSNumber (int32_t) </td>
-<td> 8 ≤ value ≤ 4096 </td>
-<td> None </td>
-<td> Required </td>
-<td> Input texture height in pixels </td>
-</tr>
-<tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.srRatio </td>
-<td> NSNumber (float) </td>
-<td> 1.0 ≤ value ≤ 4.0 </td>
-<td> None </td>
-<td> Required </td>
-<td> Output scale factor (output = input * srRatio) </td>
-</tr>
-</tbody>
-</table>
-
-
-<h2>Auto Fallback Configuration (Optional)</h2>
-
-
-<table>
-<thead>
-<tr>
-<th> Key </th>
-<th> Type </th>
-<th> Constraints  </th>
-<th> Description </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.<a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> </td>
-<td> NSInteger </td>
-<td> ≥1 </td>
-<td>  Consecutive timeout frames threshold </td>
-</tr>
-<tr>
-<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.timeoutDurationMs </td>
-<td> NSInteger </td>
-<td> ≥1 </td>
-<td> Timeout duration per frame (milliseconds) </td>
-</tr>
-<tr>
-<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.listener </td>
-<td> Block </td>
-<td> - </td>
-<td> Callback format: <code>^(NSInteger width, NSInteger height)</code> </td>
-</tr>
-</tbody>
-</table>
-<div class="note"><p><strong>Note:</strong> Example:</p>
-
-<p><code>
-<a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a> *fallbackConfig = [<a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a> configWithConsecutiveTimeoutFrames:10
-timeoutDurationMs:33
-listener:^(NSInteger w, NSInteger h) {
-NSLog(@&ldquo;Fallback: %ldx%ld&rdquo;, w, h);
-}];</p>
-
-<p>NSDictionary *config = @{
-RenderPassConfig.algorithmType: @(TSRAlgorithmTypeProfessional),
-RenderPassConfig.inputWidth: @1920,
-RenderPassConfig.inputHeight: @1080,
-RenderPassConfig.srRatio: @2.0f,
-RenderPassConfig.autoFallbackConfig: fallbackConfig
-};</p>
-
-<p>TSRInitStatusCode initStatus;</p>
-<p>TSRPass* tsrPass = [[TSRPass alloc] initWith<a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>:config glContext:context initStatusCode:&amp;initStatus];
-</code></p></div>
-			</div>
-			
-
-			
-
-			
-			<div class="method-subsection see-also-section">
-				<h4 class="method-subtitle">See Also</h4>
-				<ul>
-					
-					<li><code><p><a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a></p></code></li>
-					
-					<li><code><p><a href="../Constants/TSRInitStatusCode.html">TSRInitStatusCode</a></p></code></li>
-					
-					<li><code><p><a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a></p></code></li>
-					
-				</ul>
-			</div>
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
@@ -429,7 +249,7 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Reinitializes the TSRPass object for super-resolution rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for super-resolution.</p>
+				<p>Reinitializes the <a href="../Classes/TSRPass.html">TSRPass</a> object for super-resolution rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for super-resolution.</p>
 			</div>
 			
 		    
@@ -473,7 +293,7 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Reinitializes the TSRPass object for super-resolution rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for super-resolution.</p>
+				<p>Reinitializes the <a href="../Classes/TSRPass.html">TSRPass</a> object for super-resolution rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for super-resolution.</p>
 			</div>
 			
 
@@ -484,15 +304,15 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/render:" title="render:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/render:">&ndash;&nbsp;render:</a></code>
+	<a name="//api/name/render:commandBuffer:" title="render:commandBuffer:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/render:commandBuffer:">&ndash;&nbsp;render:commandBuffer:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -504,14 +324,14 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			<div class="method-subsection brief-description">
 				<p>Performs the super-resolution rendering operation on the input image.
 <br>
-This method applies the super-resolution rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
-the TSRPass object. And the return is the OpenGL texture which has preformed super-resolution rendering .
+This method applies the super-resolution rendering process to the input image, improving its quality. The processed image is rendered onto a MTLTexture within
+the <a href="../Classes/TSRPass.html">TSRPass</a> object. And the return is the MTLTexture which has preformed super-resolution rendering .
 <br></p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (int)render:(int)<em>texture</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (id&lt;MTLTexture&gt;)render:(id&lt;MTLTexture&gt;)<em>texture</em> commandBuffer:(id&lt;MTLCommandBuffer&gt;)<em>commandBuffer</em></code></div>
 
 		    
 			
@@ -521,7 +341,12 @@ the TSRPass object. And the return is the OpenGL texture which has preformed sup
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>texture</code></th>
-						<td><p>The OpenGL texture of the input image that needs to be processed for super-resolution.</p></td>
+						<td><p>The MTLTexture of the input image that needs to be processed for super-resolution.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>commandBuffer</code></th>
+						<td><p>The MTLCommandBuffer which you are using.</p></td>
 					</tr>
 				
 				</table>
@@ -531,7 +356,7 @@ the TSRPass object. And the return is the OpenGL texture which has preformed sup
 			
 			<div class="method-subsection return">
 				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The OpenGL texture that will be performed super-resolution rendering, which is stored inside the TSRPass
+				<p>The MTLTexture that will be performed super-resolution rendering, which is stored inside the <a href="../Classes/TSRPass.html">TSRPass</a>
 object. The size of the output texture is (<a href="#//api/name/inputWidth">inputWidth</a> * srRatio, <a href="#//api/name/inputHeight">inputHeight</a> * srRatio).</p>
 			</div>
 			
@@ -543,8 +368,8 @@ object. The size of the output texture is (<a href="#//api/name/inputWidth">inpu
 				<h4 class="method-subtitle">Discussion</h4>
 				<p>Performs the super-resolution rendering operation on the input image.
 <br>
-This method applies the super-resolution rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
-the TSRPass object. And the return is the OpenGL texture which has preformed super-resolution rendering .
+This method applies the super-resolution rendering process to the input image, improving its quality. The processed image is rendered onto a MTLTexture within
+the <a href="../Classes/TSRPass.html">TSRPass</a> object. And the return is the MTLTexture which has preformed super-resolution rendering .
 <br></p>
 			</div>
 			
@@ -556,7 +381,72 @@ the TSRPass object. And the return is the OpenGL texture which has preformed sup
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/renderWithPixelBuffer:" title="renderWithPixelBuffer:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/renderWithPixelBuffer:">&ndash;&nbsp;renderWithPixelBuffer:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Performs the super-resolution rendering operation on the input pixel buffer.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (CVPixelBufferRef)renderWithPixelBuffer:(CVPixelBufferRef)<em>pixelBuffer</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>pixelBuffer</code></th>
+						<td><p>The CVPixelBufferRef of the input image that needs to be processed for super-resolution. The width and height of the pixel buffer must match the <a href="#//api/name/inputWidth">inputWidth</a> and <a href="#//api/name/inputHeight">inputHeight</a> set during initialization, and the pixel format must be BGRA.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The CVPixelBufferRef that has been performed super-resolution rendering. The size of the output pixel buffer is (<a href="#//api/name/inputWidth">inputWidth</a> * srRatio, <a href="#//api/name/inputHeight">inputHeight</a> * srRatio).</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Performs the super-resolution rendering operation on the input pixel buffer.</p>
+
+<p>This method applies the super-resolution rendering process to the input pixel buffer, improving its quality. The processed pixel buffer is created and returned as a new CVPixelBufferRef.</p><div class="note"><p><strong>Note:</strong> The SDK internally handles the lifecycle of the returned CVPixelBufferRef, therefore, the caller absolutely should not attempt to manually release the returned CVPixelBufferRef.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
@@ -625,7 +515,7 @@ configured threshold <code>consecutiveTimeoutFrames</code>, an automatic fallbac
 will be triggered.</p>
 
 <p>The threshold for consecutive timeout frames, <code>consecutiveTimeoutFrames</code>, is
-dynamically adjusted based on the device&rsquo;s performance. In cases of lower device performance,
+dynamically adjusted based on the device&rsquo;s performance. In cases of lower <a href="#//api/name/device">device</a> performance,
 the threshold will be reduced. The adjustment mechanism is as follows:</p>
 
 <ul>
@@ -637,7 +527,7 @@ be reduced to one-third, and so on.</li>
 
 
 <p>The minimum value for the threshold is 2. The formula for updating the threshold is:
-<code><a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> = max(2, <a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> / (timeConsume / timeoutDurationMs))</code>,
+<code>consecutiveTimeoutFrames = max(2, consecutiveTimeoutFrames / (timeConsume / timeoutDurationMs))</code>,
 where <code>timeConsume</code> is the actual processing time.</p>
 
 <p>Through this dynamic adjustment mechanism, the system can flexibly respond to the current
@@ -652,7 +542,7 @@ performance conditions, ensuring stability and efficiency during the processing.
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
@@ -704,7 +594,7 @@ the system will no longer trigger a fallback based on the configured parameters.
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
@@ -774,7 +664,7 @@ This method assesses the execution time in milliseconds for the PROFESSIONAL alg
 input dimensions. This method should not be called on the main thread, as it may take approximately
 2 to 5 seconds to complete.</p>
 
-<p>This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <code>TSRPass</code> is not set to
+<p>This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <a href="../Classes/TSRPass.html"><code>TSRPass</code></a> is not set to
 <code>TSRAlgorithmTypeStandard</code>. If the algorithm type is STANDARD, the evaluation may not be applicable.
 If the execution of the algorithm fails for any reason, this method will return -1.</p>
 			</div>
@@ -787,7 +677,7 @@ If the execution of the algorithm fails for any reason, this method will return 
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
@@ -808,7 +698,7 @@ If the execution of the algorithm fails for any reason, this method will return 
 				<p>Switches between the PROFESSIONAL and STANDARD algorithms.
 This method enables or disables the use of the STANDARD algorithm. When <code>enable</code> is true, the system
 will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm.
-This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <code>TSRPass</code> is not set to
+This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <a href="../Classes/TSRPass.html"><code>TSRPass</code></a> is not set to
 <code>TSRAlgorithmTypeStandard</code>.</p>
 			</div>
 			
@@ -841,7 +731,7 @@ This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html
 				<p>Switches between the PROFESSIONAL and STANDARD algorithms.
 This method enables or disables the use of the STANDARD algorithm. When <code>enable</code> is true, the system
 will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm.
-This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <code>TSRPass</code> is not set to
+This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <a href="../Classes/TSRPass.html"><code>TSRPass</code></a> is not set to
 <code>TSRAlgorithmTypeStandard</code>.</p>
 			</div>
 			
@@ -853,15 +743,15 @@ This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/renderWithPixelBuffer:" title="renderWithPixelBuffer:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/renderWithPixelBuffer:">&ndash;&nbsp;renderWithPixelBuffer:</a></code>
+	<a name="//api/name/setParametersWithBrightness:saturation:contrast:sharpness:" title="setParametersWithBrightness:saturation:contrast:sharpness:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setParametersWithBrightness:saturation:contrast:sharpness:">&ndash;&nbsp;setParametersWithBrightness:saturation:contrast:sharpness:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -871,12 +761,13 @@ This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Performs the image enhance rendering operation on the input pixel buffer.</p>
+				<p>Adjusts the parameters of the rendering operator.
+It needs to take effect after TSRPass#initWithDevice is called.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (CVPixelBufferRef)renderWithPixelBuffer:(CVPixelBufferRef)<em>pixelBuffer</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (void)setParametersWithBrightness:(float)<em>brightness</em> saturation:(float)<em>saturation</em> contrast:(float)<em>contrast</em> sharpness:(float)<em>sharpness</em></code></div>
 
 		    
 			
@@ -885,8 +776,27 @@ This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html
 				<table class="argument-def parameter-def">
 				
 					<tr>
-						<th scope="row" class="argument-name"><code>pixelBuffer</code></th>
-						<td><p>The CVPixelBufferRef of the input image that needs to be processed for image enhance. The width and height of the pixel buffer must match the <a href="#//api/name/inputWidth">inputWidth</a> and <a href="#//api/name/inputHeight">inputHeight</a> set during initialization, and the pixel format must be BGRA.</p></td>
+						<th scope="row" class="argument-name"><code>brightness</code></th>
+						<td><p>The brightness level to apply.
+Valid values are between 0 and 100, with a default value of 50.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>saturation</code></th>
+						<td><p>The saturation level to apply.
+Valid values are between 0 and 100, with a default value of 50.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>contrast</code></th>
+						<td><p>The contrast level to apply.
+Valid values are between 0 and 100, with a default value of 50.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>sharpness</code></th>
+						<td><p>The sharpness level to apply.
+Valid values are between 0 and 100, with a default value of 0.</p></td>
 					</tr>
 				
 				</table>
@@ -894,20 +804,14 @@ This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html
 			
 
 			
-			<div class="method-subsection return">
-				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The CVPixelBufferRef that has been performed image enhance rendering. The size of the output pixel buffer is (<a href="#//api/name/inputWidth">inputWidth</a>, <a href="#//api/name/inputHeight">inputHeight</a>).</p>
-			</div>
-			
 
 			
 
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Performs the image enhance rendering operation on the input pixel buffer.</p>
-
-<p>This method applies the image enhance rendering process to the input pixel buffer, improving its quality. The processed pixel buffer is created and returned as a new CVPixelBufferRef.</p><div class="note"><p><strong>Note:</strong> The SDK internally handles the lifecycle of the returned CVPixelBufferRef, therefore, the caller absolutely should not attempt to manually release the returned CVPixelBufferRef.</p></div>
+				<p>Adjusts the parameters of the rendering operator.
+It needs to take effect after TSRPass#initWithDevice is called.</p>
 			</div>
 			
 
@@ -918,7 +822,7 @@ This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
@@ -938,7 +842,7 @@ This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html
 			<div class="method-subsection brief-description">
 				<p>Releases the resources.
 <br>
-This method should be called when the TSRPass object is no longer needed, to free up the memory and other resources.</p>
+This method should be called when the <a href="../Classes/TSRPass.html">TSRPass</a> object is no longer needed, to free up the memory and other resources.</p>
 			</div>
 			
 		    
@@ -957,7 +861,7 @@ This method should be called when the TSRPass object is no longer needed, to fre
 				<h4 class="method-subtitle">Discussion</h4>
 				<p>Releases the resources.
 <br>
-This method should be called when the TSRPass object is no longer needed, to free up the memory and other resources.</p>
+This method should be called when the <a href="../Classes/TSRPass.html">TSRPass</a> object is no longer needed, to free up the memory and other resources.</p>
 			</div>
 			
 
@@ -968,7 +872,7 @@ This method should be called when the TSRPass object is no longer needed, to fre
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TSRPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassMetal.h</code></p>
 			</div>
 			
 			
@@ -989,7 +893,7 @@ This method should be called when the TSRPass object is no longer needed, to fre
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-03-20</p>
+						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-02-27</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>

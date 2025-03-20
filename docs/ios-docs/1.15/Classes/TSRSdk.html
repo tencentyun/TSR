@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>TSRSdk Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">TSRSDK </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Tencent</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/deInit">- deInit</option>
+		
+		<option value="//api/name/initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:">- initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:</option>
+		
+		<option value="//api/name/initWithAppId:licenseUrl:tsrLogger:">- initWithAppId:licenseUrl:tsrLogger:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">TSRSdk Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>TSRSdk.h<br />TSRSdk.mm</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>TSRSdk is a class responsible for managing and verifying the license of the super-resolution SDK.
+The class provides methods for initializing the SDK with online license verification,
+and releasing the resources when the SDK is no longer needed. It also allows setting a custom
+logger for logging purposes.</p>
+
+<p><b>Usage:</b></p>
+
+
+<ol>
+<li>Get an instance of TSRSdk using the getInstance method.</li>
+<li>Initialize the TSRSdk object with online license verification using the initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger: methods.</li>
+<li>Perform super-resolution rendering using the TSRPass class.</li>
+<li>Release resources when the TSRSdk object is no longer needed by calling the deInit method.</li>
+</ol>
+
+
+<p>Example for online verification:</p>
+
+
+<pre>
+<code>
+- (void)onTSRSdkLicenseVerifyResult:(TSRSdkLicenseStatus)status {
+if (status == TSRSdkLicenseStatusAvailable) {
+// Creating TSRPass for super-resolution rendering
+} else {
+// Do something when the verification of sdk's license failed.
+}
+}
+
+// Init TSRSdk and verify the online license
+[TSRSdk.getInstance initWithAppId:APPID authId:AUTH_ID sdkLicenseVerifyResultCallback:self tsrLogger:[[Logger alloc] init]];
+// Release resources when the TSRSdk object is no longer needed.
+[TSRSdk.getInstance deInit];
+</code>
+</pre>
+
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:" title="initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:">&ndash;&nbsp;initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Initializes the TSRSdk with online license verification.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)initWithAppId:(long)<em>appId</em> authId:(int)<em>authId</em> sdkLicenseVerifyResultCallback:(id&lt;TSRSdkLicenseVerifyResultCallback&gt;)<em>sdkLicenseVerifyResultCallback</em> tsrLogger:(id&lt;TSRLogger&gt;)<em>tsrLogger</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>appId</code></th>
+						<td><p>Tencent Cloud account&rsquo;s APPID, You can click on the link <a href="https://github.com/tencentyun/TSR/blob/main/%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md">https://github.com/tencentyun/TSR/blob/main/%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md</a>  to learn how to find the APPID.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>authId</code></th>
+						<td><p>The authentication ID of the TSRSDK. You can contact the Tencent Cloud MPS Team to get the authentication ID.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>sdkLicenseVerifyResultCallback</code></th>
+						<td><p>SdkLicenseVerifyResultCallback is an interface for handling the result of SDK license verification.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>tsrLogger</code></th>
+						<td><p>Set a <a href="../Protocols/TSRLogger.html">TSRLogger</a> for the TSRSdk. The <a href="../Protocols/TSRLogger.html">TSRLogger</a> must not be null.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Initializes the TSRSdk with online license verification.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TSRSdk.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/initWithAppId:licenseUrl:tsrLogger:" title="initWithAppId:licenseUrl:tsrLogger:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithAppId:licenseUrl:tsrLogger:">&ndash;&nbsp;initWithAppId:licenseUrl:tsrLogger:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Initializes the TSRSdk with offline license verification.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (TSRSdkLicenseStatus)initWithAppId:(long)<em>appId</em> licenseUrl:(NSURL *)<em>licenseUrl</em> tsrLogger:(id&lt;TSRLogger&gt;)<em>tsrLogger</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>appId</code></th>
+						<td><p>Tencent Cloud account&rsquo;s APPID, You can click on the link <a href="https://github.com/tencentyun/TSR/blob/main/%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md">https://github.com/tencentyun/TSR/blob/main/%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97.md</a>  to learn how to find the APPID.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>licenseUrl</code></th>
+						<td><p>The url of the license</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>tsrLogger</code></th>
+						<td><p>Set a <a href="../Protocols/TSRLogger.html">TSRLogger</a> for the TSRSdk. The <a href="../Protocols/TSRLogger.html">TSRLogger</a> must not be null.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The result of the verification of sdk&rsquo;s license.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Initializes the TSRSdk with offline license verification.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TSRSdk.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/deInit" title="deInit"></a>
+	<h3 class="method-title"><code><a href="#//api/name/deInit">&ndash;&nbsp;deInit</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Releases the resources associated with the TSRSdk instance.</p>
+
+<p>
+This method should be called when the TSRSdk instance is no longer needed, to free up memory and other
+resources.
+</p>
+
+
+<p>
+After calling this method, you must re-initialize the TSRSdk instance using the [initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:](#//api/name/initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:) methods before using it again.
+</p>
+
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)deInit</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Releases the resources associated with the TSRSdk instance.</p>
+
+<p>
+This method should be called when the TSRSdk instance is no longer needed, to free up memory and other
+resources.
+</p>
+
+
+<p>
+After calling this method, you must re-initialize the TSRSdk instance using the [initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:](#//api/name/initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:) methods before using it again.
+</p>
+
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TSRSdk.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-02-27</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
