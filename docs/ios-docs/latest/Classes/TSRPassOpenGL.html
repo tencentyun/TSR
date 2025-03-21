@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>TIEPass Class Reference</title>
+	<title>TSRPassOpenGL Class Reference</title>
 
 	<link rel="stylesheet" href="../css/style.css">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
@@ -60,27 +60,23 @@
 	
 	<optgroup label="Instance Methods">
 		
-		<option value="//api/name/benchmarkProIE:inputHeight:">- benchmarkProIE:inputHeight:</option>
+		<option value="//api/name/benchmarkProSR:inputHeight:srRatio:">- benchmarkProSR:inputHeight:srRatio:</option>
 		
 		<option value="//api/name/deInit">- deInit</option>
 		
-		<option value="//api/name/disableProIEAutoFallback">- disableProIEAutoFallback</option>
+		<option value="//api/name/disableProSRAutoFallback">- disableProSRAutoFallback</option>
 		
-		<option value="//api/name/enableProIEAutoFallback:timeoutDurationMs:fallbackListener:">- enableProIEAutoFallback:timeoutDurationMs:fallbackListener:</option>
+		<option value="//api/name/enableProSRAutoFallback:timeoutDurationMs:fallbackListener:">- enableProSRAutoFallback:timeoutDurationMs:fallbackListener:</option>
 		
-		<option value="//api/name/forceProIEFallback:">- forceProIEFallback:</option>
+		<option value="//api/name/forceProSRFallback:">- forceProSRFallback:</option>
 		
-		<option value="//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:initStatusCode:">- initWithAlgorithmType:glContext:inputWidth:inputHeight:initStatusCode:</option>
+		<option value="//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:">- initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:</option>
 		
 		<option value="//api/name/initWithRenderPassConfig:glContext:initStatusCode:">- initWithRenderPassConfig:glContext:initStatusCode:</option>
 		
-		<option value="//api/name/initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:">- initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:</option>
-		
-		<option value="//api/name/reInit:inputHeight:">- reInit:inputHeight:</option>
+		<option value="//api/name/reInit:inputHeight:srRatio:">- reInit:inputHeight:srRatio:</option>
 		
 		<option value="//api/name/render:">- render:</option>
-		
-		<option value="//api/name/render:commandBuffer:">- render:commandBuffer:</option>
 		
 		<option value="//api/name/renderWithPixelBuffer:">- renderWithPixelBuffer:</option>
 		
@@ -99,7 +95,7 @@
 		<div id="overview_contents" class="container">
 			<div id="content">
 				<main role="main">
-					<h1 class="title">TIEPass Class Reference</h1>
+					<h1 class="title">TSRPassOpenGL Class Reference</h1>
 
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
@@ -108,7 +104,7 @@
 	<td>NSObject</td>
 </tr><tr>
 	<th>Declared in</th>
-	<td>TIEPass.h<br />TIEPass.m</td>
+	<td>TSRPassOpenGL.h<br />TSRPassOpenGL.mm</td>
 </tr>
 						</tbody></table></div>
 					
@@ -118,40 +114,31 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>@class TIEPass</p><p>Provides GPU-accelerated image enhancement through Metal and OpenGL ES implementations.
-Supports dynamic algorithm selection and automatic performance adaptation.</p>
+						<p>The TSRPassOpenGL class provides methods for performing super-resolution rendering on input images using the OpenGL ES 3.0</p>
 
-<h2>Dual API Architecture</h2>
+<p><a href="../Classes/TSRPass.html">TSRPass</a> is responsible for initializing the super-resolution rendering process with the specified input image size and super-resolution ratio. It also provides a render method that applies the super-resolution process to the input image and returns the processed image as an OpenGL texture.</p>
+
+<p><b>Note: </b></p>
 
 
-<p>The class provides separate initialization paths for different graphics APIs:
-- Metal (iOS 12+) : Optimized for Apple silicon with low-overhead architecture
-- OpenGL ES 3.0 (iOS 10+) : Compatibility layer for legacy systems</p><div class="warning"><p><strong>Warning:</strong> <b>Critical Usage Requirements:</b>
-1. API isolation: Do not mix Metal/OpenGL operations on same instance
-2. Thread confinement:
-- Metal: All calls must originate from the creating thread
-- OpenGL: Requires consistent EAGLContext across operations
-3. Lifecycle management: Call <a href="#//api/name/deInit">deInit</a> before releasing resources</p>
+<ol>
+<li>This class uses the OpenGL ES 3.0 for performing super-resolution rendering and requires a device that supports OpenGL ES 3.0.</li>
+<li>All methods of <a href="../Classes/TSRPass.html">TSRPass</a> must be called within the same OpenGL context.</li>
+<li>The <a href="#//api/name/render:">render:</a> and <a href="#//api/name/renderWithPixelBuffer:">renderWithPixelBuffer:</a> method should not be called before the initWithAlgorithmType:inputWidth:inputHeight:glContext:srRatio:initStatusCode: method, and it should not be called after the <a href="#//api/name/deInit">deInit</a> method.</li>
+<li>Initializing the <a href="../Classes/TSRPass.html">TSRPass</a> with TSRAlgorithmTypeProfessional or TSRAlgorithmTypeProfessionalColorRetouchingExt is only available on iOS 16.0 or newer. If the iOS version is older, it will fallback to TSRAlgorithmTypeStandard.</li>
+</ol>
 
-<p>@code
-// Metal Usage
-id<MTLDevice> metalDevice = MTLCreateSystemDefaultDevice();
-TIEPass *metalProcessor = [[TIEPass alloc] initWith<a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>:TIEAlgorithmTypeProfessional
-device:metalDevice
-inputWidth:1920
-inputHeight:1080
-srRatio:2.0
-initStatusCode:&amp;status];</p>
 
-<p>// OpenGL ES Usage
-EAGLContext <em>glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-TIEPass </em>glProcessor = [[TIEPass alloc] initWithAlgorithmType:TIEAlgorithmTypeStandard
-glContext:glContext
-inputWidth:1280
-inputHeight:720
-srRatio:1.5
-initStatusCode:&amp;status];
-@endcode</p></div>
+<p><b>Usage: </b></p>
+
+
+<ol>
+<li>Create a <a href="../Classes/TSRPass.html">TSRPass</a> instance using the initWith<a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a>:glContext:inputWidth:inputHeight:srRatio:initStatusCode: method.</li>
+<li>Call the <a href="#//api/name/render:">render:</a> method with the input image&rsquo;s OpenGL texture to perform super-resolution rendering.</li>
+<li>Obtain the processed image as OpenGL texture from the return value of the <a href="#//api/name/render:">render:</a> method.</li>
+<li><a href="#//api/name/deInit">deInit</a> method should be called when the <a href="../Classes/TSRPass.html">TSRPass</a> object is no longer needed, to free up the memory and other resources.</li>
+</ol>
+
 					</div>
 					
 					
@@ -167,8 +154,8 @@ initStatusCode:&amp;status];
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:initStatusCode:" title="initWithAlgorithmType:glContext:inputWidth:inputHeight:initStatusCode:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:initStatusCode:">&ndash;&nbsp;initWithAlgorithmType:glContext:inputWidth:inputHeight:initStatusCode:</a></code>
+	<a name="//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:" title="initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:">&ndash;&nbsp;initWithAlgorithmType:glContext:inputWidth:inputHeight:srRatio:initStatusCode:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -178,12 +165,12 @@ initStatusCode:&amp;status];
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Init TIEPass object for image enhancement.</p>
+				<p>Init <a href="../Classes/TSRPass.html">TSRPass</a> object for super-resolution.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithAlgorithmType:(TIEAlgorithmType)<em>algorithmType</em> glContext:(EAGLContext *)<em>context</em> inputWidth:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> initStatusCode:(TIEInitStatusCode *)<em>initStatusCode</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithAlgorithmType:(TSRAlgorithmType)<em>algorithmType</em> glContext:(EAGLContext *)<em>context</em> inputWidth:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> srRatio:(float_t)<em>srRatio</em> initStatusCode:(TSRInitStatusCode *)<em>initStatusCode</em></code></div>
 
 		    
 			
@@ -193,7 +180,7 @@ initStatusCode:&amp;status];
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>algorithmType</code></th>
-						<td><p>The <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> enum value representing the algorithm running mode to be used.</p></td>
+						<td><p>The <a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a> enum value representing the algorithm running mode to be used.</p></td>
 					</tr>
 				
 					<tr>
@@ -207,8 +194,13 @@ initStatusCode:&amp;status];
 					</tr>
 				
 					<tr>
+						<th scope="row" class="argument-name"><code>srRatio</code></th>
+						<td><p>The magnification factor for super-resolution.</p></td>
+					</tr>
+				
+					<tr>
 						<th scope="row" class="argument-name"><code>initStatusCode</code></th>
-						<td><p>A pointer to a <a href="../Constants/TIEInitStatusCode.html">TIEInitStatusCode</a> enum value that will store the result of the initialization process. If initialization is successful, the value will be TIEInitStatusCodeSuccess. If initialization fails, the value will indicate the specific error that occurred.</p></td>
+						<td><p>A pointer to a <a href="../Constants/TSRInitStatusCode.html">TSRInitStatusCode</a> enum value that will store the result of the initialization process. If initialization is successful, the value will be TSRInitStatusCodeSuccess. If initialization fails, the value will indicate the specific error that occurred.</p></td>
 					</tr>
 				
 				</table>
@@ -222,7 +214,7 @@ initStatusCode:&amp;status];
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Init TIEPass object for image enhancement.</p>
+				<p>Init <a href="../Classes/TSRPass.html">TSRPass</a> object for super-resolution.</p>
 			</div>
 			
 
@@ -233,7 +225,7 @@ initStatusCode:&amp;status];
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -251,12 +243,12 @@ initStatusCode:&amp;status];
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Initializes image enhancement render pass using dictionary configuration</p>
+				<p>Initializes super-resolution render pass using dictionary configuration</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithRenderPassConfig:(NSDictionary *)<em>config</em> glContext:(EAGLContext *)<em>glContext</em> initStatusCode:(TIEInitStatusCode *)<em>statusCode</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithRenderPassConfig:(NSDictionary *)<em>config</em> glContext:(EAGLContext *)<em>glContext</em> initStatusCode:(TSRInitStatusCode *)<em>statusCode</em></code></div>
 
 		    
 			
@@ -308,15 +300,15 @@ initStatusCode:&amp;status];
 </thead>
 <tbody>
 <tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.algorithmType </td>
-<td> NSNumber (<a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>) </td>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/algorithmType">algorithmType</a> </td>
+<td> NSNumber (<a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a>) </td>
 <td> Valid enum value </td>
 <td> None </td>
 <td> Required </td>
 <td> Algorithm type selection </td>
 </tr>
 <tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.inputWidth </td>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/inputWidth">inputWidth</a> </td>
 <td> NSNumber (int32_t) </td>
 <td> 8 ≤ value ≤ 4096 </td>
 <td> None </td>
@@ -324,12 +316,20 @@ initStatusCode:&amp;status];
 <td> Input texture width in pixels </td>
 </tr>
 <tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.inputHeight </td>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/inputHeight">inputHeight</a> </td>
 <td> NSNumber (int32_t) </td>
 <td> 8 ≤ value ≤ 4096 </td>
 <td> None </td>
 <td> Required </td>
 <td> Input texture height in pixels </td>
+</tr>
+<tr>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.srRatio </td>
+<td> NSNumber (float) </td>
+<td> 1.0 ≤ value ≤ 4.0 </td>
+<td> None </td>
+<td> Required </td>
+<td> Output scale factor (output = input * srRatio) </td>
 </tr>
 </tbody>
 </table>
@@ -349,7 +349,7 @@ initStatusCode:&amp;status];
 </thead>
 <tbody>
 <tr>
-<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.consecutiveTimeoutFrames </td>
+<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.<a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> </td>
 <td> NSInteger </td>
 <td> ≥1 </td>
 <td>  Consecutive timeout frames threshold </td>
@@ -378,13 +378,14 @@ NSLog(@&ldquo;Fallback: %ldx%ld&rdquo;, w, h);
 }];</p>
 
 <p>NSDictionary *config = @{
-RenderPassConfig.algorithmType: @(TIEAlgorithmTypeProfessional),
+RenderPassConfig.algorithmType: @(TSRAlgorithmTypeProfessional),
 RenderPassConfig.inputWidth: @1920,
 RenderPassConfig.inputHeight: @1080,
+RenderPassConfig.srRatio: @2.0f,
 RenderPassConfig.autoFallbackConfig: fallbackConfig
 };</p>
 
-<p>TIEPass* tiePass = [[TIEPass alloc] initWith<a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>:config glContext:context initStatusCode:&amp;initStatus];
+<p>TSRPass* tsrPass = [[TSRPass alloc] initWith<a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>:config glContext:context initStatusCode:&amp;initStatus];
 </code></p></div>
 			</div>
 			
@@ -396,9 +397,9 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 				<h4 class="method-subtitle">See Also</h4>
 				<ul>
 					
-					<li><code><p><a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a></p></code></li>
+					<li><code><p><a href="../Constants/TSRAlgorithmType.html">TSRAlgorithmType</a></p></code></li>
 					
-					<li><code><p><a href="../Constants/TIEInitStatusCode.html">TIEInitStatusCode</a></p></code></li>
+					<li><code><p><a href="../Constants/TSRInitStatusCode.html">TSRInitStatusCode</a></p></code></li>
 					
 					<li><code><p><a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a></p></code></li>
 					
@@ -409,15 +410,15 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:" title="initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:">&ndash;&nbsp;initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:</a></code>
+	<a name="//api/name/reInit:inputHeight:srRatio:" title="reInit:inputHeight:srRatio:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/reInit:inputHeight:srRatio:">&ndash;&nbsp;reInit:inputHeight:srRatio:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -427,90 +428,12 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Init TIEPass object for image enhancement.</p>
+				<p>Reinitializes the <a href="../Classes/TSRPass.html">TSRPass</a> object for super-resolution rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for super-resolution.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithTIEAlgorithmType:(TIEAlgorithmType)<em>algorithmType</em> device:(id&lt;MTLDevice&gt;)<em>device</em> inputWidth:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> initStatusCode:(TIEInitStatusCode *)<em>initStatusCode</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>algorithmType</code></th>
-						<td><p>The <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> enum value representing the algorithm running mode to be used. It can be either STANDARD (fast mode) or PROFESSIONAL (quality mode). STANDARD mode prioritizes better performance in terms of speed, possibly sacrificing some result accuracy. PROFESSIONAL mode prioritizes result accuracy, even if the running speed is slower.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>device</code></th>
-						<td><p>The MTLDevice which you are using.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>inputWidth</code></th>
-						<td><p>The width of the input texture. This value should be between 8 to 4096.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>inputHeight</code></th>
-						<td><p>The height of the input texture. This value should be between 8 to 4096.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>initStatusCode</code></th>
-						<td><p>A pointer to a <a href="../Constants/TIEInitStatusCode.html">TIEInitStatusCode</a> enum value that will store the result of the initialization process. If initialization is successful, the value will be TIEInitStatusCodeSuccess. If initialization fails, the value will indicate the specific error that occurred.</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>Init TIEPass object for image enhancement.</p>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/reInit:inputHeight:" title="reInit:inputHeight:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/reInit:inputHeight:">&ndash;&nbsp;reInit:inputHeight:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Reinitializes the TIEPass object for image enhancement rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for image enhancement.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (TIEInitStatusCode)reInit:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (TSRInitStatusCode)reInit:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> srRatio:(float_t)<em>srRatio</em></code></div>
 
 		    
 			
@@ -528,6 +451,11 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 						<td><p>The new height of the input image to be processed. This value should be between [8, 4096].</p></td>
 					</tr>
 				
+					<tr>
+						<th scope="row" class="argument-name"><code>srRatio</code></th>
+						<td><p>The new magnification factor for super-resolution. This value should be greater than zero and determines the scaling applied to the input image during the rendering process.</p></td>
+					</tr>
+				
 				</table>
 			</div>
 			
@@ -535,7 +463,7 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection return">
 				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p><a href="../Constants/TIEInitStatusCode.html">TIEInitStatusCode</a> enum value that will store the result of the reinitialization process. If reinitialization is successful, the value will be TIEInitStatusCodeSuccess. If reinitialization fails, the value will indicate the specific error that occurred.</p>
+				<p><a href="../Constants/TSRInitStatusCode.html">TSRInitStatusCode</a> enum value that will store the result of the reinitialization process. If reinitialization is successful, the value will be TSRInitStatusCodeSuccess. If reinitialization fails, the value will indicate the specific error that occurred.</p>
 			</div>
 			
 
@@ -544,7 +472,7 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Reinitializes the TIEPass object for image enhancement rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for image enhancement.</p>
+				<p>Reinitializes the <a href="../Classes/TSRPass.html">TSRPass</a> object for super-resolution rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for super-resolution.</p>
 			</div>
 			
 
@@ -555,15 +483,15 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/enableProIEAutoFallback:timeoutDurationMs:fallbackListener:" title="enableProIEAutoFallback:timeoutDurationMs:fallbackListener:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/enableProIEAutoFallback:timeoutDurationMs:fallbackListener:">&ndash;&nbsp;enableProIEAutoFallback:timeoutDurationMs:fallbackListener:</a></code>
+	<a name="//api/name/enableProSRAutoFallback:timeoutDurationMs:fallbackListener:" title="enableProSRAutoFallback:timeoutDurationMs:fallbackListener:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/enableProSRAutoFallback:timeoutDurationMs:fallbackListener:">&ndash;&nbsp;enableProSRAutoFallback:timeoutDurationMs:fallbackListener:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -573,12 +501,12 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Configures and activates the automatic fallback mechanism for image enhancement processing.</p>
+				<p>Configures and activates the automatic fallback mechanism for super-resolution processing.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (void)enableProIEAutoFallback:(int)<em>consecutiveTimeoutFrames</em> timeoutDurationMs:(int)<em>timeoutDurationMs</em> fallbackListener:(FallbackListener)<em>fallbackListener</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (void)enableProSRAutoFallback:(int)<em>consecutiveTimeoutFrames</em> timeoutDurationMs:(int)<em>timeoutDurationMs</em> fallbackListener:(FallbackListener)<em>fallbackListener</em></code></div>
 
 		    
 			
@@ -616,7 +544,7 @@ processing. If processing exceeds this duration, it is considered a timeout.</p>
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Configures and activates the automatic fallback mechanism for image enhancement processing.</p>
+				<p>Configures and activates the automatic fallback mechanism for super-resolution processing.</p>
 
 <p>This method will determine a timeout when the processing time exceeds the specified
 <code>timeoutDurationMs</code>. If the number of consecutive timeout frames reaches the
@@ -636,7 +564,7 @@ be reduced to one-third, and so on.</li>
 
 
 <p>The minimum value for the threshold is 2. The formula for updating the threshold is:
-<code>consecutiveTimeoutFrames = max(2, consecutiveTimeoutFrames / (timeConsume / timeoutDurationMs))</code>,
+<code><a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> = max(2, <a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> / (timeConsume / timeoutDurationMs))</code>,
 where <code>timeConsume</code> is the actual processing time.</p>
 
 <p>Through this dynamic adjustment mechanism, the system can flexibly respond to the current
@@ -651,15 +579,15 @@ performance conditions, ensuring stability and efficiency during the processing.
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/disableProIEAutoFallback" title="disableProIEAutoFallback"></a>
-	<h3 class="method-title"><code><a href="#//api/name/disableProIEAutoFallback">&ndash;&nbsp;disableProIEAutoFallback</a></code>
+	<a name="//api/name/disableProSRAutoFallback" title="disableProSRAutoFallback"></a>
+	<h3 class="method-title"><code><a href="#//api/name/disableProSRAutoFallback">&ndash;&nbsp;disableProSRAutoFallback</a></code>
 </h3>
 
 	<div class="method-info">
@@ -669,15 +597,15 @@ performance conditions, ensuring stability and efficiency during the processing.
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Disables the automatic fallback behavior for the image enhancement process.
+				<p>Disables the automatic fallback behavior for the super-resolution process.
 This method should be called to turn off the automatic fallback feature that was previously enabled
-using <a href="#//api/name/enableProIEAutoFallback:timeoutDurationMs:fallbackListener:"><code>enableProIEAutoFallback:timeoutDurationMs:fallbackListener:</code></a>. Once this method is invoked,
+using <a href="#//api/name/enableProSRAutoFallback:timeoutDurationMs:fallbackListener:"><code>enableProSRAutoFallback:timeoutDurationMs:fallbackListener:</code></a>. Once this method is invoked,
 the system will no longer trigger a fallback based on the configured parameters.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (void)disableProIEAutoFallback</code></div>
+			<div class="method-subsection method-declaration"><code>- (void)disableProSRAutoFallback</code></div>
 
 		    
 			
@@ -689,9 +617,9 @@ the system will no longer trigger a fallback based on the configured parameters.
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Disables the automatic fallback behavior for the image enhancement process.
+				<p>Disables the automatic fallback behavior for the super-resolution process.
 This method should be called to turn off the automatic fallback feature that was previously enabled
-using <a href="#//api/name/enableProIEAutoFallback:timeoutDurationMs:fallbackListener:"><code>enableProIEAutoFallback:timeoutDurationMs:fallbackListener:</code></a>. Once this method is invoked,
+using <a href="#//api/name/enableProSRAutoFallback:timeoutDurationMs:fallbackListener:"><code>enableProSRAutoFallback:timeoutDurationMs:fallbackListener:</code></a>. Once this method is invoked,
 the system will no longer trigger a fallback based on the configured parameters.</p>
 			</div>
 			
@@ -703,15 +631,15 @@ the system will no longer trigger a fallback based on the configured parameters.
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/benchmarkProIE:inputHeight:" title="benchmarkProIE:inputHeight:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/benchmarkProIE:inputHeight:">&ndash;&nbsp;benchmarkProIE:inputHeight:</a></code>
+	<a name="//api/name/benchmarkProSR:inputHeight:srRatio:" title="benchmarkProSR:inputHeight:srRatio:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/benchmarkProSR:inputHeight:srRatio:">&ndash;&nbsp;benchmarkProSR:inputHeight:srRatio:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -729,7 +657,7 @@ input dimensions. This method should not be called on the main thread, as it may
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (int)benchmarkProIE:(int)<em>inputWidth</em> inputHeight:(int)<em>inputHeight</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (int)benchmarkProSR:(int)<em>inputWidth</em> inputHeight:(int)<em>inputHeight</em> srRatio:(float)<em>srRatio</em></code></div>
 
 		    
 			
@@ -745,6 +673,11 @@ input dimensions. This method should not be called on the main thread, as it may
 					<tr>
 						<th scope="row" class="argument-name"><code>inputHeight</code></th>
 						<td><p>The height of the input.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>srRatio</code></th>
+						<td><p>The super-resolution ratio.</p></td>
 					</tr>
 				
 				</table>
@@ -768,8 +701,8 @@ This method assesses the execution time in milliseconds for the PROFESSIONAL alg
 input dimensions. This method should not be called on the main thread, as it may take approximately
 2 to 5 seconds to complete.</p>
 
-<p>This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to init the <code>TIEPass</code> is not set to
-<code>TIEAlgorithmTypeStandard</code>. If the algorithm type is STANDARD, the evaluation may not be applicable.
+<p>This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <a href="../Classes/TSRPass.html"><code>TSRPass</code></a> is not set to
+<code>TSRAlgorithmTypeStandard</code>. If the algorithm type is STANDARD, the evaluation may not be applicable.
 If the execution of the algorithm fails for any reason, this method will return -1.</p>
 			</div>
 			
@@ -781,15 +714,15 @@ If the execution of the algorithm fails for any reason, this method will return 
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/forceProIEFallback:" title="forceProIEFallback:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/forceProIEFallback:">&ndash;&nbsp;forceProIEFallback:</a></code>
+	<a name="//api/name/forceProSRFallback:" title="forceProSRFallback:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/forceProSRFallback:">&ndash;&nbsp;forceProSRFallback:</a></code>
 </h3>
 
 	<div class="method-info">
@@ -802,13 +735,13 @@ If the execution of the algorithm fails for any reason, this method will return 
 				<p>Switches between the PROFESSIONAL and STANDARD algorithms.
 This method enables or disables the use of the STANDARD algorithm. When <code>enable</code> is true, the system
 will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm.
-This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to init the <code>TIEPass</code> is not set to
-<code>TIEAlgorithmTypeStandard</code>.</p>
+This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <a href="../Classes/TSRPass.html"><code>TSRPass</code></a> is not set to
+<code>TSRAlgorithmTypeStandard</code>.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (void)forceProIEFallback:(bool)<em>enable</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (void)forceProSRFallback:(bool)<em>enable</em></code></div>
 
 		    
 			
@@ -835,8 +768,8 @@ This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html
 				<p>Switches between the PROFESSIONAL and STANDARD algorithms.
 This method enables or disables the use of the STANDARD algorithm. When <code>enable</code> is true, the system
 will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm.
-This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to init the <code>TIEPass</code> is not set to
-<code>TIEAlgorithmTypeStandard</code>.</p>
+This method only takes effect if the <a href="../Constants/TSRAlgorithmType.html"><code>TSRAlgorithmType</code></a> used to init the <a href="../Classes/TSRPass.html"><code>TSRPass</code></a> is not set to
+<code>TSRAlgorithmTypeStandard</code>.</p>
 			</div>
 			
 
@@ -847,7 +780,7 @@ This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -865,10 +798,10 @@ This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Performs the image enhancement rendering operation on the input image.
+				<p>Performs the super-resolution rendering operation on the input image.
 <br>
-This method applies the image enhancement rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
-the TIEPass object. And the return is the OpenGL texture which has preformed image enhancement rendering .
+This method applies the super-resolution rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
+the <a href="../Classes/TSRPass.html">TSRPass</a> object. And the return is the OpenGL texture which has preformed super-resolution rendering .
 <br></p>
 			</div>
 			
@@ -884,7 +817,7 @@ the TIEPass object. And the return is the OpenGL texture which has preformed ima
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>texture</code></th>
-						<td><p>The OpenGL texture of the input image that needs to be processed for image enhancement.</p></td>
+						<td><p>The OpenGL texture of the input image that needs to be processed for super-resolution.</p></td>
 					</tr>
 				
 				</table>
@@ -894,8 +827,8 @@ the TIEPass object. And the return is the OpenGL texture which has preformed ima
 			
 			<div class="method-subsection return">
 				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The OpenGL texture that will be performed image enhancement rendering, which is stored inside the TIEPass
-object. The size of the output texture is (inputWidth, inputHeight).</p>
+				<p>The OpenGL texture that will be performed super-resolution rendering, which is stored inside the <a href="../Classes/TSRPass.html">TSRPass</a>
+object. The size of the output texture is (<a href="#//api/name/inputWidth">inputWidth</a> * srRatio, <a href="#//api/name/inputHeight">inputHeight</a> * srRatio).</p>
 			</div>
 			
 
@@ -904,10 +837,10 @@ object. The size of the output texture is (inputWidth, inputHeight).</p>
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Performs the image enhancement rendering operation on the input image.
+				<p>Performs the super-resolution rendering operation on the input image.
 <br>
-This method applies the image enhancement rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
-the TIEPass object. And the return is the OpenGL texture which has preformed image enhancement rendering .
+This method applies the super-resolution rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
+the <a href="../Classes/TSRPass.html">TSRPass</a> object. And the return is the OpenGL texture which has preformed super-resolution rendering .
 <br></p>
 			</div>
 			
@@ -919,84 +852,7 @@ the TIEPass object. And the return is the OpenGL texture which has preformed ima
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/render:commandBuffer:" title="render:commandBuffer:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/render:commandBuffer:">&ndash;&nbsp;render:commandBuffer:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Performs the image enhancement rendering operation on the input image.
-<br>
-This method applies the image enhancement rendering process to the input image, improving its quality. The processed image is rendered onto a MTLTexture within
-the TIEPass object. And the return is the MTLTexture which has preformed image enhancement rendering .
-<br></p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (id&lt;MTLTexture&gt;)render:(id&lt;MTLTexture&gt;)<em>texture</em> commandBuffer:(id&lt;MTLCommandBuffer&gt;)<em>commandBuffer</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>texture</code></th>
-						<td><p>The MTLTexture of the input image that needs to be processed for image enhancement.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>commandBuffer</code></th>
-						<td><p>The MTLCommandBuffer which you are using.</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-			<div class="method-subsection return">
-				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The MTLTexture that will be performed image enhancement rendering, which is stored inside the TIEPass
-object. The size of the output texture is (inputWidth, inputHeight).</p>
-			</div>
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>Performs the image enhancement rendering operation on the input image.
-<br>
-This method applies the image enhancement rendering process to the input image, improving its quality. The processed image is rendered onto a MTLTexture within
-the TIEPass object. And the return is the MTLTexture which has preformed image enhancement rendering .
-<br></p>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -1029,7 +885,7 @@ the TIEPass object. And the return is the MTLTexture which has preformed image e
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>pixelBuffer</code></th>
-						<td><p>The CVPixelBufferRef of the input image that needs to be processed for image enhance. The width and height of the pixel buffer must match the inputWidth and inputHeight set during initialization, and the pixel format must be BGRA.</p></td>
+						<td><p>The CVPixelBufferRef of the input image that needs to be processed for image enhance. The width and height of the pixel buffer must match the <a href="#//api/name/inputWidth">inputWidth</a> and <a href="#//api/name/inputHeight">inputHeight</a> set during initialization, and the pixel format must be BGRA.</p></td>
 					</tr>
 				
 				</table>
@@ -1039,7 +895,7 @@ the TIEPass object. And the return is the MTLTexture which has preformed image e
 			
 			<div class="method-subsection return">
 				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The CVPixelBufferRef that has been performed image enhance rendering. The size of the output pixel buffer is (inputWidth, inputHeight).</p>
+				<p>The CVPixelBufferRef that has been performed image enhance rendering. The size of the output pixel buffer is (<a href="#//api/name/inputWidth">inputWidth</a>, <a href="#//api/name/inputHeight">inputHeight</a>).</p>
 			</div>
 			
 
@@ -1061,7 +917,7 @@ the TIEPass object. And the return is the MTLTexture which has preformed image e
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -1081,7 +937,7 @@ the TIEPass object. And the return is the MTLTexture which has preformed image e
 			<div class="method-subsection brief-description">
 				<p>Releases the resources.
 <br>
-This method should be called when the TIEPass object is no longer needed, to free up the memory and other resources.</p>
+This method should be called when the <a href="../Classes/TSRPass.html">TSRPass</a> object is no longer needed, to free up the memory and other resources.</p>
 			</div>
 			
 		    
@@ -1100,7 +956,7 @@ This method should be called when the TIEPass object is no longer needed, to fre
 				<h4 class="method-subtitle">Discussion</h4>
 				<p>Releases the resources.
 <br>
-This method should be called when the TIEPass object is no longer needed, to free up the memory and other resources.</p>
+This method should be called when the <a href="../Classes/TSRPass.html">TSRPass</a> object is no longer needed, to free up the memory and other resources.</p>
 			</div>
 			
 
@@ -1111,7 +967,7 @@ This method should be called when the TIEPass object is no longer needed, to fre
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TSRPassOpenGL.h</code></p>
 			</div>
 			
 			

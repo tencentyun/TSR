@@ -99,6 +99,8 @@
                             
                             &nbsp;&nbsp; <a href="">TIEInitStatusCodeInvalidParams</a> = -10010,<br>
                             
+                            &nbsp;&nbsp; <a href="">TIEInitStatusCodeMetalInitFailed</a> = -10011,<br>
+                            
                             };</code>
                     
                     </div>
@@ -119,7 +121,7 @@
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
 
-<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>.STANDARD.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
@@ -148,7 +150,7 @@
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
 
-<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>.STANDARD.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
@@ -177,7 +179,7 @@
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
 
-<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>.STANDARD.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
@@ -206,7 +208,7 @@
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
 
-<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>.STANDARD.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
@@ -235,7 +237,7 @@
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
 
-<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>.STANDARD.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
@@ -264,7 +266,7 @@
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
 
-<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>.STANDARD.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
@@ -293,7 +295,36 @@
 
 <p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
 
-<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to normal playback.</p>
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>.STANDARD.</p>
+
+<p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
+
+<p>TIEInitStatusCodeInternalErr -> Internal error.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TIEPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TIEInitStatusCodeMetalInitFailed"></a><code>TIEInitStatusCodeMetalInitFailed</code></dt>
+<dd>
+
+
+<p>Enum representing various initialization errors for <a href="../Classes/TIEPass.html">TIEPass</a>.</p>
+
+<p>TIEInitStatusCodeSuccess -> Initialization was successful.</p>
+
+<p>TIEInitStatusCodeSDKLicenseStatusNotAvailable -> SDK license verification failed or was not verified, fallback to normal playback.</p>
+
+<p>TIEInitStatusCodeAlgorithmTypeInvalid -> The initialization parameter <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> is invalid, fallback to normal playback.</p>
+
+<p>TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>.STANDARD.</p>
 
 <p>TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.</p>
 
@@ -334,7 +365,7 @@
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-03-20</p>
+						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-03-21</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>

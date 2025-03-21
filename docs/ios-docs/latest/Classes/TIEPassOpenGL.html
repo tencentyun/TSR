@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>TIEPass Class Reference</title>
+	<title>TIEPassOpenGL Class Reference</title>
 
 	<link rel="stylesheet" href="../css/style.css">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
@@ -74,13 +74,9 @@
 		
 		<option value="//api/name/initWithRenderPassConfig:glContext:initStatusCode:">- initWithRenderPassConfig:glContext:initStatusCode:</option>
 		
-		<option value="//api/name/initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:">- initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:</option>
-		
 		<option value="//api/name/reInit:inputHeight:">- reInit:inputHeight:</option>
 		
 		<option value="//api/name/render:">- render:</option>
-		
-		<option value="//api/name/render:commandBuffer:">- render:commandBuffer:</option>
 		
 		<option value="//api/name/renderWithPixelBuffer:">- renderWithPixelBuffer:</option>
 		
@@ -99,7 +95,7 @@
 		<div id="overview_contents" class="container">
 			<div id="content">
 				<main role="main">
-					<h1 class="title">TIEPass Class Reference</h1>
+					<h1 class="title">TIEPassOpenGL Class Reference</h1>
 
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
@@ -108,7 +104,7 @@
 	<td>NSObject</td>
 </tr><tr>
 	<th>Declared in</th>
-	<td>TIEPass.h<br />TIEPass.m</td>
+	<td>TIEPassOpenGL.h<br />TIEPassOpenGL.mm</td>
 </tr>
 						</tbody></table></div>
 					
@@ -118,40 +114,31 @@
 					<div class="section section-overview">
 						<a title="Overview" name="overview"></a>
 						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>@class TIEPass</p><p>Provides GPU-accelerated image enhancement through Metal and OpenGL ES implementations.
-Supports dynamic algorithm selection and automatic performance adaptation.</p>
+						<p>The <a href="../Classes/TIEPass.html">TIEPass</a> class provides methods for performing super-resolution rendering on input images using the OpenGL ES 3.0</p>
 
-<h2>Dual API Architecture</h2>
+<p><a href="../Classes/TIEPass.html">TIEPass</a> is responsible for initializing the super-resolution rendering process with the specified input image size and super-resolution ratio. It also provides a render method that applies the super-resolution process to the input image and returns the processed image as an OpenGL texture.</p>
+
+<p><b>Note: </b></p>
 
 
-<p>The class provides separate initialization paths for different graphics APIs:
-- Metal (iOS 12+) : Optimized for Apple silicon with low-overhead architecture
-- OpenGL ES 3.0 (iOS 10+) : Compatibility layer for legacy systems</p><div class="warning"><p><strong>Warning:</strong> <b>Critical Usage Requirements:</b>
-1. API isolation: Do not mix Metal/OpenGL operations on same instance
-2. Thread confinement:
-- Metal: All calls must originate from the creating thread
-- OpenGL: Requires consistent EAGLContext across operations
-3. Lifecycle management: Call <a href="#//api/name/deInit">deInit</a> before releasing resources</p>
+<ol>
+<li>This class uses the OpenGL ES 3.0 for performing super-resolution rendering and requires a device that supports OpenGL ES 3.0.</li>
+<li>All methods of <a href="../Classes/TIEPass.html">TIEPass</a> must be called within the same OpenGL context.</li>
+<li>The <a href="#//api/name/render:">render:</a> and <a href="#//api/name/renderWithPixelBuffer:">renderWithPixelBuffer:</a> method should not be called before the initWith<a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>:inputWidth:inputHeight:srRatio:initStatusCode: method, and it should not be called after the <a href="#//api/name/deInit">deInit</a> method.</li>
+<li>Initializing the <a href="../Classes/TIEPass.html">TIEPass</a> with TIEAlgorithmTypeProfessional is only available on iOS 16.0 or newer. If the iOS version is older, it will fallback to TIEAlgorithmTypeStandard.</li>
+</ol>
 
-<p>@code
-// Metal Usage
-id<MTLDevice> metalDevice = MTLCreateSystemDefaultDevice();
-TIEPass *metalProcessor = [[TIEPass alloc] initWith<a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>:TIEAlgorithmTypeProfessional
-device:metalDevice
-inputWidth:1920
-inputHeight:1080
-srRatio:2.0
-initStatusCode:&amp;status];</p>
 
-<p>// OpenGL ES Usage
-EAGLContext <em>glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-TIEPass </em>glProcessor = [[TIEPass alloc] initWithAlgorithmType:TIEAlgorithmTypeStandard
-glContext:glContext
-inputWidth:1280
-inputHeight:720
-srRatio:1.5
-initStatusCode:&amp;status];
-@endcode</p></div>
+<p><b>Usage: </b></p>
+
+
+<ol>
+<li>Create a <a href="../Classes/TIEPass.html">TIEPass</a> instance using the initWith<a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>:inputWidth:inputHeight:srRatio:initStatusCode: method.</li>
+<li>Call the <a href="#//api/name/render:">render:</a> method with the input image&rsquo;s OpenGL texture to perform super-resolution rendering.</li>
+<li>Obtain the processed image as OpenGL texture from the return value of the <a href="#//api/name/render:">render:</a> method.</li>
+<li><a href="#//api/name/deInit">deInit</a> method should be called when the <a href="../Classes/TIEPass.html">TIEPass</a> object is no longer needed, to free up the memory and other resources.</li>
+</ol>
+
 					</div>
 					
 					
@@ -178,12 +165,12 @@ initStatusCode:&amp;status];
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Init TIEPass object for image enhancement.</p>
+				<p>Init <a href="../Classes/TIEPass.html">TIEPass</a> object for image enhance.</p>
 			</div>
 			
 		    
 
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithAlgorithmType:(TIEAlgorithmType)<em>algorithmType</em> glContext:(EAGLContext *)<em>context</em> inputWidth:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> initStatusCode:(TIEInitStatusCode *)<em>initStatusCode</em></code></div>
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithAlgorithmType:(TIEAlgorithmType)<em>algorithmType</em> glContext:(EAGLContext *)<em>glContext</em> inputWidth:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> initStatusCode:(TIEInitStatusCode *)<em>initStatusCode</em></code></div>
 
 		    
 			
@@ -198,12 +185,12 @@ initStatusCode:&amp;status];
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>inputWidth</code></th>
-						<td><p>The width of the input texture. This value should be between 8 to 4096.</p></td>
+						<td><p>The width of the input image. This value should be between 8 to 4096.</p></td>
 					</tr>
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>inputHeight</code></th>
-						<td><p>The height of the input texture. This value should be between 8 to 4096.</p></td>
+						<td><p>The height of the input image. This value should be between 8 to 4096.</p></td>
 					</tr>
 				
 					<tr>
@@ -222,7 +209,7 @@ initStatusCode:&amp;status];
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Init TIEPass object for image enhancement.</p>
+				<p>Init <a href="../Classes/TIEPass.html">TIEPass</a> object for image enhance.</p>
 			</div>
 			
 
@@ -233,7 +220,7 @@ initStatusCode:&amp;status];
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -266,17 +253,17 @@ initStatusCode:&amp;status];
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>config</code></th>
-						<td><p>Configuration dictionary containing all required keys</p></td>
+						<td><p>Configuration dictionary with required keys</p></td>
 					</tr>
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>glContext</code></th>
-						<td><p>OpenGL ES context, must match rendering thread</p></td>
+						<td><p>OpenGL ES context (must match rendering thread)</p></td>
 					</tr>
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>statusCode</code></th>
-						<td><p>Pointer to output initialization status code</p></td>
+						<td><p>Output pointer for initialization status</p></td>
 					</tr>
 				
 				</table>
@@ -308,15 +295,15 @@ initStatusCode:&amp;status];
 </thead>
 <tbody>
 <tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.algorithmType </td>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/algorithmType">algorithmType</a> </td>
 <td> NSNumber (<a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a>) </td>
 <td> Valid enum value </td>
 <td> None </td>
 <td> Required </td>
-<td> Algorithm type selection </td>
+<td> Enhancement algorithm type </td>
 </tr>
 <tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.inputWidth </td>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/inputWidth">inputWidth</a> </td>
 <td> NSNumber (int32_t) </td>
 <td> 8 ≤ value ≤ 4096 </td>
 <td> None </td>
@@ -324,7 +311,7 @@ initStatusCode:&amp;status];
 <td> Input texture width in pixels </td>
 </tr>
 <tr>
-<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.inputHeight </td>
+<td> <a href="../Classes/RenderPassConfig.html">RenderPassConfig</a>.<a href="#//api/name/inputHeight">inputHeight</a> </td>
 <td> NSNumber (int32_t) </td>
 <td> 8 ≤ value ≤ 4096 </td>
 <td> None </td>
@@ -343,38 +330,38 @@ initStatusCode:&amp;status];
 <tr>
 <th> Key </th>
 <th> Type </th>
-<th> Constraints  </th>
-<th> Description </th>
+<th> Constraints </th>
+<th>  Description </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.consecutiveTimeoutFrames </td>
+<td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.<a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> </td>
 <td> NSInteger </td>
 <td> ≥1 </td>
-<td>  Consecutive timeout frames threshold </td>
+<td> Consecutive frame timeout threshold </td>
 </tr>
 <tr>
 <td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.timeoutDurationMs </td>
 <td> NSInteger </td>
 <td> ≥1 </td>
-<td> Timeout duration per frame (milliseconds) </td>
+<td> Single frame processing timeout (ms) </td>
 </tr>
 <tr>
 <td> <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a>.listener </td>
 <td> Block </td>
 <td> - </td>
-<td> Callback format: <code>^(NSInteger width, NSInteger height)</code> </td>
+<td> Callback signature: <code>^(NSInteger width, NSInteger height)</code> </td>
 </tr>
 </tbody>
 </table>
-<div class="note"><p><strong>Note:</strong> Example:</p>
+<div class="note"><p><strong>Note:</strong> Configuration Example:</p>
 
 <p><code>
 <a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a> *fallbackConfig = [<a href="../Classes/AutoFallbackConfig.html">AutoFallbackConfig</a> configWithConsecutiveTimeoutFrames:5
 timeoutDurationMs:100
 listener:^(NSInteger w, NSInteger h) {
-NSLog(@&ldquo;Fallback: %ldx%ld&rdquo;, w, h);
+NSLog(@&ldquo;Fallback: %ldx%ld&rdquo;, (long)w, (long)h);
 }];</p>
 
 <p>NSDictionary *config = @{
@@ -409,85 +396,7 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:" title="initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:">&ndash;&nbsp;initWithTIEAlgorithmType:device:inputWidth:inputHeight:initStatusCode:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Init TIEPass object for image enhancement.</p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (instancetype)initWithTIEAlgorithmType:(TIEAlgorithmType)<em>algorithmType</em> device:(id&lt;MTLDevice&gt;)<em>device</em> inputWidth:(int32_t)<em>inputWidth</em> inputHeight:(int32_t)<em>inputHeight</em> initStatusCode:(TIEInitStatusCode *)<em>initStatusCode</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>algorithmType</code></th>
-						<td><p>The <a href="../Constants/TIEAlgorithmType.html">TIEAlgorithmType</a> enum value representing the algorithm running mode to be used. It can be either STANDARD (fast mode) or PROFESSIONAL (quality mode). STANDARD mode prioritizes better performance in terms of speed, possibly sacrificing some result accuracy. PROFESSIONAL mode prioritizes result accuracy, even if the running speed is slower.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>device</code></th>
-						<td><p>The MTLDevice which you are using.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>inputWidth</code></th>
-						<td><p>The width of the input texture. This value should be between 8 to 4096.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>inputHeight</code></th>
-						<td><p>The height of the input texture. This value should be between 8 to 4096.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>initStatusCode</code></th>
-						<td><p>A pointer to a <a href="../Constants/TIEInitStatusCode.html">TIEInitStatusCode</a> enum value that will store the result of the initialization process. If initialization is successful, the value will be TIEInitStatusCodeSuccess. If initialization fails, the value will indicate the specific error that occurred.</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>Init TIEPass object for image enhancement.</p>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -505,7 +414,7 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Reinitializes the TIEPass object for image enhancement rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for image enhancement.</p>
+				<p>Reinitializes the <a href="../Classes/TIEPass.html">TIEPass</a> object for image enhancement. The input parameters specify the new dimensions of the input image to be enhanced.</p>
 			</div>
 			
 		    
@@ -520,12 +429,12 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>inputWidth</code></th>
-						<td><p>The new width of the input image to be processed. This value should be between [8, 4096].</p></td>
+						<td><p>The new width of the input image to be enhanced. This value should be between [8, 4096].</p></td>
 					</tr>
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>inputHeight</code></th>
-						<td><p>The new height of the input image to be processed. This value should be between [8, 4096].</p></td>
+						<td><p>The new height of the input image to be enhanced. This value should be between [8, 4096].</p></td>
 					</tr>
 				
 				</table>
@@ -544,7 +453,7 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Reinitializes the TIEPass object for image enhancement rendering. The input parameters specify the new dimensions of the input image to be processed and the new magnification factor for image enhancement.</p>
+				<p>Reinitializes the <a href="../Classes/TIEPass.html">TIEPass</a> object for image enhancement. The input parameters specify the new dimensions of the input image to be enhanced.</p>
 			</div>
 			
 
@@ -555,7 +464,7 @@ RenderPassConfig.autoFallbackConfig: fallbackConfig
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -636,7 +545,7 @@ be reduced to one-third, and so on.</li>
 
 
 <p>The minimum value for the threshold is 2. The formula for updating the threshold is:
-<code>consecutiveTimeoutFrames = max(2, consecutiveTimeoutFrames / (timeConsume / timeoutDurationMs))</code>,
+<code><a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> = max(2, <a href="#//api/name/consecutiveTimeoutFrames">consecutiveTimeoutFrames</a> / (timeConsume / timeoutDurationMs))</code>,
 where <code>timeConsume</code> is the actual processing time.</p>
 
 <p>Through this dynamic adjustment mechanism, the system can flexibly respond to the current
@@ -651,7 +560,7 @@ performance conditions, ensuring stability and efficiency during the processing.
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -703,7 +612,7 @@ the system will no longer trigger a fallback based on the configured parameters.
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -724,7 +633,10 @@ the system will no longer trigger a fallback based on the configured parameters.
 				<p>Evaluates the rendering time consumption of the PROFESSIONAL algorithm.
 This method assesses the execution time in milliseconds for the PROFESSIONAL algorithm based on the given
 input dimensions. This method should not be called on the main thread, as it may take approximately
-2 to 5 seconds to complete.</p>
+2 to 5 seconds to complete.
+This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to create the <a href="../Classes/TIEPass.html"><code>TIEPass</code></a> is not set to
+<code>TIEAlgorithmTypeStandard</code>. If the algorithm type is STANDARD, the evaluation may not be applicable.
+If the execution of the algorithm fails for any reason, this method will return -1.</p>
 			</div>
 			
 		    
@@ -766,9 +678,8 @@ input dimensions. This method should not be called on the main thread, as it may
 				<p>Evaluates the rendering time consumption of the PROFESSIONAL algorithm.
 This method assesses the execution time in milliseconds for the PROFESSIONAL algorithm based on the given
 input dimensions. This method should not be called on the main thread, as it may take approximately
-2 to 5 seconds to complete.</p>
-
-<p>This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to init the <code>TIEPass</code> is not set to
+2 to 5 seconds to complete.
+This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to create the <a href="../Classes/TIEPass.html"><code>TIEPass</code></a> is not set to
 <code>TIEAlgorithmTypeStandard</code>. If the algorithm type is STANDARD, the evaluation may not be applicable.
 If the execution of the algorithm fails for any reason, this method will return -1.</p>
 			</div>
@@ -781,7 +692,7 @@ If the execution of the algorithm fails for any reason, this method will return 
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -802,7 +713,7 @@ If the execution of the algorithm fails for any reason, this method will return 
 				<p>Switches between the PROFESSIONAL and STANDARD algorithms.
 This method enables or disables the use of the STANDARD algorithm. When <code>enable</code> is true, the system
 will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm.
-This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to init the <code>TIEPass</code> is not set to
+This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to create the <a href="../Classes/TIEPass.html"><code>TIEPass</code></a> is not set to
 <code>TIEAlgorithmTypeStandard</code>.</p>
 			</div>
 			
@@ -835,7 +746,7 @@ This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html
 				<p>Switches between the PROFESSIONAL and STANDARD algorithms.
 This method enables or disables the use of the STANDARD algorithm. When <code>enable</code> is true, the system
 will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm.
-This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to init the <code>TIEPass</code> is not set to
+This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html"><code>TIEAlgorithmType</code></a> used to create the <a href="../Classes/TIEPass.html"><code>TIEPass</code></a> is not set to
 <code>TIEAlgorithmTypeStandard</code>.</p>
 			</div>
 			
@@ -847,7 +758,7 @@ This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -865,10 +776,10 @@ This method only takes effect if the <a href="../Constants/TIEAlgorithmType.html
 			
 			
 			<div class="method-subsection brief-description">
-				<p>Performs the image enhancement rendering operation on the input image.
+				<p>Performs the image enhance rendering operation on the input image.
 <br>
-This method applies the image enhancement rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
-the TIEPass object. And the return is the OpenGL texture which has preformed image enhancement rendering .
+This method applies the image enhance rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
+the <a href="../Classes/TIEPass.html">TIEPass</a> object. And the return is the OpenGL texture which has preformed image enhance rendering .
 <br></p>
 			</div>
 			
@@ -884,7 +795,7 @@ the TIEPass object. And the return is the OpenGL texture which has preformed ima
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>texture</code></th>
-						<td><p>The OpenGL texture of the input image that needs to be processed for image enhancement.</p></td>
+						<td><p>The OpenGL texture of the input image that needs to be processed for image enhance. The format of the texture is BGRA.</p></td>
 					</tr>
 				
 				</table>
@@ -894,8 +805,8 @@ the TIEPass object. And the return is the OpenGL texture which has preformed ima
 			
 			<div class="method-subsection return">
 				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The OpenGL texture that will be performed image enhancement rendering, which is stored inside the TIEPass
-object. The size of the output texture is (inputWidth, inputHeight).</p>
+				<p>The OpenGL texture that will be performed image enhance rendering, which is stored inside the <a href="../Classes/TIEPass.html">TIEPass</a>
+object.</p>
 			</div>
 			
 
@@ -904,10 +815,10 @@ object. The size of the output texture is (inputWidth, inputHeight).</p>
 			
 			<div class="method-subsection discussion-section">
 				<h4 class="method-subtitle">Discussion</h4>
-				<p>Performs the image enhancement rendering operation on the input image.
+				<p>Performs the image enhance rendering operation on the input image.
 <br>
-This method applies the image enhancement rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
-the TIEPass object. And the return is the OpenGL texture which has preformed image enhancement rendering .
+This method applies the image enhance rendering process to the input image, improving its quality. The processed image is rendered onto a OpenGL texture within
+the <a href="../Classes/TIEPass.html">TIEPass</a> object. And the return is the OpenGL texture which has preformed image enhance rendering .
 <br></p>
 			</div>
 			
@@ -919,84 +830,7 @@ the TIEPass object. And the return is the OpenGL texture which has preformed ima
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
-			</div>
-			
-			
-		</div>
-	</div>
-</div><div class="section-method">
-	<a name="//api/name/render:commandBuffer:" title="render:commandBuffer:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/render:commandBuffer:">&ndash;&nbsp;render:commandBuffer:</a></code>
-</h3>
-
-	<div class="method-info">
-		<div class="pointy-thing"></div>
-
-		<div class="method-info-container">
-			
-			
-			<div class="method-subsection brief-description">
-				<p>Performs the image enhancement rendering operation on the input image.
-<br>
-This method applies the image enhancement rendering process to the input image, improving its quality. The processed image is rendered onto a MTLTexture within
-the TIEPass object. And the return is the MTLTexture which has preformed image enhancement rendering .
-<br></p>
-			</div>
-			
-		    
-
-			<div class="method-subsection method-declaration"><code>- (id&lt;MTLTexture&gt;)render:(id&lt;MTLTexture&gt;)<em>texture</em> commandBuffer:(id&lt;MTLCommandBuffer&gt;)<em>commandBuffer</em></code></div>
-
-		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>texture</code></th>
-						<td><p>The MTLTexture of the input image that needs to be processed for image enhancement.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>commandBuffer</code></th>
-						<td><p>The MTLCommandBuffer which you are using.</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-			<div class="method-subsection return">
-				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The MTLTexture that will be performed image enhancement rendering, which is stored inside the TIEPass
-object. The size of the output texture is (inputWidth, inputHeight).</p>
-			</div>
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>Performs the image enhancement rendering operation on the input image.
-<br>
-This method applies the image enhancement rendering process to the input image, improving its quality. The processed image is rendered onto a MTLTexture within
-the TIEPass object. And the return is the MTLTexture which has preformed image enhancement rendering .
-<br></p>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -1029,7 +863,7 @@ the TIEPass object. And the return is the MTLTexture which has preformed image e
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>pixelBuffer</code></th>
-						<td><p>The CVPixelBufferRef of the input image that needs to be processed for image enhance. The width and height of the pixel buffer must match the inputWidth and inputHeight set during initialization, and the pixel format must be BGRA.</p></td>
+						<td><p>The CVPixelBufferRef of the input image that needs to be processed for image enhance. The width and height of the pixel buffer must match the <a href="#//api/name/inputWidth">inputWidth</a> and <a href="#//api/name/inputHeight">inputHeight</a> set during initialization, and the pixel format must be BGRA.</p></td>
 					</tr>
 				
 				</table>
@@ -1039,7 +873,7 @@ the TIEPass object. And the return is the MTLTexture which has preformed image e
 			
 			<div class="method-subsection return">
 				<h4 class="method-subtitle parameter-title">Return Value</h4>
-				<p>The CVPixelBufferRef that has been performed image enhance rendering. The size of the output pixel buffer is (inputWidth, inputHeight).</p>
+				<p>The CVPixelBufferRef that has been performed image enhance rendering. The size of the output pixel buffer is (<a href="#//api/name/inputWidth">inputWidth</a>, <a href="#//api/name/inputHeight">inputHeight</a>).</p>
 			</div>
 			
 
@@ -1061,7 +895,7 @@ the TIEPass object. And the return is the MTLTexture which has preformed image e
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			
@@ -1081,7 +915,7 @@ the TIEPass object. And the return is the MTLTexture which has preformed image e
 			<div class="method-subsection brief-description">
 				<p>Releases the resources.
 <br>
-This method should be called when the TIEPass object is no longer needed, to free up the memory and other resources.</p>
+This method should be called when the <a href="../Classes/TIEPass.html">TIEPass</a> object is no longer needed, to free up the memory and other resources.</p>
 			</div>
 			
 		    
@@ -1100,7 +934,7 @@ This method should be called when the TIEPass object is no longer needed, to fre
 				<h4 class="method-subtitle">Discussion</h4>
 				<p>Releases the resources.
 <br>
-This method should be called when the TIEPass object is no longer needed, to free up the memory and other resources.</p>
+This method should be called when the <a href="../Classes/TIEPass.html">TIEPass</a> object is no longer needed, to free up the memory and other resources.</p>
 			</div>
 			
 
@@ -1111,7 +945,7 @@ This method should be called when the TIEPass object is no longer needed, to fre
 			
 			<div class="method-subsection declared-in-section">
 				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">TIEPass.h</code></p>
+				<p><code class="declared-in-ref">TIEPassOpenGL.h</code></p>
 			</div>
 			
 			

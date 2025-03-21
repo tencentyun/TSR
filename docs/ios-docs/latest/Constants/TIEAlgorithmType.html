@@ -85,11 +85,15 @@
                         <h4 class="method-subtitle">Definition</h4>
                         <code>typedef NS_ENUM(NSInteger, TIEAlgorithmType ) {<br>
                             
-                            &nbsp;&nbsp; <a href="">TIEAlgorithmTypeStandard</a>,<br>
+                            &nbsp;&nbsp; <a href="">TIEAlgorithmTypeStandard</a> = 0,<br>
                             
                             &nbsp;&nbsp; <a href="">TIEAlgorithmTypeProfessional</a>,<br>
                             
-                            &nbsp;&nbsp; <a href="">)</a>,<br>
+                            &nbsp;&nbsp; <a href="">)</a> = 1,<br>
+                            
+                            &nbsp;&nbsp; <a href="">TIEAlgorithmTypeProfessionalHighQuality</a>,<br>
+                            
+                            &nbsp;&nbsp; <a href="">)</a> = 1,<br>
                             
                             };</code>
                     
@@ -103,11 +107,11 @@
 <dd>
 
 
-<p>The TIEAlgorithmType enum represents the algorithm running mode to be used for image enhancement.</p>
+<p>The TIEAlgorithmType enum value representing the algorithm running mode to be used.</p>
 
-<p>TIEAlgorithmTypeStandard -> The standard mode is the basic color enhancement mode, which has corresponding enhancements to brightness, contrast and saturation. The enhancement speed is very fast and is recommended for use on low-to-mid-end smartphones.</p>
+<p>TIEAlgorithmTypeStandard -> The TIEAlgorithmTypeStandard mode provides fast image enhancement processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
 
-<p>TIEAlgorithmTypeProfessional -> The TIEAlgorithmTypeProfessional mode ensures high image quality while requiring higher device performance. This mode is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones.</p>
+<p>TIEAlgorithmTypeProfessional -> The TIEAlgorithmTypeProfessional mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones.</p>
 
 
 
@@ -124,11 +128,11 @@
 <dd>
 
 
-<p>The TIEAlgorithmType enum represents the algorithm running mode to be used for image enhancement.</p>
+<p>The TIEAlgorithmType enum value representing the algorithm running mode to be used.</p>
 
-<p>TIEAlgorithmTypeStandard -> The standard mode is the basic color enhancement mode, which has corresponding enhancements to brightness, contrast and saturation. The enhancement speed is very fast and is recommended for use on low-to-mid-end smartphones.</p>
+<p>TIEAlgorithmTypeStandard -> The TIEAlgorithmTypeStandard mode provides fast image enhancement processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
 
-<p>TIEAlgorithmTypeProfessional -> The TIEAlgorithmTypeProfessional mode ensures high image quality while requiring higher device performance. This mode is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones.</p>
+<p>TIEAlgorithmTypeProfessional -> The TIEAlgorithmTypeProfessional mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones.</p>
 
 
 
@@ -145,11 +149,53 @@
 <dd>
 
 
-<p>The TIEAlgorithmType enum represents the algorithm running mode to be used for image enhancement.</p>
+<p>The TIEAlgorithmType enum value representing the algorithm running mode to be used.</p>
 
-<p>TIEAlgorithmTypeStandard -> The standard mode is the basic color enhancement mode, which has corresponding enhancements to brightness, contrast and saturation. The enhancement speed is very fast and is recommended for use on low-to-mid-end smartphones.</p>
+<p>TIEAlgorithmTypeStandard -> The TIEAlgorithmTypeStandard mode provides fast image enhancement processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
 
-<p>TIEAlgorithmTypeProfessional -> The TIEAlgorithmTypeProfessional mode ensures high image quality while requiring higher device performance. This mode is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones.</p>
+<p>TIEAlgorithmTypeProfessional -> The TIEAlgorithmTypeProfessional mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TIEPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title="TIEAlgorithmTypeProfessionalHighQuality"></a><code>TIEAlgorithmTypeProfessionalHighQuality</code></dt>
+<dd>
+
+
+<p>The TIEAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TIEAlgorithmTypeStandard -> The TIEAlgorithmTypeStandard mode provides fast image enhancement processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TIEAlgorithmTypeProfessional -> The TIEAlgorithmTypeProfessional mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones.</p>
+
+
+
+
+
+    
+	<p>
+		Declared In <code class="declared-in-ref">TIEPass.h</code>.
+	</p>
+	
+</dd>
+                            
+                            <dt><a name="" title=")"></a><code>)</code></dt>
+<dd>
+
+
+<p>The TIEAlgorithmType enum value representing the algorithm running mode to be used.</p>
+
+<p>TIEAlgorithmTypeStandard -> The TIEAlgorithmTypeStandard mode provides fast image enhancement processing speed, suitable for scenarios with high real-time requirements. It can achieve significant image quality improvements while prioritizing performance.</p>
+
+<p>TIEAlgorithmTypeProfessional -> The TIEAlgorithmTypeProfessional mode ensures high image quality while requiring higher device performance. It is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones.</p>
 
 
 
@@ -186,7 +232,7 @@
 				<footer>
 					<div class="footer-copyright">
 						
-						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-03-20</p>
+						<p class="copyright">Copyright &copy; 2025 Tencent. All rights reserved. Updated: 2025-03-21</p>
 						
 						
 						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
