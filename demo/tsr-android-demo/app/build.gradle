@@ -13,6 +13,10 @@ android {
         versionCode 1
         versionName "1.0"
 
+        ndk {
+            abiFilters "arm64-v8a"
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -25,6 +29,15 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        // 如有有多个，只需集成一个。
+        pickFirst '**/libc++_shared.so'
+        // 必须声明排除这个 so
+        excludes += ['**/libqqneuroedge*.so']
+        // 如果 app 没有用到 armeabi-v7a 架构的 libmmkv.so，可以排除它，减少包大小。但注意需要保留 arm64-v8a 架构的。
+        excludes += ['**/armeabi-v7a/libmmkv.so']
     }
 
     applicationVariants.all { variant ->
