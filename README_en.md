@@ -22,28 +22,7 @@ The specific functionality details of each version are as follows:
 * The advantage of the professional version is the effect. By using AI model inference, it can generate the missing texture details of the original image, achieving the best image enhancement and super-resolution effects. It requires device computing power and is recommended for use only on mid-to-high-end smartphones.
 
 ## 2. Product Performance
-### Standard Super Resolution
-Tested on Pixel6 mobile phone, the GPU time for processing one frame of the standard super-resolution image is less than 1ms.
-
-<img src=docs/standard-sr-performance1-en.png width=50% />
-
-Tested on high, medium, and low-end models, after opening super-resolution, the increase in CPU/memory/GPU/power consumption is small, and there is no impact on the frame rate. 4K videos can also be processed in real-time on mid-range smartphones.
-
-<img src=docs/standard-sr-performance2-en.png width=80% />
-
-### Professional Super Resolution
-#### FAST
-<img src=docs/pro-sr-performance-fast_en.png width=80% />
-
-#### HIGH QUALITY
-<img src=docs/pro-sr-performance-high-quality_en.png width=80% />
-
-### AI Image Quality Enhancement
-#### FAST
-<img src=docs/pro-ie-performance-fast_en.png width=80% />
-
-#### HIGH QUALITY
-<img src=docs/pro-ie-performance-high-quality_en.png width=80% />
+<img src=docs/performance.png width=70% />
 
 ## 3. Use Cases
 
