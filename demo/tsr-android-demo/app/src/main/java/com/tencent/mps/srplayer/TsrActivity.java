@@ -496,12 +496,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
 
         if (isSrAlgorithm(mAlgorithm)) {
             long ss = System.currentTimeMillis();
-            TSRPass.TSRInitStatusCode error = mTSRPass.init(7, 7, mSrRatio);
-            long start = System.currentTimeMillis();
-            Log.i(TAG, "init cost = " + (start - ss));
-            error = mTSRPass.reInit(mFrameWidth, mFrameHeight, mSrRatio);
-            long end = System.currentTimeMillis();
-            Log.i(TAG, "reinit cost = " + (end - start));
+            TSRPass.TSRInitStatusCode error = mTSRPass.init(mFrameWidth, mFrameHeight, mSrRatio);
             String errorMsg = "";
             switch (error) {
                 case SUCCESS:
@@ -529,12 +524,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             }
         } else if (mAlgorithm == Algorithm.IE_PRO || mAlgorithm == Algorithm.IE_STD) {
             long ss = System.currentTimeMillis();
-            TIEPass.TIEInitStatusCode error = mTIEPass.init(200, 200);
-            long start = System.currentTimeMillis();
-            Log.i(TAG, "init cost = " + (start - ss));
-            error = mTIEPass.reInit(mFrameWidth, mFrameHeight);
-            long end = System.currentTimeMillis();
-            Log.i(TAG, "reinit cost = " + (end - start));
+            TIEPass.TIEInitStatusCode error = mTIEPass.init(mFrameWidth, mFrameHeight);
 
             String errorMsg = "";
             switch (error) {
