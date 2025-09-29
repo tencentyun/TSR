@@ -19,7 +19,7 @@
 3. 运行demo
 
 ## **1.3 Demo App体验**
-以下是Demo工程编译好的App安装包，可以直接进行[下载](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo_v0.5.6-12-f17f911_202411071807.apk)安装体验。
+以下是Demo工程编译好的App安装包，可以直接进行[下载](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo.apk)安装体验。
 
 <img src=./docs/android-demo-qrcode.png width=16% />
 
