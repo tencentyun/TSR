@@ -1,31 +1,57 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
-        mavenLocal()
-        maven { url 'https://jitpack.io' }
-        google()
+        maven { url "https://mirrors.tencent.com/repository/maven/thirdparty" }
+        maven { url "https://mirrors.tencent.com/repository/maven/AndroidQQRepo" }
+        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven { url "https://mirrors.tencent.com/repository/maven/thirdparty" }
+        maven { url "https://mirrors.tencent.com/repository/maven/AndroidQQRepo" }
+        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
         mavenLocal()
-        maven { url 'https://jitpack.io' }
-        google()
         mavenCentral()
     }
-
     versionCatalogs {
         libs {
-            version('versionName', '1.0.0')
+            version('versionName', '2.0.0')
             version('versionCode', '2')
-            version('compileSdk', '32')
-            version('minSdk', '21')
-            version('targetSdk', '32')
+            version('compileSdk', '35')
+            version('minSdk', '23')
+            version('targetSdk', '35')
         }
     }
 }
 
 rootProject.name = "SRPlayer"
 include ':app'
+
+
+////////////////// 解析 local.properties，获取依赖本地子模块代码还是远端 maven 库 //////////////////
+def readLocalProperties = { propFile, key ->
+    boolean result = false
+    File localPropsFile = file(propFile)
+
+    if (localPropsFile.exists()) {
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(localPropsFile))
+        if (properties.containsKey(key)) {
+            result = properties.getProperty(key).toBoolean()
+        }
+    } else {
+        println "#readLocalProperties file not exist:" + localPropsFile.absolutePath
+    }
+    return result
+}
+// 先将变量挂载到 gradle.ext 全局对象，以便其他模块使用
+gradle.ext.use_local_module_TsrSdk = readLocalProperties('local.properties', 'use_local_module_TsrSdk')
+if (gradle.ext.use_local_module_TsrSdk) {
+    include ':TsrSdk'
+    project(':TsrSdk').projectDir = new File('../../../cloud_gaming_android/SRPlayer/android/Tsrsdk')
+    include ':QneWrap'
+    project(':QneWrap').projectDir = new File('../../../cloud_gaming_android/SRPlayer/android/QneWrap')
+}

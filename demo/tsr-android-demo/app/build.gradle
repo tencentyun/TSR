@@ -4,20 +4,18 @@ plugins {
 
 android {
     namespace 'com.tencent.mps.srplayer'
-    compileSdk 33
+    compileSdk libs.versions.compileSdk.get().toInteger()
 
     defaultConfig {
         applicationId "com.tencent.mps.srplayer"
-        minSdk 23
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        minSdk libs.versions.minSdk.get().toInteger()
+        targetSdk libs.versions.targetSdk.get().toInteger()
+        versionCode libs.versions.versionCode.get().toInteger()
+        versionName libs.versions.versionName.get()
 
         ndk {
             abiFilters "arm64-v8a"
         }
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -27,8 +25,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     packagingOptions {
@@ -40,21 +38,17 @@ android {
         excludes += ['**/armeabi-v7a/libmmkv.so']
     }
 
-    applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "SRPlayer.apk"
-        }
-    }
 }
 
 dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.preference:preference:1.2.1'
 
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.preference:preference:1.1.1'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+    if (gradle.ext.use_local_module_TsrSdk) {
+        implementation project(':TsrSdk')
+    } else {
+        implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+    }
 }
