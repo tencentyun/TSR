@@ -13,15 +13,27 @@ android {
         versionCode libs.versions.versionCode.get().toInteger()
         versionName libs.versions.versionName.get()
 
+        // 注入到 BuildConfig
+        buildConfigField "int", "APP_ID", gradle.ext.App_Id?.toString() ?: "0"
+        buildConfigField "int", "AUTH_ID", gradle.ext.Auth_Id?.toString() ?: "0"
+
         ndk {
             abiFilters "arm64-v8a"
         }
     }
-
+    signingConfigs {
+        test {
+            storeFile file('../../../../keystore/tsr.keystore')
+            storePassword '12345678'
+            keyAlias 'tsr'
+            keyPassword '12345678'
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.test
         }
     }
     compileOptions {
@@ -37,7 +49,9 @@ android {
         // 如果 app 没有用到 armeabi-v7a 架构的 libmmkv.so，可以排除它，减少包大小。但注意需要保留 arm64-v8a 架构的。
         excludes += ['**/armeabi-v7a/libmmkv.so']
     }
-
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
@@ -45,6 +59,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.preference:preference:1.2.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
 
     if (gradle.ext.use_local_module_TsrSdk) {
         implementation project(':TsrSdk')

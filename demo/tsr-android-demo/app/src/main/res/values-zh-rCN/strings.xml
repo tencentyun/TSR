@@ -44,8 +44,8 @@
     <string name="play_video">点击播放</string>
     <string name="pause_video">点击暂停</string>
 
-    <string name="turn_on_sr">点击开启超分</string>
-    <string name="turn_off_sr">点击关闭超分</string>
+    <string name="turn_on_sr">点击开启增强</string>
+    <string name="turn_off_sr">点击关闭增强</string>
 
     <string name="dump_start">开始Dump，请等待Dump完成…</string>
     <string name="dump_done">超分视频已保存在手机相册</string>

@@ -2,17 +2,19 @@ package com.tencent.mps.srplayer;
 
 import android.app.Application;
 import android.content.Context;
+import com.tencent.mps.srplayer.helper.TsrSdkHelper;
 
 public class SRApplication extends Application {
-    private static Context sContext;
+    private static Context sAppContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sContext = getApplicationContext();
+        sAppContext = getApplicationContext();
+        TsrSdkHelper.getInstance().init(sAppContext);
     }
 
-    public static Context getContext() {
-        return sContext;
+    public static Context getAppContext() {
+        return sAppContext;
     }
 }

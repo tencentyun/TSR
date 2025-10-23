@@ -89,8 +89,8 @@ public class OffScreenRenderPass {
 
         try {
             // 加载着色器
-            final String vertexShader = GlUtils.readShaderFileFromAssets(SRApplication.getContext(), VERTEX_SHADER_NAME);
-            final String fragmentShader = GlUtils.readShaderFileFromAssets(SRApplication.getContext(), assetsFragShaderPath);
+            final String vertexShader = GlUtils.readShaderFileFromAssets(SRApplication.getAppContext(), VERTEX_SHADER_NAME);
+            final String fragmentShader = GlUtils.readShaderFileFromAssets(SRApplication.getAppContext(), assetsFragShaderPath);
             mShader = new GlShader(vertexShader, fragmentShader);
             mShader.useProgram();
 

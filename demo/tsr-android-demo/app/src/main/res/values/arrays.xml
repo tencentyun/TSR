@@ -1,10 +1,18 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="video_names">
-        <item>game.mp4</item>
-        <item>landscape.mp4</item>
-        <item>movie(horizontal).mp4</item>
-        <item>movie(vertical).mp4</item>
+        <item>270x480.mp4</item>
+        <item>360x640.mp4</item>
+        <item>640x480.mp4</item>
+        <item>540x960.mp4</item>
+        <item>960x540.mp4</item>
+        <item>960x960.mp4</item>
+        <item>720x1280.mp4</item>
+        <item>1280x720.mp4</item>
+        <item>1280x1280.mp4</item>
+        <item>1080x1920.mp4</item>
+        <item>1920x1080.mp4</item>
+        <item>1440x1440.mp4</item>
     </string-array>
 
     <string-array name="sr_ratio">

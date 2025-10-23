@@ -30,25 +30,23 @@ dependencyResolutionManagement {
 rootProject.name = "SRPlayer"
 include ':app'
 
-
 ////////////////// 解析 local.properties，获取依赖本地子模块代码还是远端 maven 库 //////////////////
 def readLocalProperties = { propFile, key ->
-    boolean result = false
+    def result = null
     File localPropsFile = file(propFile)
-
     if (localPropsFile.exists()) {
         Properties properties = new Properties()
         properties.load(new FileInputStream(localPropsFile))
-        if (properties.containsKey(key)) {
-            result = properties.getProperty(key).toBoolean()
-        }
+        result = properties.getProperty(key)
     } else {
         println "#readLocalProperties file not exist:" + localPropsFile.absolutePath
     }
     return result
 }
 // 先将变量挂载到 gradle.ext 全局对象，以便其他模块使用
-gradle.ext.use_local_module_TsrSdk = readLocalProperties('local.properties', 'use_local_module_TsrSdk')
+gradle.ext.App_Id = readLocalProperties('local.properties', 'App_Id')?.toInteger()
+gradle.ext.Auth_Id = readLocalProperties('local.properties', 'Auth_Id')?.toInteger()
+gradle.ext.use_local_module_TsrSdk = readLocalProperties('local.properties', 'use_local_module_TsrSdk')?.toBoolean()
 if (gradle.ext.use_local_module_TsrSdk) {
     include ':TsrSdk'
     project(':TsrSdk').projectDir = new File('../../../cloud_gaming_android/SRPlayer/android/Tsrsdk')

@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# 以下为 release 构建 R8 的告警，忽略之
+-dontwarn com.tencent.beacon.event.UserAction
+-dontwarn com.tencent.beacon.upload.TunnelInfo
+-dontwarn io.github.landerlyoung.jenny.NativeFieldProxy
+-dontwarn io.github.landerlyoung.jenny.NativeMethodProxy
+-dontwarn io.github.landerlyoung.jenny.NativeProxy
