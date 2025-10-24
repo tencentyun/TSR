@@ -10,21 +10,36 @@
 
 将前面“SDK授权申请”步骤获取的SDK和授权文件，配置到Demo工程中。操作如下：
 
-1. 将SDK放在工程的./SRPlayer/app/libs文件夹下。
+1. 将SDK放在工程的./SRPlayer/app/libs文件夹下（删掉旧的）。
 
-2. 在MainActivity.java下配置初始化参数，在校验初始化需要腾讯云APPID。
+2. 在 TsrSdkHelper.java 下配置初始化参数，校验应用 APP_ID 和授权码 AUTH_ID 。
 
    ![verification-params.png](./docs/verification-params.png)
 
 3. 运行demo
 
-## **1.3 Demo App体验**
-以下是Demo工程编译好的App安装包，可以直接进行[下载](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/MPSDemo.apk)安装体验。
+# **2 App 接入 TcrSdk 指南**
+## **2.1 添加和配置 TcrSdk**
 
-<img src=./docs/android-demo-qrcode.png width=16% />
+将 TcrSdk 的相关 AAR 放入 App 工程的 libs 文件夹下。
+在 App 的 build.gradle 中配置
+```
+android {
+    packagingOptions {
+        // 如有有多个，只需集成一个。
+        pickFirst '**/libc++_shared.so'
+        // 必须声明排除这个 so
+        excludes += ['**/libqqneuroedge*.so']
+        // 如果 app 没有用到 libmmkv.so，可以排除 armeabi-v7a 架构的，减少包大小。注意需要保留 arm64-v8a 架构的。
+        excludes += ['**/armeabi-v7a/libmmkv.so']
+    }
+}
 
-# **2 SDK 接入指南**
-## **2.1 App工程添加权限**
+dependencies {
+     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+}
+```
+在 AndroidManifest.xml 里配置
 ```
  <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -79,10 +94,10 @@
 **注意：TSRPass 不是线程安全的，必须在同一个线程中调用 TSRPass 的方法。**
 
 在 TSRAlgorithmType 枚举中，有 STANDARD、STANDARD_COLOR_RETOUCHING_EXT、PROFESSIONAL和PROFESSIONAL四个算法运行模式：
-1. **STANDARD（标准）模式**：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
-2. **STANDARD_COLOR_RETOUCHING_EXT（标准-色彩调节）模式**：在标准版超分辨率的基础上优化色彩表现。
-3. **PROFESSIONAL（专业）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
-4. **PROFESSIONAL_COLOR_RETOUCHING_EXT（专业-色彩调节）模式**：在专业版超分辨率的基础上优化色彩表现。
+1. **STANDARD（标准版超分）模式**：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
+2. **STANDARD_COLOR_RETOUCHING_EXT（标准版超分+增强）模式**：在标准版超分辨率的基础上优化色彩表现。
+3. **PROFESSIONAL（专业版超分）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
+4. **PROFESSIONAL_COLOR_RETOUCHING_EXT（专业版超分+增强）模式**：在专业版超分辨率的基础上优化色彩表现。
 
 它包括了 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TSRPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TSRPass 实例的情况下更新输入图像的尺寸或缩放比例，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
@@ -136,7 +151,7 @@ TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的�
 这些接口为开发者提供了灵活的控制选项，以优化超分辨率渲染的性能和用户体验。
 
 ### **2.2.3 TIEPass**
-[TIEPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TIEPass.html) 是用于进行图像增强渲染的类，**只在专业版SDK可用**。在创建 TIEPass 时，您需要传入 TIEAlgorithmType 设置图像增强的算法类型。它包括 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TIEPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TIEPass 实例的情况下更新输入图像的尺寸，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
+[TIEPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TIEPass.html) 是用于进行图像增强渲染的类。在创建 TIEPass 时，您需要传入 TIEAlgorithmType 设置图像增强的算法类型：**STANDARD（标准版增强）模式** 或者 **PROFESSIONAL（专业版增强）模式**：。它包括 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TIEPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TIEPass 实例的情况下更新输入图像的尺寸，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
 
 
 **注意：TIEPass 不是线程安全的，必须在同一个线程中调用 TIEPass 的方法。**
