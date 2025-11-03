@@ -1,27 +1,28 @@
 # **1 快速开始**
 ## 1.1 **SDK授权申请**
-为了服务能够正常授权，您还需要在腾讯云官网开通【媒体处理（MPS）控制台】。开通链接：[https://console.cloud.tencent.com/mps](https://console.cloud.tencent.com/mps)
-
-开通【媒体处理（MPS）控制台】后，可以参照[文档教程](https://cloud.tencent.com/document/product/862/109789?from=copy)。的方式，自行开通测试授权。
+请先在腾讯云官网开通 媒体处理 [控制台](https://console.cloud.tencent.com/mps)。然后根据[指南](https://cloud.tencent.com/document/product/862/109789)，自助开通SDK测试授权，获取 授权ID。    
+<img src="./docs/license.png" height="100">    
+在 腾讯云-账号中心-[账号信息](https://console.cloud.tencent.com/developer)，获取你的账号的 APPID。    
+<img src="./docs/APPID.png" height="100">    
 
 ## 1.2 **Demo工程编译运行**
+下载Demo工程[源码](https://github.com/tencentyun/TSR/tree/main/demo/tsr-android-demo)。    
+将前面“SDK授权申请”步骤获取的 授权ID 和 APPID，配置到Demo工程里：可以在工程根目录下的 local.properties 文件里添加
+```
+App_Id=你的APPID
+Auth_Id=你的授权ID
+```
+或者 也可以直接写到工程的 TsrSdkHelper.java 文件里    
+<img src="./docs/verification-params.png">    
+然后就可以编译运行 Demo 了。
 
-下载Demo工程的[源码](https://github.com/tencentyun/TSR/tree/main/demo/tsr-android-demo)。
+*备注：Demo工程的 ./SRPlayer/app/libs 文件夹下的 SDK 文件可能较旧，可以联系你的腾讯云商务代表获取最新版本。*
 
-将前面“SDK授权申请”步骤获取的SDK和授权文件，配置到Demo工程中。操作如下：
-
-1. 将SDK放在工程的./SRPlayer/app/libs文件夹下（删掉旧的）。
-
-2. 在 TsrSdkHelper.java 下配置初始化参数，校验应用 APP_ID 和授权码 AUTH_ID 。
-
-   ![verification-params.png](./docs/verification-params.png)
-
-3. 运行demo
 
 # **2 App 接入 TcrSdk 指南**
 ## **2.1 添加和配置 TcrSdk**
 
-将 TcrSdk 的相关 AAR 放入 App 工程的 libs 文件夹下。
+将 TsrSdk 的相关 AAR 放入 App 工程的 libs 文件夹下。
 在 App 的 build.gradle 中配置
 ```
 android {
@@ -64,7 +65,7 @@ dependencies {
 ### **2.2.1 TSRSdk**
 [TSRSdk](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRSdk.html)包括init和deInit两个方法。init方法用于初始化SDK，deInit方法用于释放资源。
 
-1. 在线鉴权初始化TSRSdk，您需要传入**APPID和AUTH_ID**进行在线鉴权，还需要传入TSRSdk.TSRSdkLicenseVerifyResultCallback用于获取在线鉴权的结果。除此之外，还需要传入一个TSRLogger，用于获取SDK的日志。下面是示例代码：
+1. 在线鉴权初始化TSRSdk，您需要传入**APPID**和**授权ID**进行在线鉴权，还需要传入TSRSdk.TSRSdkLicenseVerifyResultCallback用于获取在线鉴权的结果。除此之外，还需要传入一个TSRLogger，用于获取SDK的日志。下面是示例代码：
 
 ```
     TSRSdkLicenseVerifyResultCallback callback = new TSRSdkLicenseVerifyResultCallback() {

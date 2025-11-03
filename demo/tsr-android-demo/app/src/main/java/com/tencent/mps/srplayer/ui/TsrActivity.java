@@ -580,12 +580,12 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             }
         } else if (mAlgorithm == Algorithm.IE_PRO || mAlgorithm == Algorithm.IE_STD) {
             long ss = System.currentTimeMillis();
-            TIEPass.TIEInitStatusCode error = mTIEPass.init(800, 800);
+            TIEPass.TIEInitStatusCode error = mTIEPass.init(mFrameWidth, mFrameHeight);
             long start = System.currentTimeMillis();
             Log.i(TAG, "init cost = " + (start - ss));
-            error = mTIEPass.reInit(mFrameWidth, mFrameHeight);
-            long end = System.currentTimeMillis();
-            Log.i(TAG, "reinit cost = " + (end - start));
+            //error = mTIEPass.reInit(mFrameWidth, mFrameHeight);
+            //long end = System.currentTimeMillis();
+            //Log.i(TAG, "reinit cost = " + (end - start));
 
             String errorMsg = "";
             switch (error) {
