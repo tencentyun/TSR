@@ -457,8 +457,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         } else if (mAlgorithm == Algorithm.SR_PRO) {
             Map<String, Object> config = new HashMap<>();
             config.put(RenderPassConfig.ALGORITHM_TYPE, TSRPass.TSRAlgorithmType.PROFESSIONAL);
-            config.put(RenderPassConfig.MAX_INPUT_WIDTH, mFrameWidth);
-            config.put(RenderPassConfig.MAX_INPUT_HEIGHT, mFrameHeight);
             AutoFallbackConfig fallbackConfig = new AutoFallbackConfig(5, 33,
                     (width, height) -> Log.d("TSR", "Fallback to STANDARD!"));
             //config.put(RenderPassConfig.AUTO_FALLBACK_CONFIG, fallbackConfig);
@@ -466,8 +464,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         } else if (mAlgorithm == Algorithm.SR_PRO_EH) {
             Map<String, Object> config = new HashMap<>();
             config.put(RenderPassConfig.ALGORITHM_TYPE, TSRPass.TSRAlgorithmType.PROFESSIONAL_COLOR_RETOUCHING_EXT);
-            config.put(RenderPassConfig.MAX_INPUT_WIDTH, mFrameWidth);
-            config.put(RenderPassConfig.MAX_INPUT_HEIGHT, mFrameHeight);
             AutoFallbackConfig fallbackConfig = new AutoFallbackConfig(5, 33,
                     (width, height) -> Log.d("TSR", "Fallback to STANDARD!"));
             //config.put(RenderPassConfig.AUTO_FALLBACK_CONFIG, fallbackConfig);
@@ -479,8 +475,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         } else if (mAlgorithm == Algorithm.IE_PRO) {
             Map<String, Object> config = new HashMap<>();
             config.put(RenderPassConfig.ALGORITHM_TYPE, TIEPass.TIEAlgorithmType.PROFESSIONAL);
-            config.put(RenderPassConfig.MAX_INPUT_WIDTH, mFrameWidth);
-            config.put(RenderPassConfig.MAX_INPUT_HEIGHT, mFrameHeight);
             AutoFallbackConfig fallbackConfig = new AutoFallbackConfig(5, 33,
                     (width, height) -> Log.d("TIE", "Fallback to STANDARD!"));
             //config.put(RenderPassConfig.AUTO_FALLBACK_CONFIG, fallbackConfig);
@@ -498,8 +492,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         } else if (mCompareAlgorithm == Algorithm.SR_PRO) {
             Map<String, Object> config = new HashMap<>();
             config.put(RenderPassConfig.ALGORITHM_TYPE, TSRPass.TSRAlgorithmType.PROFESSIONAL);
-            config.put(RenderPassConfig.MAX_INPUT_WIDTH, mFrameWidth);
-            config.put(RenderPassConfig.MAX_INPUT_HEIGHT, mFrameHeight);
             AutoFallbackConfig fallbackConfig = new AutoFallbackConfig(5, 33,
                     (width, height) -> Log.d("TSR", "Fallback to STANDARD!"));
             config.put(RenderPassConfig.AUTO_FALLBACK_CONFIG, fallbackConfig);
@@ -507,8 +499,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         } else if (mCompareAlgorithm == Algorithm.SR_PRO_EH) {
             Map<String, Object> config = new HashMap<>();
             config.put(RenderPassConfig.ALGORITHM_TYPE, TSRPass.TSRAlgorithmType.PROFESSIONAL_COLOR_RETOUCHING_EXT);
-            config.put(RenderPassConfig.MAX_INPUT_WIDTH, mFrameWidth);
-            config.put(RenderPassConfig.MAX_INPUT_HEIGHT, mFrameWidth);
             AutoFallbackConfig fallbackConfig = new AutoFallbackConfig(5, 33,
                     null);
             config.put(RenderPassConfig.AUTO_FALLBACK_CONFIG, fallbackConfig);
@@ -520,8 +510,6 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
         } else if (mCompareAlgorithm == Algorithm.IE_PRO) {
             Map<String, Object> config = new HashMap<>();
             config.put(RenderPassConfig.ALGORITHM_TYPE, TIEPass.TIEAlgorithmType.PROFESSIONAL);
-            config.put(RenderPassConfig.MAX_INPUT_WIDTH, mFrameWidth);
-            config.put(RenderPassConfig.MAX_INPUT_HEIGHT, mFrameHeight);
             AutoFallbackConfig fallbackConfig = new AutoFallbackConfig(5, 33,
                     (width, height) -> Log.d("TIE", "Fallback to STANDARD!"));
             config.put(RenderPassConfig.AUTO_FALLBACK_CONFIG, fallbackConfig);
