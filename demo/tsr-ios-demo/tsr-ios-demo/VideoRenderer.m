@@ -72,7 +72,7 @@
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     // 清理
-    glBindTexture(GL_TEXTURE_2D, 0);    
+    glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 

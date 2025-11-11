@@ -24,7 +24,6 @@
 		4D38C76E2BB1561D00A57626 /* 540P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C7682BB155FF00A57626 /* 540P.mp4 */; };
 		4D38C76F2BB1561D00A57626 /* 1080P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C7692BB1560500A57626 /* 1080P.mp4 */; };
 		4D38C7702BB1561D00A57626 /* 720P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76A2BB1560C00A57626 /* 720P.mp4 */; };
-		4D38C7712BB1561D00A57626 /* 4K.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76B2BB1561200A57626 /* 4K.mp4 */; };
 		4D38C7722BB1561D00A57626 /* 864P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76C2BB1561900A57626 /* 864P.mp4 */; };
 		4D38C7732BB1561D00A57626 /* 576P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76D2BB1561D00A57626 /* 576P.mp4 */; };
 		4D812D652D6DBE220097ED2C /* VideoRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D812D642D6DBE220097ED2C /* VideoRenderer.m */; };
@@ -87,7 +86,6 @@
 		4D38C7682BB155FF00A57626 /* 540P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 540P.mp4; sourceTree = "<group>"; };
 		4D38C7692BB1560500A57626 /* 1080P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1080P.mp4; sourceTree = "<group>"; };
 		4D38C76A2BB1560C00A57626 /* 720P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720P.mp4; sourceTree = "<group>"; };
-		4D38C76B2BB1561200A57626 /* 4K.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4K.mp4; sourceTree = "<group>"; };
 		4D38C76C2BB1561900A57626 /* 864P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 864P.mp4; sourceTree = "<group>"; };
 		4D38C76D2BB1561D00A57626 /* 576P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 576P.mp4; sourceTree = "<group>"; };
 		4D812D622D6DBE060097ED2C /* VideoRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoRenderer.h; sourceTree = "<group>"; };
@@ -143,7 +141,6 @@
 		4D2411712B60C1D000720192 /* tsr-ios-demo */ = {
 			isa = PBXGroup;
 			children = (
-				4D38C76B2BB1561200A57626 /* 4K.mp4 */,
 				4D38C7682BB155FF00A57626 /* 540P.mp4 */,
 				4D38C76D2BB1561D00A57626 /* 576P.mp4 */,
 				4D38C76A2BB1560C00A57626 /* 720P.mp4 */,
@@ -301,7 +298,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D38C7702BB1561D00A57626 /* 720P.mp4 in Resources */,
-				4D38C7712BB1561D00A57626 /* 4K.mp4 in Resources */,
 				4D2411822B60C1D200720192 /* LaunchScreen.storyboard in Resources */,
 				4D38C76F2BB1561D00A57626 /* 1080P.mp4 in Resources */,
 				4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */,
@@ -545,7 +541,7 @@
 					"-fprofile-instr-generate",
 					"-lstdc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo1";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.mps.srplayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -585,7 +581,7 @@
 					"-fprofile-instr-generate",
 					"-lstdc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo1";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.mps.srplayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

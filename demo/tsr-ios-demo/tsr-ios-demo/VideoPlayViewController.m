@@ -10,8 +10,12 @@
 
 #import <OpenGLES/ES3/glext.h>
 #import <CoreVideo/CoreVideo.h>
+#import <tsr_client/CommonConfig.h>
+#import <Photos/Photos.h>
 
-@implementation VideoPlayViewController
+@implementation VideoPlayViewController {
+    dispatch_queue_t _serialQueue;
+}
 
 - (void)verifyTSRLicense {
     [TSRSdk.getInstance deInit];
@@ -22,7 +26,19 @@
     NSLog(@"Online verification callback");
     if (status == TSRSdkLicenseStatusAvailable) {
         if (!_srCreateDone) {
-            [self createTSRPassAndTIEPass:_glContext];
+            if (!_isUseMetal) {
+                [self createTSRPassAndTIEPass:_glContext];
+            } else {
+                [self createTSRPassAndTIEPassMetal];
+            }
+        }
+        if (_isRecording) {
+            dispatch_async(_serialQueue, ^{
+                [self setupVideoWriter];
+                _lastFrameTime = kCMTimeZero;
+                [_assetWriter startWriting];
+                [_assetWriter startSessionAtSourceTime:kCMTimeZero];
+            });
         }
         [_player play];
     } else {
@@ -35,35 +51,174 @@
     [EAGLContext setCurrentContext:_glContext];
     TSRInitStatusCode initStatus;
     
-    _tsr_pass_standard = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeStandard glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+    _tsr_pass_standard = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeStandard glContext: context inputWidth:10 inputHeight:10 srRatio:_srRatio initStatusCode:&initStatus];
     NSLog(@"initStatus: %d", initStatus);
+    initStatus = [_tsr_pass_standard reInit:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
     
     _tsr_pass_standard_ext = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeStandardColorRetouchingExt glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
     NSLog(@"initStatus: %d", initStatus);
     
-    _tsr_pass_professional = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeProfessional glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+
+    AutoFallbackConfig *autoFallbackConfig = [AutoFallbackConfig configWithConsecutiveTimeoutFrames:5
+                                                                timeoutDurationMs:33
+                                                               listener:^(NSInteger w, NSInteger h) {
+        NSLog(@"TSR AutoFallback: %dx%d", w, h);
+    }];
+    NSDictionary *tsrConfig = @{
+        [RenderPassConfig algorithmType]: @(TSRAlgorithmTypeProfessional),
+        [RenderPassConfig inputWidth]: @(_videoSize.width),
+        [RenderPassConfig inputHeight]: @(_videoSize.height),
+        [RenderPassConfig srRatio]: @(self.srRatio),
+        //[RenderPassConfig autoFallbackConfig]: autoFallbackConfig
+    };
+    _tsr_pass_professional = [[TSRPass alloc] initWithRenderPassConfig:tsrConfig glContext:context initStatusCode:&initStatus];
     NSLog(@"initStatus: %d", initStatus);
 
-    _tsr_pass_professional_ext = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeProfessionalColorRetouchingExt glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+    _tsr_pass_professional_ext = [[TSRPass alloc] initWithAlgorithmType:TSRAlgorithmTypeProfessionalColorRetouchingExt glContext: context inputWidth:10 inputHeight:10 srRatio:_srRatio initStatusCode:&initStatus];
+    // [_tsr_pass_professional_ext enableProSRAutoFallback:10 timeoutDurationMs:33 fallbackListener:nil];
+    initStatus = [_tsr_pass_professional_ext reInit:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio];
 
     TIEInitStatusCode tieInitStatus;
+//    _tie_pass_standard = [[TIEPass alloc] initWithAlgorithmType:TIEAlgorithmTypeStandard glContext: context inputWidth:10 inputHeight:10 initStatusCode:&tieInitStatus];
+//    NSLog(@"initStatus: %d", tieInitStatus);
+    // initStatus = [_tie_pass_standard reInit:_videoSize.width inputHeight:_videoSize.height];
     _tie_pass_standard = [[TIEPass alloc] initWithAlgorithmType:TIEAlgorithmTypeStandard glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
     NSLog(@"initStatus: %d", tieInitStatus);
-    
-    _tie_pass_professional = [[TIEPass alloc] initWithAlgorithmType:TIEAlgorithmTypeProfessional glContext: context inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
+    AutoFallbackConfig *autoFallbackConfigTIE = [AutoFallbackConfig configWithConsecutiveTimeoutFrames:10
+                                                                                     timeoutDurationMs:33
+                                                               listener:^(NSInteger w, NSInteger h) {
+        NSLog(@"TIE AutoFallback: %dx%d", w, h);
+    }];
+    NSDictionary *tieConfig = @{
+        [RenderPassConfig algorithmType]: @(TIEAlgorithmTypeProfessional),
+        [RenderPassConfig inputWidth]: @(_videoSize.width),
+        [RenderPassConfig inputHeight]: @(_videoSize.height),
+        [RenderPassConfig autoFallbackConfig]: autoFallbackConfigTIE
+    };
+    _tie_pass_professional = [[TIEPass alloc] initWithRenderPassConfig:tieConfig glContext:context initStatusCode:&initStatus];
     NSLog(@"initStatus: %d", tieInitStatus);
     
     _srCreateDone = true;
 }
 
-- (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio algorithm:(NSString*)algorithm {
+-(void)createTSRPassAndTIEPassMetal {
+    NSLog(@"inputWidth = %d, inputHeight = %d", (int)_videoSize.width, (int)_videoSize.height);
+//    TSRInitStatusCode initStatus;
+//    TIEInitStatusCode tieInitStatus;
+//    if ([_algorithm isEqualToString:@"增强播放(标准版)"]) {
+//        MTLTextureDescriptor *ieTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
+//        ieTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+//        _ie_texture = [_device newTextureWithDescriptor:ieTextureDescriptor];
+//
+//        _tie_pass_standard = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
+//    } else if ([_algorithm isEqualToString:@"增强播放(专业版)"]) {
+//        MTLTextureDescriptor *ieTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
+//        ieTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+//        _ie_texture = [_device newTextureWithDescriptor:ieTextureDescriptor];
+//
+//        _tie_pass_professional = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
+//
+////        [_tie_pass_professional enableProIEAutoFallback:10 timeoutDurationMs:33 fallbackListener:^(int w, int h) {
+////            NSLog(@"TSR AutoFallback: %dx%d", w, h);
+////        }];
+//    } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
+//        MTLTextureDescriptor *srTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width * _srRatio height:_videoSize.height * _srRatio mipmapped:NO];
+//        srTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+//        _sr_texture = [_device newTextureWithDescriptor:srTextureDescriptor];
+//
+//        _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+//
+//    } else if ([_algorithm isEqualToString:@"超分播放(标准版-增强)"]) {
+//        MTLTextureDescriptor *srTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width * _srRatio height:_videoSize.height * _srRatio mipmapped:NO];
+//        srTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+//        _sr_texture = [_device newTextureWithDescriptor:srTextureDescriptor];
+//
+//        _tsr_pass_standard_ext = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandardColorRetouchingExt device: _device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+//
+//    } else if ([_algorithm isEqualToString:@"超分播放(专业版)"]) {
+//        MTLTextureDescriptor *srTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width * _srRatio height:_videoSize.height * _srRatio mipmapped:NO];
+//        srTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+//        _sr_texture = [_device newTextureWithDescriptor:srTextureDescriptor];
+//
+//        _tsr_pass_professional = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+//    } else if ([_algorithm isEqualToString:@"超分播放(专业版-增强)"]) {
+//        MTLTextureDescriptor *srTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width * _srRatio height:_videoSize.height * _srRatio mipmapped:NO];
+//        srTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+//        _sr_texture = [_device newTextureWithDescriptor:srTextureDescriptor];
+//
+//        _tsr_pass_professional_ext = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+//    }
+
+    NSLog(@"inputWidth = %d, inputHeight = %d", (int)_videoSize.width, (int)_videoSize.height);
+
+        MTLTextureDescriptor *srTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width * _srRatio height:_videoSize.height * _srRatio mipmapped:NO];
+        srTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+        _sr_texture = [_device newTextureWithDescriptor:srTextureDescriptor];
+
+        TSRInitStatusCode initStatus;
+
+        _tsr_pass_standard = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+
+        _tsr_pass_standard_ext = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeStandardColorRetouchingExt device: _device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+
+        _tsr_pass_professional = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+
+        _tsr_pass_professional_ext = [[TSRPass alloc] initWithTSRAlgorithmType:TSRAlgorithmTypeProfessionalHighQuality device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height srRatio:_srRatio initStatusCode:&initStatus];
+        [_tsr_pass_professional_ext enableProSRAutoFallback:10 timeoutDurationMs:33 fallbackListener:^(int w, int h) {
+            NSLog(@"TSR AutoFallback: %dx%d", w, h);
+        }];
+
+        MTLTextureDescriptor *ieTextureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
+        ieTextureDescriptor.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+
+        _ie_texture = [_device newTextureWithDescriptor:ieTextureDescriptor];
+        TIEInitStatusCode tieInitStatus;
+        _tie_pass_standard = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeStandard device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
+
+        _tie_pass_professional = [[TIEPass alloc] initWithTIEAlgorithmType:TIEAlgorithmTypeProfessional device:_device inputWidth:_videoSize.width inputHeight:_videoSize.height initStatusCode:&tieInitStatus];
+        [_tie_pass_professional enableProIEAutoFallback:10 timeoutDurationMs:33 fallbackListener:^(int w, int h) {
+            NSLog(@"TSR AutoFallback: %dx%d", w, h);
+        }];
+
+    _srCreateDone = true;
+}
+
+- (instancetype)initWithVideoURL:(NSURL *)videoURL srRatio:(float)srRatio algorithm:(NSString*)algorithm isRecording:(BOOL)isRecording {
     self = [super init];
     if (self) {
         _srRatio = srRatio;
         _algorithm = algorithm;
+        _isRecording = isRecording;
+
+        if (_isRecording) {
+            _frameCount = 0;
+            _fps = 30;
+            _serialQueue = dispatch_queue_create("com.tencent.mps.tsr-ios-demo1", DISPATCH_QUEUE_SERIAL);
+            
+            NSString *originalFilename = [[videoURL lastPathComponent] stringByDeletingPathExtension];
+            
+            NSCharacterSet *illegalChars = [NSCharacterSet characterSetWithCharactersInString:@"/\\:?*<>|\"() "];
+            NSString *safeAlgorithm = [[algorithm componentsSeparatedByCharactersInSet:illegalChars] componentsJoinedByString:@"_"];
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"yyyyMMdd_HHmmss";
+            NSString *timestamp = [formatter stringFromDate:[NSDate date]];
+            
+            // 4. 组合新文件名（格式：原文件名_算法_时间戳.mp4）
+            NSString *outputFilename = [NSString stringWithFormat:@"%@_%@_%@.mp4",
+                                        originalFilename,
+                                        safeAlgorithm,
+                                        timestamp];
+            _outputURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:outputFilename]];
+        }
         
         _videoSize = [self loadVideo:videoURL];
+        
+        _isUseMetal = USE_METAL;
 
+        _frameCount = 0;
+        _avgCost = 0;
+        
         [self.infoLabel setText:_algorithm];
         
         CGRect rect;
@@ -96,32 +251,68 @@
             rect = CGRectMake(0, 0, viewWidth / 3, viewHeight / 3);
         }
         
-        // 创建 OpenGL ES 上下文
-        _glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-        CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, _glContext, NULL, &_textureCache);
-        self.renderer = [[VideoRenderer alloc] initWithContext:_glContext inputWidth:_videoSize.width inputHeight:_videoSize.height outputWidth:_outputWidth outputHeight:_outputHeight];
-        [self.renderer setupGL];
-        // 设置MTKView
-        _glkView = [[GLKView alloc] initWithFrame:rect context:_glContext];
-        _glkView.delegate = self;
-        _glkView.enableSetNeedsDisplay = NO;
-        [self.view addSubview:_glkView];
-        
-        [self verifyTSRLicense];
-        
-        // 设置UI
-        [self setUI];
+        if (_isUseMetal) {
+            id<MTLDevice>device = MTLCreateSystemDefaultDevice();
+            _device = device;
+            _commandQueue = [device newCommandQueue];
+            
+            MTLTextureDescriptor *textureDescriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatBGRA8Unorm width:_videoSize.width height:_videoSize.height mipmapped:NO];
+            _in_texture = [device newTextureWithDescriptor:textureDescriptor];
+                
+            NSError *error;
+            
+            // 设置MTKView
+            _mtkView = [[MTKView alloc] initWithFrame:rect device:device];
+            _mtkView.delegate = self;
+            _mtkView.framebufferOnly = NO;
+            _mtkView.enableSetNeedsDisplay = YES;
+            
+            id<MTLLibrary> library = [_device newDefaultLibrary];
+            id<MTLFunction> vertexFunction = [library newFunctionWithName:@"vertexShader"];
+            id<MTLFunction> fragmentFunction = [library newFunctionWithName:@"fragmentShader"];
+            
+            MTLRenderPipelineDescriptor *pipelineDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
+            pipelineDescriptor.vertexFunction = vertexFunction;
+            pipelineDescriptor.fragmentFunction = fragmentFunction;
+            pipelineDescriptor.colorAttachments[0].pixelFormat = _mtkView.colorPixelFormat;
+            
+            _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineDescriptor error:&error];
+            
+            if (!_pipelineState) {
+                NSLog(@"Failed to create pipeline state: %@", error);
+            }
+
+            [self.view addSubview:_mtkView];
+        } else {
+            _glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+            CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, _glContext, NULL, &_textureCache);
+            self.renderer = [[VideoRenderer alloc] initWithContext:_glContext inputWidth:_videoSize.width inputHeight:_videoSize.height outputWidth:_outputWidth outputHeight:_outputHeight];
+            [self.renderer setupGL];
+            // 设置MTKView
+            _glkView = [[GLKView alloc] initWithFrame:rect context:_glContext];
+            _glkView.delegate = self;
+            _glkView.enableSetNeedsDisplay = NO;
+            [self.view addSubview:_glkView];
+        }
         
         // 添加定时器以保证连续渲染
         _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateDisplay)];
         [_displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    
+
+        [self verifyTSRLicense];
+        
+        // 设置UI
+        [self setUI];
     }
     return self;
 }
 
 - (void)updateDisplay {
-    [_glkView display];
+    if (_isUseMetal) {
+        [_mtkView setNeedsDisplay];
+    } else {
+        [_glkView display];
+    }
 }
 
 - (void)viewDidLoad {
@@ -132,7 +323,148 @@
     NSLog(@"Remote view service terminated with error: %@", error);
 }
 
-#pragma mark - 渲染逻辑
+
+
+#pragma mark - MTKViewDelegate
+- (void)mtkView:(MTKView *)view drawableSizeWillChange:(CGSize)size {
+}
+
+- (void)drawInMTKView:(MTKView *)view {
+    id<CAMetalDrawable> drawable = [view currentDrawable];
+    if (!drawable) {
+        return;
+    }
+    
+    // 获取当前视频帧
+    CMTime currentTime = _player.currentItem.currentTime;
+    CVPixelBufferRef pixelBuffer = [_videoOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
+    if (!pixelBuffer) {
+        NSLog(@"pixel buffer is null");
+        return;
+    }
+    
+    if (!_srCreateDone) {
+        NSLog(@"sr is not ready");
+        return;
+    }
+    
+    [self updateTextureWithPixelBuffer:pixelBuffer texture:_in_texture];
+    
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+    
+    // 创建命令缓冲区
+    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+    
+    if (!_isRecording) {
+        NSDate *startDate = [NSDate date];
+        if ([_algorithm isEqualToString:@"增强播放(标准版)"]) {
+            _ie_texture = [_tie_pass_standard render:_in_texture commandBuffer:commandBuffer];
+        } else if ([_algorithm isEqualToString:@"增强播放(专业版)"]) {
+            _ie_texture = [_tie_pass_professional render:_in_texture commandBuffer:commandBuffer];
+        } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
+            _sr_texture = [_tsr_pass_standard render:_in_texture commandBuffer:commandBuffer];
+        } else if ([_algorithm isEqualToString:@"超分播放(标准版-增强)"]) {
+            _sr_texture = [_tsr_pass_standard_ext render:_in_texture commandBuffer:commandBuffer];
+        } else if ([_algorithm isEqualToString:@"超分播放(专业版)"]) {
+            _sr_texture = [_tsr_pass_professional render:_in_texture commandBuffer:commandBuffer];
+        } else if ([_algorithm isEqualToString:@"超分播放(专业版-增强)"]) {
+            _sr_texture = [_tsr_pass_professional_ext render:_in_texture commandBuffer:commandBuffer];
+        }
+        NSTimeInterval duration = -[startDate timeIntervalSinceNow];
+        NSLog(@"耗时: %.4f ms", duration * 1000);
+    } else {
+        NSDate *startDate = [NSDate date];
+        CVPixelBufferRef pb = pixelBuffer;
+        if ([_algorithm isEqualToString:@"增强播放(标准版)"]) {
+            pb = [_tie_pass_standard renderWithPixelBuffer:pixelBuffer];
+            [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+        } else if ([_algorithm isEqualToString:@"增强播放(专业版)"]) {
+            pb = [_tie_pass_professional renderWithPixelBuffer:pixelBuffer];
+            [self updateTextureWithPixelBuffer:pb texture:_ie_texture];
+        } else if ([_algorithm isEqualToString:@"超分播放(标准版)"]) {
+            pb = [_tsr_pass_standard renderWithPixelBuffer:pixelBuffer];
+            [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+        } else if ([_algorithm isEqualToString:@"超分播放(标准版-增强)"]) {
+            pb = [_tsr_pass_standard_ext renderWithPixelBuffer:pixelBuffer];
+            [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+        } else if ([_algorithm isEqualToString:@"超分播放(专业版)"]) {
+            pb = [_tsr_pass_professional renderWithPixelBuffer:pixelBuffer];
+            [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+        } else if ([_algorithm isEqualToString:@"超分播放(专业版-增强)"]) {
+            pb = [_tsr_pass_professional_ext renderWithPixelBuffer:pixelBuffer];
+            [self updateTextureWithPixelBuffer:pb texture:_sr_texture];
+        }
+
+        NSTimeInterval duration = -[startDate timeIntervalSinceNow];
+
+        CMTime presentationTime = CMTimeMake(_frameCount, _fps);
+        NSLog(@"presentationTime = %ld", presentationTime.value);
+        if (_lastFrameTime.value != 0 && presentationTime.value <= self.lastFrameTime.value) {
+            return;
+        }
+        self.lastFrameTime = presentationTime;
+        if (self.videoInput.readyForMoreMediaData) {
+            if (![self.pixelBufferAdaptor appendPixelBuffer:pb
+                                   withPresentationTime:presentationTime]) {
+                NSLog(@"写入失败: %@", self.assetWriter.error);
+            }
+        }
+
+
+        _avgCost += duration * 1000;
+        _frameCount++;
+        NSLog(@"耗时: %.4f ms, 平均耗时: %.4fms", duration * 1000, _avgCost / _frameCount);
+    }
+
+    // 创建渲染编码器
+    MTLRenderPassDescriptor *renderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
+    renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
+    renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+    renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
+    renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 1);
+    
+    id<MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+    
+    // 设置渲染管道状态
+    [renderEncoder setRenderPipelineState:_pipelineState];
+    
+    // 设置纹理
+    if ([_algorithm isEqualToString:@"增强播放(标准版)"] || [_algorithm isEqualToString:@"增强播放(专业版)"]) {
+        [renderEncoder setFragmentTexture:_ie_texture atIndex:0];
+    } else if ([_algorithm isEqualToString:@"普通播放"]) {
+        [renderEncoder setFragmentTexture:_in_texture atIndex:0];
+    } else {
+        [renderEncoder setFragmentTexture:_sr_texture atIndex:0];
+    }
+    
+    // 绘制
+    [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
+    
+    // 结束编码
+    [renderEncoder endEncoding];
+    
+    // 提交命令
+    [commandBuffer presentDrawable:drawable];
+    [commandBuffer commit];
+    
+    // 释放资源
+    CVPixelBufferRelease(pixelBuffer);
+}
+
+- (void)updateTextureWithPixelBuffer:(CVPixelBufferRef)pixelBuffer texture: (id<MTLTexture>)texture{
+    size_t width = CVPixelBufferGetWidth(pixelBuffer);
+    size_t height = CVPixelBufferGetHeight(pixelBuffer);
+    
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    void *baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer);
+    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
+    
+    [texture replaceRegion:MTLRegionMake2D(0, 0, width, height) mipmapLevel:0 withBytes:baseAddress bytesPerRow:bytesPerRow];
+    
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+}
+
+#pragma mark - OPENGL ES Render
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
     // 确保上下文设置成功
     if (![EAGLContext setCurrentContext:_glContext]) {
@@ -165,7 +497,12 @@
     CVPixelBufferRef pixelBuffer = [_videoOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:nil];
     if (!pixelBuffer) return;
     
-    bool useRenderMethod = true;
+    if (!_srCreateDone) {
+        NSLog(@"sr is not ready");
+        return;
+    }
+
+    bool useRenderMethod = !_isRecording;
     if (useRenderMethod) {
         // 创建OpenGL纹理
         CVOpenGLESTextureRef cvTexture = NULL;
@@ -187,7 +524,7 @@
         if (err == noErr && cvTexture) {
             GLuint texture = CVOpenGLESTextureGetName(cvTexture);
             int outputTexture = texture;
-            
+            NSDate *startDate = [NSDate date];
             // 根据算法选择渲染路径
             if ([_algorithm isEqualToString:@"增强播放(标准版)"]) {
                 outputTexture = [_tie_pass_standard render:texture];
@@ -202,14 +539,19 @@
             } else if ([_algorithm isEqualToString:@"超分播放(专业版-增强)"]) {
                 outputTexture = [_tsr_pass_professional_ext render:texture];
             }
-            
+            NSTimeInterval duration = -[startDate timeIntervalSinceNow];
+            NSLog(@"耗时: %.4f ms", duration * 1000);
+
             // 实际渲染到屏幕
             [self.renderer render:outputTexture];
             
             CVOpenGLESTextureCacheFlush(_textureCache, 0);
             CFRelease(cvTexture);
+
+
         }
     } else {
+        NSDate *startDate = [NSDate date];
         // 根据算法选择渲染路径
         CVPixelBufferRef enhancedBuffer = pixelBuffer;
         if ([_algorithm isEqualToString:@"增强播放(标准版)"]) {
@@ -225,6 +567,24 @@
         } else if ([_algorithm isEqualToString:@"超分播放(专业版-增强)"]) {
             enhancedBuffer = [_tsr_pass_professional_ext renderWithPixelBuffer:pixelBuffer];
         }
+        NSTimeInterval duration = -[startDate timeIntervalSinceNow];
+
+        CMTime presentationTime = CMTimeMake(_frameCount, _fps);
+        NSLog(@"presentationTime = %ld", presentationTime.value);
+        if (_lastFrameTime.value != 0 && presentationTime.value <= self.lastFrameTime.value) {
+            return;
+        }
+        self.lastFrameTime = presentationTime;
+        if (self.videoInput.readyForMoreMediaData) {
+            if (![self.pixelBufferAdaptor appendPixelBuffer:enhancedBuffer
+                                   withPresentationTime:presentationTime]) {
+                NSLog(@"写入失败: %@", self.assetWriter.error);
+            }
+        }
+
+        _avgCost += duration * 1000;
+        _frameCount++;
+        NSLog(@"耗时: %.4f ms, 平均耗时: %.4fms", duration * 1000, _avgCost / _frameCount);
 
         CVOpenGLESTextureRef cvTexture = NULL;
         CVReturn err = CVOpenGLESTextureCacheCreateTextureFromImage(
@@ -241,8 +601,6 @@
             0,
             &cvTexture
         );
-        int width = (GLsizei)CVPixelBufferGetWidth(enhancedBuffer);
-        int height = (GLsizei)CVPixelBufferGetHeight(enhancedBuffer);
         
         if (err == noErr && cvTexture) {
             GLuint texture = CVOpenGLESTextureGetName(cvTexture);
@@ -251,6 +609,8 @@
             CVOpenGLESTextureCacheFlush(_textureCache, 0);
             CFRelease(cvTexture);
         }
+        
+
     }
     
     if (pixelBuffer) {
@@ -269,6 +629,57 @@
 
 }
 
+- (void)setupVideoWriter {
+    // 确保删除已存在的文件
+    if ([[NSFileManager defaultManager] fileExistsAtPath:_outputURL.path]) {
+        NSError *removeError;
+        [[NSFileManager defaultManager] removeItemAtURL:_outputURL error:&removeError];
+        if (removeError) {
+            NSLog(@"删除旧文件失败: %@", removeError);
+            return;
+        }
+    }
+    
+    NSError *error = nil;
+    _assetWriter = [[AVAssetWriter alloc] initWithURL:_outputURL
+                                            fileType:AVFileTypeMPEG4
+                                               error:&error];
+    
+    if (error) {
+        NSLog(@"初始化 AVAssetWriter 失败: %@", error);
+        return;
+    }
+    
+    // 视频输出设置（需根据实际输出尺寸调整）
+    NSDictionary *videoSettings = @{
+        AVVideoCodecKey: AVVideoCodecTypeH264,
+        AVVideoWidthKey: @(_outputWidth),
+        AVVideoHeightKey: @(_outputHeight),
+        AVVideoCompressionPropertiesKey: @{
+            AVVideoAverageBitRateKey: @(10 * 1024 * 1024),
+            AVVideoExpectedSourceFrameRateKey: @(_fps)
+        }
+    };
+    
+    _videoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo
+                                                     outputSettings:videoSettings];
+    _videoInput.expectsMediaDataInRealTime = YES;
+    
+    // 像素缓冲区属性
+    NSDictionary *pixelBufferAttributes = @{
+        (id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
+        (id)kCVPixelBufferWidthKey: @(_outputWidth),
+        (id)kCVPixelBufferHeightKey: @(_outputHeight)
+    };
+    
+    _pixelBufferAdaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_videoInput
+                                                                                          sourcePixelBufferAttributes:pixelBufferAttributes];
+    
+    if ([_assetWriter canAddInput:_videoInput]) {
+        [_assetWriter addInput:_videoInput];
+    }
+}
+
 - (CGSize)loadVideo:(NSURL*)videoURL {
     AVAsset *asset = [AVAsset assetWithURL:videoURL];
     NSArray *tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
@@ -276,6 +687,7 @@
 
     if (tracks.count > 0) {
         AVAssetTrack *videoTrack = tracks.firstObject;
+        _fps = videoTrack.nominalFrameRate;
         videoSize = videoTrack.naturalSize;
     }
     
@@ -304,7 +716,11 @@
     [self.view addSubview:_whiteView];
     [self addEdgePanGesture];
     
-    [self.view addSubview:_glkView];
+    if (!_isUseMetal) {
+        [self.view addSubview:_glkView];
+    } else {
+        [self.view addSubview:_mtkView];
+    }
     
     // 创建播放/暂停按钮
     self.playPauseButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -456,6 +872,19 @@
             [self.tie_pass_professional deInit];
             [TSRSdk.getInstance deInit];
             
+            if (!self.isUseMetal) {
+                if (self.renderer) {
+                    [self.renderer cleanupGL];
+                    self.renderer = nil;
+                }
+                if (self.textureCache) {
+                    CFRelease(self.textureCache);
+                    self.textureCache = nil;
+                }
+                [EAGLContext setCurrentContext:nil];
+                _glContext = nil;
+            }
+
             // 停止显示链接
             if (self->_displayLink) {
                 [self->_displayLink invalidate];
@@ -517,9 +946,73 @@ bool enable = false;
 
 #pragma mark - 接收播放完成的通知
 - (void)runLoopTheMovie:(NSNotification *)notification {
-    AVPlayerItem *playerItem = notification.object;
-    [playerItem seekToTime:kCMTimeZero];
-    [_player play];
+    if (!_isRecording) {
+//    if (true) {
+        AVPlayerItem *playerItem = notification.object;
+        [playerItem seekToTime:kCMTimeZero];
+        [_player play];
+    } else {
+        _isRecording = false;
+        [self.player pause];
+        dispatch_async(_serialQueue, ^{
+            [self.videoInput markAsFinished];
+            [self.assetWriter finishWritingWithCompletionHandler:^{
+                if (self->_assetWriter.status == AVAssetWriterStatusCompleted) {
+                    NSLog(@"Export completed");
+                    [PHPhotoLibrary requestAuthorizationForAccessLevel:PHAccessLevelAddOnly handler:^(PHAuthorizationStatus status) {
+                        if (status == PHAuthorizationStatusAuthorized) {
+                            [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                                PHAssetCreationRequest *request = [PHAssetCreationRequest creationRequestForAsset];
+                                [request addResourceWithType:PHAssetResourceTypeVideo
+                                                      fileURL:self.outputURL
+                                                     options:nil];
+                            } completionHandler:^(BOOL success, NSError * _Nullable error) {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    if (success) {
+                                        [self showAlertWithTitle:@"保存成功" message:@"视频已保存到相册"];
+                                    } else {
+                                        [self showAlertWithTitle:@"保存失败" message:error.localizedDescription];
+                                    }
+                                });
+                            }];
+                        } else {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self showAlertWithTitle:@"无权限" message:@"请前往设置开启相册权限"];
+                            });
+                        }
+                    }];
+                } else {
+                    NSLog(@"Export failed: %ld", self->_assetWriter.status);
+                }
+            }];
+        });
+        
+    }
+}
+
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction* _Nonnull action) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            // 在这里执行您需要在视图控制器关闭后进行的操作
+            [self.tsr_pass_standard deInit];
+            [self.tsr_pass_standard_ext deInit];
+            [self.tsr_pass_professional deInit];
+            [self.tsr_pass_professional_ext deInit];
+            [self.tie_pass_standard deInit];
+            [self.tie_pass_professional deInit];
+            [TSRSdk.getInstance deInit];
+            
+            // 停止显示链接
+            if (self->_displayLink) {
+                [self->_displayLink invalidate];
+                self->_displayLink = nil;
+            }
+        }];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
@@ -557,7 +1050,11 @@ bool enable = false;
             self->_outputHeight = viewHeight;
             rect = CGRectMake(0, 0, viewWidth / 3, viewHeight / 3);
         }
-        self->_glkView.frame = rect;
+        if (!_isUseMetal) {
+            self->_glkView.frame = rect;
+        } else {
+            self->_mtkView.frame = rect;
+        }
     } completion:nil];
 }
 

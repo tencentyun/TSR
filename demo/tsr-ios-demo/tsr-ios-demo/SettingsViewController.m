@@ -10,6 +10,7 @@
 @property (strong, nonatomic) UIButton *showCollectionViewButton;
 @property (strong, nonatomic) UIButton *chooseFileButton;
 @property (strong, nonatomic) UIButton *startPlayButton;
+@property (strong, nonatomic) UIButton *startExportButton;
 @property (nonatomic, strong) NSURL *selectedVideoURL;
 @property (nonatomic, strong) UILabel *videoNameLabel;
 @property (nonatomic, strong) UISegmentedControl *resolutionRatioControl;
@@ -46,7 +47,7 @@
     [self.view addSubview:self.videoNameLabel];
     
     // 初始化数据
-    self.data = @[@"4K", @"1080P", @"864P", @"720P", @"576P", @"540P", @"girl-544x960"];
+    self.data = @[@"1080P", @"864P", @"720P", @"576P", @"540P", @"girl-544x960"];
     
     // 创建并设置UICollectionViewFlowLayout
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -112,9 +113,9 @@
     _srLabel.text = @"放大倍数";
     [self.view addSubview:_srLabel];
     // 添加超分辨率倍率选择器
-    NSArray *resolutionRatios = @[@"1.0", @"1.25", @"1.5", @"1.7", @"2.0", @"auto"];
+    NSArray *resolutionRatios = @[@"1.0", @"1.25", @"1.5", @"2.0", @"3.0", @"auto"];
     top += 50;
-    self.resolutionRatioControl = [[UISegmentedControl alloc] initWithItems:resolutionRatios]; self.resolutionRatioControl.frame = CGRectMake(left, top, self.view.bounds.size.width - 40, 50); self.resolutionRatioControl.selectedSegmentIndex = 4; // 默认选择2.0
+    self.resolutionRatioControl = [[UISegmentedControl alloc] initWithItems:resolutionRatios]; self.resolutionRatioControl.frame = CGRectMake(left, top, self.view.bounds.size.width - 40, 50); self.resolutionRatioControl.selectedSegmentIndex = 5; // 默认选择auto
     [self.view addSubview:self.resolutionRatioControl];
     // 分割线
     top += 70;
@@ -129,6 +130,13 @@
     [self.startPlayButton addTarget:self action:@selector(playVideoButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.startPlayButton.frame = CGRectMake([UIScreen mainScreen].bounds.size.width / 2 - 50, top, 100, 50);
     [self.view addSubview:self.startPlayButton];
+    
+    top += 50;
+    self.startExportButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.startExportButton setTitle:@"导出视频" forState:UIControlStateNormal];
+    [self.startExportButton addTarget:self action:@selector(exportVideoButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    self.startExportButton.frame = CGRectMake([UIScreen mainScreen].bounds.size.width / 2 - 50, top, 100, 50);
+    [self.view addSubview:self.startExportButton];
     
     // 创建并设置覆盖其他控件的视图
     self.overlayView = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -148,6 +156,14 @@
 }
 
 - (void)playVideoButtonTapped:(id)sender {
+    [self initPlayerView:sender isRecording:false];
+}
+
+- (void)exportVideoButtonTapped:(id)sender {
+    [self initPlayerView:sender isRecording:true];
+}
+
+-(void)initPlayerView: (id)sender isRecording: (BOOL)isRecording {
     // 获取选中的算法
     NSInteger selectedAlgorithmIndex = [self.algorithmPickerView selectedRowInComponent:0];
     NSString *selectedAlgorithm = self.algorithmOptions[selectedAlgorithmIndex];
@@ -164,7 +180,7 @@
     NSLog(@"Selected resolution ratio: %@", selectedResolutionRatio);
     
     // 显示 ViewController
-    VideoPlayViewController *videoPlayVC = [[VideoPlayViewController alloc] initWithVideoURL:self.selectedVideoURL srRatio:srRatio algorithm:selectedAlgorithm];
+    VideoPlayViewController *videoPlayVC = [[VideoPlayViewController alloc] initWithVideoURL:self.selectedVideoURL srRatio:srRatio algorithm:selectedAlgorithm isRecording:isRecording];
     videoPlayVC.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:videoPlayVC animated:YES completion:nil];
 }
