@@ -266,6 +266,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         Algorithm.initializeDescriptions(mContext);
 
