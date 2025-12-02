@@ -14,7 +14,7 @@ android {
         versionName libs.versions.versionName.get()
 
         // 注入到 BuildConfig
-        buildConfigField "int", "APP_ID", gradle.ext.App_Id?.toString() ?: "0"
+        buildConfigField "long", "APP_ID", gradle.ext.App_Id?.toString() ?: "0"
         buildConfigField "int", "AUTH_ID", gradle.ext.Auth_Id?.toString() ?: "0"
 
         ndk {

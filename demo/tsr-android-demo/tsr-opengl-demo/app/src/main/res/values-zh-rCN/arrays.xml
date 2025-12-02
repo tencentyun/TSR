@@ -1,14 +1,6 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="video_names">
-        <item>360P-100-h265.mp4</item>
-        <item>480P-200-h265.mp4</item>
-        <item>720P-300-h265.mp4</item>
-        <item>1080P-400-h265.mp4</item>
-        <item>360P-100.mp4</item>
-        <item>480P-200.mp4</item>
-        <item>720P-300.mp4</item>
-        <item>1080P-400.mp4</item>
         <item>270x480.mp4</item>
         <item>360x640.mp4</item>
         <item>640x480.mp4</item>

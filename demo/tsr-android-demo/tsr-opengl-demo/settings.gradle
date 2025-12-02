@@ -44,12 +44,12 @@ def readLocalProperties = { propFile, key ->
     return result
 }
 // 先将变量挂载到 gradle.ext 全局对象，以便其他模块使用
-gradle.ext.App_Id = readLocalProperties('local.properties', 'App_Id')?.toInteger()
+gradle.ext.App_Id = readLocalProperties('local.properties', 'App_Id')?.toLong()
 gradle.ext.Auth_Id = readLocalProperties('local.properties', 'Auth_Id')?.toInteger()
 gradle.ext.use_local_module_TsrSdk = readLocalProperties('local.properties', 'use_local_module_TsrSdk')?.toBoolean()
 if (gradle.ext.use_local_module_TsrSdk) {
     include ':TsrSdk'
-    project(':TsrSdk').projectDir = new File('../../../cloud_gaming_android/SRPlayer/android/Tsrsdk')
+    project(':TsrSdk').projectDir = new File('../../../../cloud_gaming_android/SRPlayer/android/Tsrsdk')
     include ':QneWrap'
-    project(':QneWrap').projectDir = new File('../../../cloud_gaming_android/SRPlayer/android/QneWrap')
+    project(':QneWrap').projectDir = new File('../../../../cloud_gaming_android/SRPlayer/android/QneWrap')
 }
