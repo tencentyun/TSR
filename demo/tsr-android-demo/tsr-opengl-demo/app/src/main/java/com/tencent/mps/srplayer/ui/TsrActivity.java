@@ -516,7 +516,7 @@ public class TsrActivity extends AppCompatActivity implements GLSurfaceView.Rend
             Map<String, Object> config = new HashMap<>();
             config.put(RenderPassConfig.ALGORITHM_TYPE, TSRPass.TSRAlgorithmType.PROFESSIONAL_COLOR_RETOUCHING_EXT);
             config.put(RenderPassConfig.MAX_INPUT_WIDTH, mFrameWidth);
-            config.put(RenderPassConfig.MAX_INPUT_HEIGHT, mFrameWidth);
+            config.put(RenderPassConfig.MAX_INPUT_HEIGHT, mFrameHeight);
             mTSRPassCmp = new TSRPass(config);
         } else if (mCompareAlgorithm == Algorithm.IE_STD) {
             Map<String, Object> config = new HashMap<>();
