@@ -7,10 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		446388CA2F0FBEE200A26AA7 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 446388C92F0FBEE200A26AA7 /* Config.xcconfig */; };
+		44B79A682F0A577B0016CC16 /* tsr_client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B79A662F0A576E0016CC16 /* tsr_client.framework */; };
+		44B79A692F0A577B0016CC16 /* tsr_client.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44B79A662F0A576E0016CC16 /* tsr_client.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		44B79A792F0E10C20016CC16 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B79A782F0E10C20016CC16 /* MainViewController.m */; };
+		44B79A902F0E47CD0016CC16 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B79A8F2F0E47CD0016CC16 /* ProfileViewController.m */; };
+		44B8EF552F3ACE93004E2CC4 /* 1920x1080.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 44B8EF542F3ACE93004E2CC4 /* 1920x1080.mp4 */; };
+		44B8EF562F3ACE93004E2CC4 /* 480x854.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 44B8EF502F3ACE93004E2CC4 /* 480x854.mp4 */; };
+		44B8EF572F3ACE93004E2CC4 /* 1280x720.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 44B8EF532F3ACE93004E2CC4 /* 1280x720.mp4 */; };
+		44B8EF582F3ACE93004E2CC4 /* 720x1280.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 44B8EF512F3ACE93004E2CC4 /* 720x1280.mp4 */; };
+		44B8EF592F3ACE93004E2CC4 /* 854x480.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 44B8EF522F3ACE93004E2CC4 /* 854x480.mp4 */; };
 		4D02E2142B6365DA0019EA2F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D02E2132B6365DA0019EA2F /* SettingsViewController.m */; };
 		4D1E68E82B67C6E200B8FA8E /* Logger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E68E72B67C6E200B8FA8E /* Logger.m */; };
 		4D2411742B60C1D000720192 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411732B60C1D000720192 /* AppDelegate.m */; };
-		4D2411772B60C1D000720192 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411762B60C1D000720192 /* SceneDelegate.m */; };
 		4D24117A2B60C1D000720192 /* VideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411792B60C1D000720192 /* VideoPlayViewController.m */; };
 		4D24117D2B60C1D000720192 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D24117B2B60C1D000720192 /* Main.storyboard */; };
 		4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D24117E2B60C1D200720192 /* Assets.xcassets */; };
@@ -19,13 +28,7 @@
 		4D24118F2B60C1D300720192 /* tsr_ios_demoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D24118E2B60C1D300720192 /* tsr_ios_demoTests.m */; };
 		4D2411992B60C1D300720192 /* tsr_ios_demoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411982B60C1D300720192 /* tsr_ios_demoUITests.m */; };
 		4D24119B2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */; };
-		4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D2411A72B60C1F800720192 /* girl-544x960.mp4 */; };
 		4D2411AA2B60C21100720192 /* shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411A92B60C21100720192 /* shader.metal */; };
-		4D38C76E2BB1561D00A57626 /* 540P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C7682BB155FF00A57626 /* 540P.mp4 */; };
-		4D38C76F2BB1561D00A57626 /* 1080P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C7692BB1560500A57626 /* 1080P.mp4 */; };
-		4D38C7702BB1561D00A57626 /* 720P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76A2BB1560C00A57626 /* 720P.mp4 */; };
-		4D38C7722BB1561D00A57626 /* 864P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76C2BB1561900A57626 /* 864P.mp4 */; };
-		4D38C7732BB1561D00A57626 /* 576P.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D38C76D2BB1561D00A57626 /* 576P.mp4 */; };
 		4D812D652D6DBE220097ED2C /* VideoRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D812D642D6DBE220097ED2C /* VideoRenderer.m */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +56,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				44B79A692F0A577B0016CC16 /* tsr_client.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -60,6 +64,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		446388C92F0FBEE200A26AA7 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		44B79A662F0A576E0016CC16 /* tsr_client.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = tsr_client.framework; sourceTree = "<group>"; };
+		44B79A772F0E10B80016CC16 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		44B79A782F0E10C20016CC16 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		44B79A8E2F0E47CD0016CC16 /* ProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
+		44B79A8F2F0E47CD0016CC16 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		44B8EF502F3ACE93004E2CC4 /* 480x854.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 480x854.mp4; sourceTree = "<group>"; };
+		44B8EF512F3ACE93004E2CC4 /* 720x1280.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720x1280.mp4; sourceTree = "<group>"; };
+		44B8EF522F3ACE93004E2CC4 /* 854x480.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 854x480.mp4; sourceTree = "<group>"; };
+		44B8EF532F3ACE93004E2CC4 /* 1280x720.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1280x720.mp4; sourceTree = "<group>"; };
+		44B8EF542F3ACE93004E2CC4 /* 1920x1080.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1920x1080.mp4; sourceTree = "<group>"; };
 		4D02E2122B6365A90019EA2F /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		4D02E2132B6365DA0019EA2F /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		4D1E68E52B67C6BB00B8FA8E /* Logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
@@ -67,13 +82,11 @@
 		4D24116F2B60C1D000720192 /* tsr-ios-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tsr-ios-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D2411722B60C1D000720192 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4D2411732B60C1D000720192 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		4D2411752B60C1D000720192 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		4D2411762B60C1D000720192 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		4D2411782B60C1D000720192 /* VideoPlayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoPlayViewController.h; sourceTree = "<group>"; };
 		4D2411792B60C1D000720192 /* VideoPlayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoPlayViewController.m; sourceTree = "<group>"; };
-		4D24117C2B60C1D000720192 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4D24117C2B60C1D000720192 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		4D24117E2B60C1D200720192 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4D2411812B60C1D200720192 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		4D2411812B60C1D200720192 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4D2411832B60C1D200720192 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D2411842B60C1D200720192 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4D24118A2B60C1D300720192 /* tsr-ios-demoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tsr-ios-demoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,13 +94,7 @@
 		4D2411942B60C1D300720192 /* tsr-ios-demoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "tsr-ios-demoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D2411982B60C1D300720192 /* tsr_ios_demoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tsr_ios_demoUITests.m; sourceTree = "<group>"; };
 		4D24119A2B60C1D300720192 /* tsr_ios_demoUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tsr_ios_demoUITestsLaunchTests.m; sourceTree = "<group>"; };
-		4D2411A72B60C1F800720192 /* girl-544x960.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "girl-544x960.mp4"; sourceTree = "<group>"; };
 		4D2411A92B60C21100720192 /* shader.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = shader.metal; sourceTree = "<group>"; };
-		4D38C7682BB155FF00A57626 /* 540P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 540P.mp4; sourceTree = "<group>"; };
-		4D38C7692BB1560500A57626 /* 1080P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1080P.mp4; sourceTree = "<group>"; };
-		4D38C76A2BB1560C00A57626 /* 720P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720P.mp4; sourceTree = "<group>"; };
-		4D38C76C2BB1561900A57626 /* 864P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 864P.mp4; sourceTree = "<group>"; };
-		4D38C76D2BB1561D00A57626 /* 576P.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 576P.mp4; sourceTree = "<group>"; };
 		4D812D622D6DBE060097ED2C /* VideoRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoRenderer.h; sourceTree = "<group>"; };
 		4D812D642D6DBE220097ED2C /* VideoRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoRenderer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -97,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44B79A682F0A577B0016CC16 /* tsr_client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +125,84 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		446388A62F0FB84000A26AA7 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				4D2411832B60C1D200720192 /* Info.plist */,
+				4D2411842B60C1D200720192 /* main.m */,
+				4D2411722B60C1D000720192 /* AppDelegate.h */,
+				4D2411732B60C1D000720192 /* AppDelegate.m */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		446388A72F0FB84700A26AA7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4D24117E2B60C1D200720192 /* Assets.xcassets */,
+				446388AA2F0FB88B00A26AA7 /* Base.lproj */,
+				446388AC2F0FB8CE00A26AA7 /* Shaders */,
+				446388C02F0FB95A00A26AA7 /* Videos */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		446388A82F0FB84C00A26AA7 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				44B79A772F0E10B80016CC16 /* MainViewController.h */,
+				44B79A782F0E10C20016CC16 /* MainViewController.m */,
+				44B79A8E2F0E47CD0016CC16 /* ProfileViewController.h */,
+				44B79A8F2F0E47CD0016CC16 /* ProfileViewController.m */,
+				4D02E2122B6365A90019EA2F /* SettingsViewController.h */,
+				4D02E2132B6365DA0019EA2F /* SettingsViewController.m */,
+				4D2411782B60C1D000720192 /* VideoPlayViewController.h */,
+				4D2411792B60C1D000720192 /* VideoPlayViewController.m */,
+				4D812D622D6DBE060097ED2C /* VideoRenderer.h */,
+				4D812D642D6DBE220097ED2C /* VideoRenderer.m */,
+				4D1E68E52B67C6BB00B8FA8E /* Logger.h */,
+				4D1E68E72B67C6E200B8FA8E /* Logger.m */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		446388A92F0FB87700A26AA7 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				446388C92F0FBEE200A26AA7 /* Config.xcconfig */,
+			);
+			path = Configurations;
+			sourceTree = "<group>";
+		};
+		446388AA2F0FB88B00A26AA7 /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				4D24117B2B60C1D000720192 /* Main.storyboard */,
+				4D2411802B60C1D200720192 /* LaunchScreen.storyboard */,
+			);
+			path = Base.lproj;
+			sourceTree = "<group>";
+		};
+		446388AC2F0FB8CE00A26AA7 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				4D2411A92B60C21100720192 /* shader.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		446388C02F0FB95A00A26AA7 /* Videos */ = {
+			isa = PBXGroup;
+			children = (
+				44B8EF502F3ACE93004E2CC4 /* 480x854.mp4 */,
+				44B8EF512F3ACE93004E2CC4 /* 720x1280.mp4 */,
+				44B8EF522F3ACE93004E2CC4 /* 854x480.mp4 */,
+				44B8EF532F3ACE93004E2CC4 /* 1280x720.mp4 */,
+				44B8EF542F3ACE93004E2CC4 /* 1920x1080.mp4 */,
+			);
+			path = Videos;
+			sourceTree = "<group>";
+		};
 		4D2411662B60C1D000720192 = {
 			isa = PBXGroup;
 			children = (
@@ -141,30 +227,10 @@
 		4D2411712B60C1D000720192 /* tsr-ios-demo */ = {
 			isa = PBXGroup;
 			children = (
-				4D38C7682BB155FF00A57626 /* 540P.mp4 */,
-				4D38C76D2BB1561D00A57626 /* 576P.mp4 */,
-				4D38C76A2BB1560C00A57626 /* 720P.mp4 */,
-				4D38C76C2BB1561900A57626 /* 864P.mp4 */,
-				4D38C7692BB1560500A57626 /* 1080P.mp4 */,
-				4D2411A92B60C21100720192 /* shader.metal */,
-				4D2411A72B60C1F800720192 /* girl-544x960.mp4 */,
-				4D2411722B60C1D000720192 /* AppDelegate.h */,
-				4D2411732B60C1D000720192 /* AppDelegate.m */,
-				4D2411752B60C1D000720192 /* SceneDelegate.h */,
-				4D2411762B60C1D000720192 /* SceneDelegate.m */,
-				4D2411782B60C1D000720192 /* VideoPlayViewController.h */,
-				4D2411792B60C1D000720192 /* VideoPlayViewController.m */,
-				4D24117B2B60C1D000720192 /* Main.storyboard */,
-				4D24117E2B60C1D200720192 /* Assets.xcassets */,
-				4D2411802B60C1D200720192 /* LaunchScreen.storyboard */,
-				4D2411832B60C1D200720192 /* Info.plist */,
-				4D2411842B60C1D200720192 /* main.m */,
-				4D02E2122B6365A90019EA2F /* SettingsViewController.h */,
-				4D02E2132B6365DA0019EA2F /* SettingsViewController.m */,
-				4D1E68E52B67C6BB00B8FA8E /* Logger.h */,
-				4D1E68E72B67C6E200B8FA8E /* Logger.m */,
-				4D812D622D6DBE060097ED2C /* VideoRenderer.h */,
-				4D812D642D6DBE220097ED2C /* VideoRenderer.m */,
+				446388A62F0FB84000A26AA7 /* Application */,
+				446388A72F0FB84700A26AA7 /* Resources */,
+				446388A82F0FB84C00A26AA7 /* Modules */,
+				446388A92F0FB87700A26AA7 /* Configurations */,
 			);
 			path = "tsr-ios-demo";
 			sourceTree = "<group>";
@@ -189,6 +255,7 @@
 		4DB63CEE2B625D5300E563DE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44B79A662F0A576E0016CC16 /* tsr_client.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -297,15 +364,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D38C7702BB1561D00A57626 /* 720P.mp4 in Resources */,
 				4D2411822B60C1D200720192 /* LaunchScreen.storyboard in Resources */,
-				4D38C76F2BB1561D00A57626 /* 1080P.mp4 in Resources */,
+				446388CA2F0FBEE200A26AA7 /* Config.xcconfig in Resources */,
 				4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */,
-				4D38C76E2BB1561D00A57626 /* 540P.mp4 in Resources */,
-				4D2411A82B60C1F900720192 /* girl-544x960.mp4 in Resources */,
 				4D24117D2B60C1D000720192 /* Main.storyboard in Resources */,
-				4D38C7722BB1561D00A57626 /* 864P.mp4 in Resources */,
-				4D38C7732BB1561D00A57626 /* 576P.mp4 in Resources */,
+				44B8EF552F3ACE93004E2CC4 /* 1920x1080.mp4 in Resources */,
+				44B8EF562F3ACE93004E2CC4 /* 480x854.mp4 in Resources */,
+				44B8EF572F3ACE93004E2CC4 /* 1280x720.mp4 in Resources */,
+				44B8EF582F3ACE93004E2CC4 /* 720x1280.mp4 in Resources */,
+				44B8EF592F3ACE93004E2CC4 /* 854x480.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,11 +398,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D812D652D6DBE220097ED2C /* VideoRenderer.m in Sources */,
+				44B79A902F0E47CD0016CC16 /* ProfileViewController.m in Sources */,
 				4D24117A2B60C1D000720192 /* VideoPlayViewController.m in Sources */,
 				4D2411742B60C1D000720192 /* AppDelegate.m in Sources */,
 				4D2411852B60C1D200720192 /* main.m in Sources */,
+				44B79A792F0E10C20016CC16 /* MainViewController.m in Sources */,
 				4D02E2142B6365DA0019EA2F /* SettingsViewController.m in Sources */,
-				4D2411772B60C1D000720192 /* SceneDelegate.m in Sources */,
 				4D1E68E82B67C6E200B8FA8E /* Logger.m in Sources */,
 				4D2411AA2B60C21100720192 /* shader.metal in Sources */,
 			);
@@ -395,6 +463,7 @@
 /* Begin XCBuildConfiguration section */
 		4D24119C2B60C1D300720192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 446388C92F0FBEE200A26AA7 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -456,6 +525,7 @@
 		};
 		4D24119D2B60C1D300720192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 446388C92F0FBEE200A26AA7 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -515,16 +585,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KN7WY94HU7;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = FN2V63AD2J;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/tsr-ios-demo",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "tsr-ios-demo/Info.plist";
+				INFOPLIST_FILE = "tsr-ios-demo/Application/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -541,9 +613,10 @@
 					"-fprofile-instr-generate",
 					"-lstdc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.mps.srplayer;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "com.tencent.mps.tsr-ios-demo_Development_SignProvision";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -555,16 +628,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = KN7WY94HU7;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = FN2V63AD2J;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/tsr-ios-demo",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "tsr-ios-demo/Info.plist";
+				INFOPLIST_FILE = "tsr-ios-demo/Application/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -581,9 +656,10 @@
 					"-fprofile-instr-generate",
 					"-lstdc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.mps.srplayer;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tencent.mps.tsr-ios-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "com.tencent.mps.tsr-ios-demo_Development_SignProvision";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

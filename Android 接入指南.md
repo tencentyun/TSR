@@ -1,13 +1,14 @@
-# **1 快速开始**
-## 1.1 **SDK授权申请**
-请先在腾讯云官网开通 媒体处理 [控制台](https://console.cloud.tencent.com/mps)。然后根据[指南](https://cloud.tencent.com/document/product/862/109789)，自助开通SDK测试授权，获取 授权ID。    
+# 1 运行 Demo
+## 1.1 SDK授权申请
+请先在腾讯云官网开通 媒体处理 [控制台](https://console.cloud.tencent.com/mps)。然后根据[指南](https://cloud.tencent.com/document/product/862/109789)，自助开通SDK测试授权，获取 授权ID，绑定 App 包名。    
 <img src="./docs/license.png" height="100">    
 在 腾讯云-账号中心-[账号信息](https://console.cloud.tencent.com/developer)，获取你的账号的 APPID。    
 <img src="./docs/APPID.png" height="100">    
 
-## 1.2 **Demo工程编译运行**
-下载Demo工程[源码](https://github.com/tencentyun/TSR/tree/main/demo/tsr-android-demo)。    
-将前面“SDK授权申请”步骤获取的 授权ID 和 APPID，配置到Demo工程里：可以在工程根目录下的 local.properties 文件里添加
+## 1.2 Demo工程编译运行
+下载Demo工程[源码](./demo/tsr-android-demo/tsr-opengl-demo)。    
+将 Demo 包名修改为前面“SDK授权申请”步骤绑定的包名。    
+将获取的 授权ID 和 APPID，配置到Demo工程里：可以在工程根目录下的 local.properties 文件里添加
 ```
 App_Id=你的APPID
 Auth_Id=你的授权ID
@@ -16,11 +17,12 @@ Auth_Id=你的授权ID
 <img src="./docs/verification-params.png">    
 然后就可以编译运行 Demo 了。
 
-*备注：Demo工程的 ./SRPlayer/app/libs 文件夹下的 SDK 文件可能较旧，可以联系你的腾讯云商务代表获取最新版本。*
+*备注：Demo工程的 ./SRPlayer/app/libs 文件夹下的 SDK 版本可能较旧，可以联系你的腾讯云商务代表获取最新版本。*
 
+---
 
-# **2 App 接入 TcrSdk 指南**
-## **2.1 添加和配置 TcrSdk**
+# 2 App 接入 SDK
+## 2.1 添加和配置 SDK
 
 将 TsrSdk 的相关 AAR 放入 App 工程的 libs 文件夹下。
 在 App 的 build.gradle 中配置
@@ -59,7 +61,10 @@ dependencies {
          android:required="false" />
  </application>
 ```
-## **2.2 程序流程**
+
+---
+
+## 2.2 使用 SDK
 <img src=./docs/tsr-work-flow.png width=50% />
 
 ### **2.2.1 TSRSdk**
@@ -81,13 +86,7 @@ dependencies {
 ```
 
 
-2. 当您已经不需要使用TSRSdk时，需要调用TSRSdk的deInit方法，释放资源。<font color="red">**注意：在调用TSRSdk的deInit方法前，确保所有TSRPass已经释放资源，否则会有意想不到的问题。**</font>
-```
-  // If you have created TSRPass, you should release it before release TSRSdk.
-  tsrPass.deInit();
-  // Release resources when the TSRSdk object is no longer needed.
-  TSRSdk.getInstance().deInit();
-```
+2. 当您已经不需要使用TSRSdk时，可以调用TSRSdk的deInit方法。
 
 ### **2.2.2 TSRPass**
 [TSRPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRPass.html) 是用于进行超分辨率渲染的类，在创建 TSRPass 时，您需要传入 TSRAlgorithmType 设置超分的算法类型。
@@ -212,7 +211,7 @@ TIEPass类提供了接口用于管理和优化图像增强过程中的专业版�
 ### **2.2.4 TSRLogger**
 [TSRLogger](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRLogger.html)用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
 
-# **3 SDK API描述**
+# **3 SDK 接口文档**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
 [TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/latest/index.html)

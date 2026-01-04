@@ -1,50 +1,35 @@
-# **1 快速开始**
-## 1.1 **SDK授权申请**
-### 1.1.1 **授权所需信息**
-请联系您的腾讯云商务开通服务。您需要提供将要集成SDK的APP的这些信息：**腾讯云账号APPID**、**APP的Bundle Identifier**。
+# 1 运行 Demo
+## 1.1 SDK授权申请
+请先在腾讯云官网开通 媒体处理 [控制台](https://console.cloud.tencent.com/mps)。然后根据[指南](https://cloud.tencent.com/document/product/862/109789)，自助开通SDK测试授权，获取 授权ID，绑定 App 包名。    
+<img src="./docs/license.png" height="100">    
+在 腾讯云-账号中心-[账号信息](https://console.cloud.tencent.com/developer)，获取你的账号的 APPID。    
+<img src="./docs/APPID.png" height="100">    
 
-* APPID可以在您的腾讯云【账号中心】->【账号信息】->【基本信息】中查看。
-* Bundle Identifier可以在xcode项目中的【TARGETS】-> 【General】-> 【Identity】-> 【Bundle Identifier】查看。
+## 1.2 Demo工程编译运行
+下载Demo工程[源码](./demo/tsr-ios-demo)。    
+将 Demo 包名修改为前面“SDK授权申请”步骤绑定的包名。    
+将 Configurations 目录下的 Config.xcconfig.example 文件重命名为 Config.xcconfig 文件，并修改文件内容，填入你获取的 授权ID 和 APPID。
+然后就可以编译运行 Demo 了。
 
-#### 例：提供的信息
-|信息|值|
-| ------ | ----------- |
-|APPID|12345678|
-|Bundle Identifier|com.tencent.mps.ios-demo|
-|SDK版本|标准版/专业版|
+*备注：Demo工程集成的 SDK 版本可能较旧，可以联系你的腾讯云商务代表获取最新版本。*
 
-授权方案分为授权申请和授权验证两个过程，其中授权申请在授权有效期内，只会进行一次。授权服务开通后，您可以在初始化TSRSDK时使用在线方式进行鉴权，APP需要有访问网络权限。授权服务具有有效期限，当授权过期失效后需要重新获取授权。
-
-### **1.1.2 开通测试授权**
-为了服务能够正常授权，您还需要在腾讯云官网开通【媒体处理（MPS）控制台】。开通链接：https://console.cloud.tencent.com/mps
-
-开通【媒体处理（MPS）控制台】后，可以参照[文档教程](https://doc.weixin.qq.com/doc/w3_AOcASwZGACk0FEPdUPJSfWATJijrR?scode=AJEAIQdfAAoiwZesQAAcEALgZGALo)。的方式，自行开通测试授权。
-
-## 1.2 **Demo工程编译运行**
-
-下载Demo工程的[源码](https://github.com/tencentyun/TSR/tree/main/demo/tsr-ios-demo)。
-
-修改demo的Bundle Ientifier，并将Bundle Ientifier提供给腾讯云商务，参考前面“SDK授权申请”步骤，获取SDK和授权文件，配置到Demo工程中。操作如下：
-1. 使用xcode打开工程项目，将sdk拖入工程的目录下。勾选Copy items if needed，并检查Link Binary With Libraries是否已经包含sdk
-   ![ios-demo-step1-1](./docs/ios-demo-step1-1.png)
-   ![ios-demo-step1-2](./docs/ios-demo-step1-2.png)
-   ![ios-demo-step1-3](./docs/ios-demo-step1-3.png)
-2. 在【TARGETS】-> 【General】-> 【Frameworks, Libraries, and Embedded Content】中设置SDK的【Embed】为"Embed & Sign"
-   ![ios-demo-step2](./docs/ios-demo-step2.png)
-3. 将证书拖入工程目录的tsr-ios-demo下，并确认【Target Membembership】已勾选。
-4. 在VideoPlayViewController.h中填写appId
-   ![ios-demo-step4](./docs/ios-demo-step4.png)
-5. 运行demo
-
-## **1.3 Demo App体验**
-暂无
+---
 
 
-# 2 **SDK接入指南**
-## **2.1 程序流程**
+# 2 **App 接入 SDK**
+## 2.1 添加和配置 SDK
+将 tsr_client.framework 添加到您的 Xcode 工程中：
+1. 将 tsr_client.framework 拖拽到工程的 Frameworks 目录下。
+2. 在工程的 **General → Frameworks, Libraries, and Embedded Content** 中，将 tsr_client.framework 设置为 **Embed & Sign**。
+
+## **2.2 使用 SDK**
+建议参考Demo工程里的[MainViewController.m](./demo/tsr-ios-demo/tsr-ios-demo/Modules/MainViewController.m)类 和 [ProfileViewController.m](./demo/tsr-ios-demo/tsr-ios-demo/Modules/ProfileViewController.m)类，以最简单的方式初始化和使用 SDK。
+
+以下是一些接口的详细说明。
+
 <img src=./docs/tsr-work-flow.png width=50% />
 
-### **2.1.1 TSRSdk**
+### **2.2.1 TSRSdk**
 TSRSdk包括`initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:`和`deInit`两个方法。`initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:`方法用于初始化SDK，`deInit`方法用于释放资源。
 1. 在线鉴权初始化TSRSdk，您需要传入**APPID和AUTH_ID**用于鉴权，`initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:`需要传入TSRSdkLicenseVerifyResultCallback用于获取在线鉴权的结果，除此之外，还需要传入一个 TSRLogger，用于获取SDK的日志。下面是示例代码：
 ```
@@ -60,13 +45,9 @@ TSRSdk包括`initWithAppId:authId:sdkLicenseVerifyResultCallback:tsrLogger:`和`
 [TSRSdk.getInstance initWithAppId:APPID authId:AUTH_ID sdkLicenseVerifyResultCallback:self tsrLogger:[[Logger alloc] init]];
 ```
 
+2. 当您已经不需要使用TSRSdk时，可以调用TSRSdk的deInit方法。
 
-2. 当您已经不需要使用TSRSdk时，需要调用TSRSdk的deInit方法，释放资源。
-```
-// Release resources when the TSRSdk object is no longer needed.
-[TSRSdk.getInstance deInit];
-```
-### **2.1.2 TSRPass**
+### **2.2.2 TSRPass**
 
 TSRPass是用于进行超分辨率渲染的类，它包括了`init`、`render`和`reInit`方法。在创建TSRPass时，您需要传入`TSRAlgorithmType`设置超分的算法类型。
 
@@ -132,7 +113,7 @@ TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的�
 
 这些接口为开发者提供了灵活的控制选项，以优化超分辨率渲染的性能和用户体验。
 
-### **2.1.3 TIEPass**
+### **2.2.3 TIEPass**
 TIEPass是用于进行图像增强渲染的类，**只在专业版SDK可用**。它包括`init`、`render`、`renderWithPixelBuffer`、`reInit`和`deInit`方法。在使用TIEPass前，您需要调用`init`方法进行初始化。在创建TIEPass时，您需要传入`TIEAlgorithmType`设置图像增强的算法类型。
 
 **注意：**
@@ -185,10 +166,10 @@ TIEPass类还提供了接口用于管理和优化图像增强过程中的专业�
 
 这些接口为开发者提供了灵活的控制选项，以优化图像增强的性能和用户体验。
 
-### **2.1.4 TSRLogger**
+### **2.2.4 TSRLogger**
 TSRLogger用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
 
-# **3 SDK API描述**
+# **3 SDK 接口文档**
 您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
 
 [TSRSDK IOS API文档](https://tencentyun.github.io/TSR/ios-docs/latest/index.html)
