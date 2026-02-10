@@ -1,32 +1,52 @@
-# **1 Quick Start**
-## 1.1 **SDK Authorization Application**
-In order for the service to authorize normally, you also need to open the【Media Processing (MPS) Console】on the Tencent Cloud official website. Open link: https://console.cloud.tencent.com/mps
+# 1 Run the Demo
+## 1.1 SDK Authorization Application
+Please first activate the Media Processing Service (MPS) [Console](https://console.cloud.tencent.com/mps) on the Tencent Cloud official website. Then follow the [guide](https://cloud.tencent.com/document/product/862/109789) to self-service activate SDK test authorization, obtain the Authorization ID, and bindthe App package name.    
+<img src="./docs/license.png" height="100">    
+In Tencent Cloud - Account Center - [Account Information](https://console.cloud.tencent.com/developer), obtain your account's APPID.    
+<img src="./docs/APPID.png" height="100">    
 
-## 1.2 **Demo Project Compilation and Running**
+## 1.2 Demo Project Compilation and Running
+Download the Demo project [source code](./demo/tsr-android-demo/tsr-opengl-demo).    
+Change the Demo package name to the package name bound in the previous "SDK Authorization Application" step.    
+Configure the obtained Authorization ID and APPID into the Demo project: you can add them in the local.properties file under the project root directory
+```
+App_Id=your_APPID
+Auth_Id=your_Authorization_ID
+```
+Or you can also write them directly in the TsrSdkHelper.java file of the project    
+<img src="./docs/verification-params.png">    
+Then you can compile and run the Demo.
 
-Download the [source code](https://github.com/tencentyun/TSR/tree/offline-verification/demo/tsr-android-demo) of the Demo project.
+*Note: The SDK version in the ./SRPlayer/app/libs folder of the Demo project may be outdated. You can contact your Tencent Cloud business representative to obtain the latest version.*
 
-Configure the SDK and authorization file obtained in the "SDK Authorization Application" step into the Demo project. The operation is as follows:
+---
 
-1. Put the SDK in the ./SRPlayer/app/libs folder of the project.
+# 2 App SDK Integration
+## 2.1 Add and Configure SDK
 
-2. Configure the initialization parameters under MainActivity.java, and APPID of Tencent Cloud is required for verification initialization.
+Place the TsrSdk related AAR files into the libs folder of the App project.
+Configure in the App's build.gradle:
+```
+android {
+    packagingOptions {
+        // If there are multiple, only one needs to be integrated.
+        pickFirst '**/libc++_shared.so'
+        // Must declare excluding this so
+        excludes += ['**/libqqneuroedge*.so']
+        // If the app does not use libmmkv.so, you can exclude the armeabi-v7a architecture to reduce package size. Note that the arm64-v8a architecture must be retained.
+        excludes += ['**/armeabi-v7a/libmmkv.so']
+    }
+}
 
-   ![verification-params.png](./docs/verification-params.png)
+dependencies {
+     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+}
+```
+Configure in AndroidManifest.xml:
+```
+ <uses-permission android:name="android.permission.INTERNET"/>
 
-3. Run the demo
-
-## **1.3 Demo App Experience**
-The following is the compiled App installation package of the Demo project, which can be [downloaded](https://cg-sdk-1258344699.cos.ap-nanjing.myqcloud.com/tsr/pro-demo-android/SRPlayer.apk) and installed directly for experience.
-
-<img src=./docs/android-demo-qrcode.png width=16% />
-
-# **2 SDK Access Guide**
-## **2.1 Add permissions to the App project**
-``` 
-<uses-permission android:name="android.permission.INTERNET"/>
-
-// If Android targetSdkVersion is greater than or equal to 31, you need to add the following tags, otherwise the professional version features will not be available
+ // If Android targetSdkVersion is greater than or equal to 31, you need to add the following tags, otherwise the professional version features will not be available
  <application>
      <uses-native-library
          android:name="libOpenCL.so"
@@ -42,13 +62,16 @@ The following is the compiled App installation package of the Demo project, whic
  </application>
 ```
 
-## **2.2 Program Flow**
+---
+
+## 2.2 Using the SDK
 <img src=./docs/tsr-work-flow.png width=50% />
 
 ### **2.2.1 TSRSdk**
 [TSRSdk](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRSdk.html) includes init and deInit methods. The init method is used to initialize the SDK, and the deInit method is used to release resources.
 
-1. To initialize the TSRSdk for online authentication, you need to pass in the APPID and AUTH_ID for online authorization, and also pass in the TSRSdk.TSRSdkLicenseVerifyResultCallback to obtain the results of online authentication. In addition, you need to pass in a TSRLogger to obtain the SDK logs. Here is an example code:
+1. To initialize the TSRSdk for online authentication, you need to pass in the **APPID** and **Authorization ID** for online authentication, and also pass in TSRSdk.TSRSdkLicenseVerifyResultCallback to obtain the results of online authentication. In addition, you need to pass in a TSRLogger to obtain the SDK logs. Here is an example code:
+
 ```
     TSRSdkLicenseVerifyResultCallback callback = new TSRSdkLicenseVerifyResultCallback() {
     public void onTSRSdkLicenseVerifyResult(TSRSdkLicenseStatus status) {
@@ -62,13 +85,8 @@ The following is the compiled App installation package of the Demo project, whic
   TSRSdk.getInstance().init(context, appId, authId, callback, logger);
 ```
 
-2. When you no longer need to use TSRSdk, you need to call the deInit method of TSRSdk to release resources. <font color="red">**Note: Before calling the deInit method of TSRSdk, make sure that all TSRPasses have released resources, otherwise unexpected problems may occur.**</font>
-```
-  // If you have created TSRPass, you should release it before release TSRSdk.
-  tsrPass.deInit();
-  // Release resources when the TSRSdk object is no longer needed.
-  TSRSdk.getInstance().deInit();
-```
+
+2. When you no longer need to use TSRSdk, you can call the deInit method of TSRSdk.
 
 ### **2.2.2 TSRPass**
 [TSRPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRPass.html) is a class used for super-resolution rendering. When creating a TSRPass, you need to pass in TSRAlgorithmType to set the super-resolution algorithm type.
@@ -76,17 +94,18 @@ The following is the compiled App installation package of the Demo project, whic
 **Note: TSRPass is not thread-safe, and the methods of TSRPass must be called in the same thread.**
 
 In the TSRAlgorithmType enumeration, there are STANDARD, STANDARD_COLOR_RETOUCHING_EXT, PROFESSIONAL, and PROFESSIONAL_COLOR_RETOUCHING_EXT four algorithm running modes:
-1. **STANDARD** mode: Provides fast super-resolution processing speed, suitable for scenes with high real-time requirements. In this mode, significant image quality improvement can be achieved.
-2. **STANDARD_COLOR_RETOUCHING_EXT** mode: The STANDARD mode integrates color retouching functionality on top of super-resolution processing, enhancing visual color performance while preserving real-time capabilities.
-3. **PROFESSIONAL** mode: Ensures faster processing speed while sacrificing some image quality. It is suitable for scenes with high real-time requirements and is recommended for use on mid-range smartphones.
-4. **PROFESSIONAL_COLOR_RETOUCHING_EXT** mode: The PROFESSIONAL mode integrates color retouching functionality on top of super-resolution processing, enhancing visual color performance.
-The class includes `init`, `reInit`, `render`, and `deInit` methods. Before using TSRPass, you need to call the `init` method to initialize. If you need to update the input image dimensions or scaling factor without creating a new TSRPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
+1. **STANDARD (Standard Super Resolution) mode**: Provides fast super-resolution processing speed, suitable for scenes with high real-time requirements. In this mode, significant image quality improvement can be achieved.
+2. **STANDARD_COLOR_RETOUCHING_EXT (Standard Super Resolution + Enhancement) mode**: Optimizes color performance on top of standard super-resolution.
+3. **PROFESSIONAL (Professional Super Resolution) mode**: Ensures high image quality while requiring higher device performance. It is suitable for scenes with high image quality requirements and is recommended for use on mid-to-high-end smartphones.
+4. **PROFESSIONAL_COLOR_RETOUCHING_EXT (Professional Super Resolution + Enhancement) mode**: Optimizes color performance on top of professional super-resolution.
+
+It includes `init`, `reInit`, `render`, and `deInit` methods. Before using TSRPass, you need to call the `init` method to initialize. If you need to update the input image dimensions or scaling factor without creating a new TSRPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
 
 
-The following is an example of using STANDARD super-resolution algorithm code:
+The following is a super-resolution code example:
 ```
 // Create a TSRPass object using the constructor.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD); // STANDARD, STANDARD_COLOR_RETOUCHING_EXT, PROFESSIONAL, PROFESSIONAL_COLOR_RETOUCHING_EXT
+TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL); // STANDARD, STANDARD_COLOR_RETOUCHING_EXT, PROFESSIONAL, PROFESSIONAL_COLOR_RETOUCHING_EXT
 
 // The code below must be executed in the same glThread.
 //----------------------GL Thread---------------------//
@@ -95,7 +114,6 @@ TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.STANDARD); // STANDARD, S
 TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
 
 if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-
    // Perform super-resolution rendering and get the enhanced texture ID.
    int outputTextureId = tsrPass.render(inputTextureId);
 
@@ -116,37 +134,33 @@ if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
 //----------------------GL Thread---------------------//
 ```
 
-
-The TSRPass class provides interfaces for managing and optimizing the professional super-resolution (Pro SR) functionality during the super-resolution rendering process. Below is a detailed introduction to these interfaces:
+The TSRPass class also provides interfaces for managing and optimizing the professional super-resolution (Pro SR) functionality during the super-resolution rendering process. Below is a detailed introduction to these interfaces:
 
 1. **enableProSRAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
-   This method enables the automatic fallback mechanism for the super-resolution process and sets the corresponding parameters. This method should be called before invoking the initialization method. It configures the parameters for automatic fallback; if the number of consecutive timeout frames exceeds the specified consecutiveTimeoutFrames, the system will trigger a fallback. Note that this method only takes effect if the algorithm type used to create the TSRPass is not set to STANDARD. Additionally, a fallback listener can be provided to handle fallback events. When a fallback is triggered, the fallback listener's onFallback() method will be called, allowing the user to implement custom behavior in response to the fallback event.
+   This method enables the automatic fallback mechanism for super-resolution processing. This method should be called before the initialization method. It configures the automatic fallback parameters; if consecutive consecutiveTimeoutFrames frames exceed the specified timeoutDurationMs, the system will trigger a fallback to the standard algorithm, ensuring smooth playback and avoiding stuttering due to insufficient device performance. Note that this method only takes effect when the algorithm type used to create TSRPass is set to PROFESSIONAL or PROFESSIONAL_COLOR_RETOUCHING_EXT. Additionally, a fallback listener can be provided to handle fallback events. When a fallback is triggered, the fallback listener's onFallback() method will be called, allowing users to implement custom behavior in response to the fallback event.
 
 2. **disableProSRAutoFallback():**
-   This method disables the automatic fallback mechanism for the super-resolution process. This method should be called to turn off the automatic fallback feature that was previously enabled using enableProSRAutoFallback. Once this method is invoked, the system will no longer trigger a fallback based on the configured parameters.
+   This method disables the automatic fallback mechanism for super-resolution processing. This method should be called to turn off the automatic fallback feature previously enabled using enableProSRAutoFallback. Once invoked, the system will no longer trigger a fallback based on the configured parameters.
 
 3. **benchmarkProSR(int inputWidth, int inputHeight, float srRatio):**
-   This method evaluates the rendering time consumption of the PROFESSIONAL algorithm. It assesses the execution time in milliseconds for the PROFESSIONAL algorithm based on the given input dimensions. This method should not be called on the main thread, as it may take approximately 2 to 5 seconds to complete. This method only takes effect if the algorithm type used to create the TSRPass is not set to STANDARD. If the execution of the algorithm fails for any reason, this method will return -1.
+   This method evaluates the rendering time consumption of the professional algorithm. It assesses the execution time in milliseconds based on the given input dimensions. This method should not be called on the main thread, as it may take approximately 2 to 5 seconds to complete. This method only takes effect when the algorithm type used to create TSRPass is not set to STANDARD. If the algorithm execution fails for any reason, this method will return -1.
 
 4. **forceProSRFallback(boolean enable):**
-   This method switches between the PROFESSIONAL and STANDARD algorithms. When enable is true, the system will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm. This method only takes effect if the algorithm type used to create the TSRPass is not set to STANDARD.
+   This method switches between the professional and standard algorithms. When enable is true, the system will switch to the standard algorithm; otherwise, it will use the professional algorithm. This method only takes effect when the algorithm type used to create TSRPass is not set to STANDARD.
 
 These interfaces provide developers with flexible control options to optimize the performance and user experience of super-resolution rendering.
 
 ### **2.2.3 TIEPass**
-[TIEPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TIEPass.html) is a class used for image enhancement rendering, **only available in the Professional Edition SDK**. When creating a TIEPass, you need to pass in TIEAlgorithmType to set the image enhancement algorithm type. It includes `init`, `reInit`, `render`, and `deInit` methods. Before using TIEPass, you need to call the `init` method to initialize. If you need to update the input image dimensions without creating a new TIEPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
+[TIEPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TIEPass.html) is a class used for image enhancement rendering. When creating a TIEPass, you need to pass in TIEAlgorithmType to set the image enhancement algorithm type: **STANDARD (Standard Enhancement) mode** or **PROFESSIONAL (Professional Enhancement) mode**. It includes `init`, `reInit`, `render`, and `deInit` methods. Before using TIEPass, you need to call the `init` method to initialize. If you need to update the input image dimensions without creating a new TIEPass instance, you can use the `reInit` method. After using it, you need to call the `deInit` method to release resources.
 
-In the TIEAlgorithmType enumeration, there are two algorithm running modes:
-1. **STANDARD**: The standard mode is the basic color enhancement mode, which has corresponding enhancements to brightness, contrast and saturation. The enhancement speed is very fast and is recommended for use on low-to-mid-end smartphones.
-2. **PROFESSIONAL**: The PROFESSIONAL mode ensures high image quality while requiring higher device performance. This mode is suitable for scenarios with high image quality requirements and is recommended for use on mid-to-high-end smartphones. Configuration requirements: The device must have total RAM >= 4GB and available RAM >= 512MB; otherwise, it will revert to the STANDARD version of the algorithm.
 
 **Note: TIEPass is not thread-safe, and TIEPass methods must be called in the same thread.**
 
 The following is a code example:
-
 ```
 // Create a TIEPass object using the constructor.
 TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
+
 
 // The code below must be executed in the same glThread.
 //----------------------GL Thread---------------------//
@@ -181,24 +195,23 @@ if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
 The TIEPass class provides interfaces for managing and optimizing the professional image enhancement (Pro IE) functionality during the image enhancement process. Below is a detailed introduction to these interfaces:
 
 1. **enableProIEAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
-   This method enables the automatic fallback mechanism for the image enhancement process and sets the corresponding parameters. This method should be called before invoking the initialization method. It configures the parameters for automatic fallback; if the number of consecutive timeout frames exceeds the specified consecutiveTimeoutFrames, the system will trigger a fallback. Note that this method only takes effect if the algorithm type used to create the TIEPass is not set to STANDARD. Additionally, a fallback listener can be provided to handle fallback events. When a fallback is triggered, the fallback listener's onFallback() method will be called, allowing the user to implement custom behavior in response to the fallback event.
-
+    This method enables the automatic fallback mechanism for image enhancement processing. This method should be called before the initialization method. It configures the automatic fallback parameters; if consecutive consecutiveTimeoutFrames frames exceed the specified timeoutDurationMs, the system will trigger a fallback to the standard algorithm, ensuring smooth playback and avoiding stuttering due to insufficient device performance. Note that this method only takes effect when the algorithm type used to create TIEPass is set to PROFESSIONAL. Additionally, a fallback listener can be provided to handle fallback events. When a fallback is triggered, the fallback listener's onFallback() method will be called, allowing users to implement custom behavior in response to the fallback event.
+   
 2. **disableProIEAutoFallback():**
-   This method disables the automatic fallback mechanism for the image enhancement process. This method should be called to turn off the automatic fallback feature that was previously enabled using enableProIEAutoFallback. Once this method is invoked, the system will no longer trigger a fallback based on the configured parameters.
+   This method disables the automatic fallback mechanism for image enhancement processing. This method should be called to turn off the automatic fallback feature previously enabled using enableProIEAutoFallback. Once invoked, the system will no longer trigger a fallback based on the configured parameters.
 
 3. **benchmarkProIE(int inputWidth, int inputHeight):**
-   This method evaluates the rendering time consumption of the PROFESSIONAL algorithm. It assesses the execution time in milliseconds for the PROFESSIONAL algorithm based on the given input dimensions. This method should not be called on the main thread, as it may take approximately 2 to 5 seconds to complete. This method only takes effect if the algorithm type used to create the TIEPass is not set to STANDARD. If the execution of the algorithm fails for any reason, this method will return -1.
+   This method evaluates the rendering time consumption of the professional algorithm. It assesses the execution time in milliseconds based on the given input dimensions. This method should not be called on the main thread, as it may take approximately 2 to 5 seconds to complete. This method only takes effect when the algorithm type used to create TIEPass is not set to STANDARD. If the algorithm execution fails for any reason, this method will return -1.
 
 4. **forceProIEFallback(boolean enable):**
-   This method switches between the PROFESSIONAL and STANDARD algorithms. When enable is true, the system will switch to the STANDARD algorithm; otherwise, it will use the PROFESSIONAL algorithm. This method only takes effect if the algorithm type used to create the TIEPass is not set to STANDARD.
+   This method switches between the professional and standard algorithms. When enable is true, the system will switch to the standard algorithm; otherwise, it will use the professional algorithm. This method only takes effect when the algorithm type used to create TIEPass is not set to STANDARD.
 
-These interfaces provide developers with flexible control options to optimize the performance and user experience of the image enhancement process.
+These interfaces provide developers with flexible control options to optimize the performance and user experience of image enhancement.
 
 ### **2.2.4 TSRLogger**
 [TSRLogger](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRLogger.html) is used to receive logs from the SDK internals. Please write these logs to a file for external network problem positioning.
 
-# **3 SDK API Description**
+# **3 SDK API Documentation**
 You can click on the link to view the TSRSDK API documentation, which contains interface comments and usage examples.
 
 [TSRSDK ANDROID API Documentation](https://tencentyun.github.io/TSR/android-docs/latest/index.html)
-

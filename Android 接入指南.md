@@ -93,7 +93,7 @@ dependencies {
 
 **注意：TSRPass 不是线程安全的，必须在同一个线程中调用 TSRPass 的方法。**
 
-在 TSRAlgorithmType 枚举中，有 STANDARD、STANDARD_COLOR_RETOUCHING_EXT、PROFESSIONAL和PROFESSIONAL四个算法运行模式：
+在 TSRAlgorithmType 枚举中，有 STANDARD、STANDARD_COLOR_RETOUCHING_EXT、PROFESSIONAL和PROFESSIONAL_COLOR_RETOUCHING_EXT四个算法运行模式：
 1. **STANDARD（标准版超分）模式**：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
 2. **STANDARD_COLOR_RETOUCHING_EXT（标准版超分+增强）模式**：在标准版超分辨率的基础上优化色彩表现。
 3. **PROFESSIONAL（专业版超分）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
