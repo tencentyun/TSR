@@ -70,8 +70,21 @@ In scenarios such as video editing and multi-screen compositing, intelligently u
 </table>
 
 
-## 3. Product Performance Reference
-<img src=docs/performance.png />
+## 3. Performance Reference
+
+| Device | Video | Normal Playback Power (mW) | Enhanced Playback Power (mW) | Power Increase (mW) | Latency (ms) |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| iPhone 13 | 480P | 668 | 828 | 160 | 12 |
+| iPhone 15 Pro | 480P | 751 | 904 | 153 | 9 |
+| vivo X80 (Dimensity 9000) | 480P | 742 | 1920 | 1178 | 9 |
+| Redmi K80 (Snapdragon 8 Gen 3) | 480P | 1090 | 1374 | 284 | 8 |
+
+| Device | Video | Normal Playback Power (mW) | Enhanced Playback Power (mW) | Power Increase (mW) | Latency (ms) |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| iPhone 13 | 720P | 854 | 1277 | 423 | 14 |
+| iPhone 15 Pro | 720P | 726 | 1081 | 355 | 13 |
+| vivo X80 (Dimensity 9000) | 720P | 752 | 2186 | 1434 | 16 |
+| Redmi K80 (Snapdragon 8 Gen 3) | 720P | 1116 | 1710 | 594 | 14 |
 
 
 ## 4. Device Compatibility
@@ -104,10 +117,6 @@ In scenarios such as video editing and multi-screen compositing, intelligently u
 </table>
 </div>
 <br>
-<div style="display:flex;">
-  <img src=docs/android-demo-1.png width="30%" /> 
-  <img src=docs/android-demo-2.png width="30%" margin-left=40px />
-</div>
 
 ## 7. Integration Guide
 Refer to [Android](Android%20Quick%20Start.md), [iOS](iOS%20Quick%20Start.md) integration guide.

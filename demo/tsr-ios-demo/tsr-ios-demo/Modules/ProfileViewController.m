@@ -185,9 +185,10 @@
         
         // 【步骤4】创建显示链接，与屏幕刷新同步（按视频帧率刷新）
         _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateDisplay)];
-        NSInteger targetFPS = MAX(1, (NSInteger)lroundf(_videoFPS));
+        //NSInteger targetFPS = MAX(1, (NSInteger)lroundf(_videoFPS));
         if (@available(iOS 10.0, *)) {
-            _displayLink.preferredFramesPerSecond = targetFPS;
+            // preferredFramesPerSecond 只支持屏幕刷新率的整除因子。在 60Hz 屏幕上，可用的帧率值为 60、30、20、15 等。当设置为 25 时，系统会自动降级到 20fps，导致丢帧。所以这里不能设置为 _videoFPS。
+            _displayLink.preferredFramesPerSecond = 30;
         }
         [_displayLink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
         
@@ -277,8 +278,7 @@
     AVAssetTrack *track = [asset tracksWithMediaType:AVMediaTypeVideo].firstObject;
     CGSize size = track ? track.naturalSize : CGSizeZero;
     if (track) {
-        float fps = track.nominalFrameRate;
-        _videoFPS = fps > 0 ? fps : 30;// 默认 30fps
+        _videoFPS = track.nominalFrameRate;
     }
     
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
