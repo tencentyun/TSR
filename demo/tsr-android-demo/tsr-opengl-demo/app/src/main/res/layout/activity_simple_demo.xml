@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.BasePlayActivity">
+
+    <!-- 视频显示区域 -->
+    <android.opengl.GLSurfaceView
+            android:id="@+id/glSurfaceView"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="match_parent" />
+
+    <!-- 底部操作面板 -->
+    <LinearLayout
+            android:id="@+id/controlPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#00000000"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="48dp">
+            <Button
+                    android:id="@+id/btnPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="播放"
+                    android:layout_margin="8dp"
+                    android:minWidth="60dp" />
+
+            <Button
+                    android:id="@+id/btnPause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="暂停"
+                    android:layout_margin="8dp"
+                    android:minWidth="60dp" />
+
+            <Button
+                    android:id="@+id/btnStop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="停止"
+                    android:layout_margin="8dp"
+                    android:minWidth="60dp" />
+    </LinearLayout>
+
+    <!-- 底部状态显示 -->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#7777"
+            android:gravity="center_vertical"
+            android:layout_gravity="bottom">
+
+        <!-- 左侧：状态文本区域 -->
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/tvStatus0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="9sp" />
+
+            <TextView
+                    android:id="@+id/tvStatus1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="9sp" />
+
+            <TextView
+                    android:id="@+id/tvStatus2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="56dp"
+                    android:scrollbars="vertical"
+                    android:isScrollContainer="true"
+                    android:textSize="9sp" />
+        </LinearLayout>
+
+        <!-- 右侧：TSR 开关按钮 -->
+        <ToggleButton
+                android:id="@+id/toggleTsr"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:textOn="TSR 开"
+                android:textOff="TSR 关"
+                android:checked="false"
+                android:textSize="9sp"
+                android:minWidth="60dp"
+                android:minHeight="0dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:layout_marginEnd="4dp" />
+    </LinearLayout>
+
+</FrameLayout>

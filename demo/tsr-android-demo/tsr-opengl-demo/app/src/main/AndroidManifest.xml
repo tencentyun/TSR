@@ -3,6 +3,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
 
     <application
             android:name="com.tencent.mps.srplayer.SRApplication"
@@ -31,17 +32,18 @@
                 android:required="false" />
 
         <activity
-                android:name=".ui.SettingsActivity"
+                android:name=".ui.HomeActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-                android:name=".ui.TsrActivity"
-                android:exported="true"/>
+
+        <activity android:name=".ui.CmpSettingActivity" />
+        <activity android:name=".ui.CmpPlayActivity" />
+        <activity android:name=".ui.BasePlayActivity" />
+        <activity android:name=".ui.ProfileActivity" />
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -18,15 +19,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.tencent.mps.srplayer.R;
 import java.util.Objects;
 
-public class SettingsActivity extends AppCompatActivity {
+// 设置页 for {@link CmpPlayActivity}
+public class CmpSettingActivity extends AppCompatActivity {
+
     private static Uri mVideoUri;
     private static String mFileName;
     private static boolean mVideoChooseAlbum;
+    private Spinner mAlgorithmSpinner, mCompareAlgorithmSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
+        setContentView(R.layout.activity_atomic_setting);
 
         // 配置开始按钮
         Button startPlayTsrButton = findViewById(R.id.start_play_button_tsr);
@@ -67,6 +71,17 @@ public class SettingsActivity extends AppCompatActivity {
                 chooseBuildInVideo.setVisibility(View.VISIBLE);
             }
         });
+
+        // 配置算法下拉框
+        mAlgorithmSpinner = findViewById(R.id.video_algorithm);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ALGORITHM_ARRAY);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mAlgorithmSpinner.setAdapter(adapter);
+        mCompareAlgorithmSpinner = findViewById(R.id.compare_algorithm);
+        ArrayAdapter<String> compare_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+                COMPARE_ALGORITHM_ARRAY);
+        compare_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mCompareAlgorithmSpinner.setAdapter(compare_adapter);
     }
 
     @Override
@@ -100,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void onButtonClick(View view, boolean isExport) {
-        Intent intent = new Intent(SettingsActivity.this, TsrActivity.class);
+        Intent intent = new Intent(CmpSettingActivity.this, CmpPlayActivity.class);
         if (mVideoChooseAlbum) {
             if (mVideoUri == null) {
                 Toast.makeText(getApplicationContext(), R.string.video_choose_hint, Toast.LENGTH_SHORT).show();
@@ -126,15 +141,40 @@ public class SettingsActivity extends AppCompatActivity {
             return;
         }
         intent.putExtra("file_name", mFileName);
-        intent.putExtra("algorithm", (String) ((Spinner) findViewById(R.id.video_algorithm)).getSelectedItem());
-        intent.putExtra("compare_algorithm", (String) ((Spinner) findViewById(R.id.compare_algorithm)).getSelectedItem());
+        intent.putExtra("algorithm", getAlgorithm(mAlgorithmSpinner.getSelectedItem().toString()));
+        intent.putExtra("compare_algorithm", getAlgorithm(mCompareAlgorithmSpinner.getSelectedItem().toString()));
         intent.putExtra("sr_ratio", (String) ((Spinner) findViewById(R.id.sr_ratio)).getSelectedItem());
 
         if (isExport) {
             intent.putExtra("export_video", true);
-            intent.putExtra("export_codec", (String) ((Spinner) findViewById(R.id.export_codec_type)).getSelectedItem());
-            intent.putExtra("export_bitrate", Integer.parseInt(((EditText) findViewById(R.id.export_bitrate_mbps)).getText().toString()));
+            intent.putExtra("export_codec",
+                    (String) ((Spinner) findViewById(R.id.export_codec_type)).getSelectedItem());
+            intent.putExtra("export_bitrate",
+                    Integer.parseInt(((EditText) findViewById(R.id.export_bitrate_mbps)).getText().toString()));
         }
         startActivity(intent);
+    }
+
+    private static final String NO_CMP = "NoCmp";
+    private static final String NONE = "None";
+    private static final String TIE_STD = "TieStd";
+    private static final String TIE_PRO_NPU = "TiePro";
+    private static final String TSR_STD = "TsrStd";
+    public static final String[] ALGORITHM_ARRAY = {NONE, TIE_STD, TIE_PRO_NPU, TSR_STD};
+    public static final String[] COMPARE_ALGORITHM_ARRAY = {NO_CMP, NONE, TIE_STD, TIE_PRO_NPU, TSR_STD};
+
+    private static CmpPlayActivity.Algorithm getAlgorithm(String algorithm) {
+        switch (algorithm) {
+            case NONE:
+                return CmpPlayActivity.Algorithm.NONE;
+            case TIE_STD:
+                return CmpPlayActivity.Algorithm.TIE_STD;
+            case TIE_PRO_NPU:
+                return CmpPlayActivity.Algorithm.TIE_PRO;
+            case TSR_STD:
+                return CmpPlayActivity.Algorithm.TSR_STD;
+            default:
+                return CmpPlayActivity.Algorithm.NO_CMP;
+        }
     }
 }

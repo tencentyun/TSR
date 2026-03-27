@@ -1,3 +1,7 @@
+
+# Android 接入指南
+---
+
 # 1 运行 Demo
 ## 1.1 SDK授权申请
 请先在腾讯云官网开通 媒体处理 [控制台](https://console.cloud.tencent.com/mps)。然后根据[指南](https://cloud.tencent.com/document/product/862/109789)，自助开通SDK测试授权，获取 授权ID，绑定 App 包名。    
@@ -17,7 +21,7 @@ Auth_Id=你的授权ID
 <img src="./docs/verification-params.png">    
 然后就可以编译运行 Demo 了。
 
-*备注：Demo工程的 ./SRPlayer/app/libs 文件夹下的 SDK 版本可能较旧，可以联系你的腾讯云商务代表获取最新版本。*
+*备注：Demo工程的 ./SRPlayer/app/libs 文件夹下的 SDK 文件可能较旧，可以联系你的腾讯云商务代表获取最新版本。*
 
 ---
 
@@ -64,156 +68,136 @@ dependencies {
 
 ---
 
-## 2.2 使用 SDK
-<img src=./docs/tsr-work-flow.png width=50% />
+# 3. 使用 SDK
 
-### **2.2.1 TSRSdk**
-[TSRSdk](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRSdk.html)包括init和deInit两个方法。init方法用于初始化SDK，deInit方法用于释放资源。
+## 3.1 初始化
 
-1. 在线鉴权初始化TSRSdk，您需要传入**APPID**和**授权ID**进行在线鉴权，还需要传入TSRSdk.TSRSdkLicenseVerifyResultCallback用于获取在线鉴权的结果。除此之外，还需要传入一个TSRLogger，用于获取SDK的日志。下面是示例代码：
+建议参考示例工程中的封装方式，通过单例类统一管理初始化状态：[TsrSdkHelper](./demo/tsr-android-demo/tsr-opengl-demo/app/src/main/java/com/tencent/mps/srplayer/helper/TsrSdkHelper.java)
 
-```
-    TSRSdkLicenseVerifyResultCallback callback = new TSRSdkLicenseVerifyResultCallback() {
-    public void onTSRSdkLicenseVerifyResult(TSRSdkLicenseStatus status) {
+当前 Demo 通过 `TSRSdk.getInstance().init(...)` 完成 SDK 授权初始化：
+
+```java
+public void init(Context context) {
+    TSRSdk.getInstance().init(context.getApplicationContext(), BuildConfig.APP_ID, BuildConfig.AUTH_ID, status -> {
         if (status == TSRSdkLicenseStatus.AVAILABLE) {
-           // Creating TSRPass for super-resolution rendering
+            isInit = Boolean.TRUE;
         } else {
-           // Do something when the verification of sdk's license failed.
+            isInit = Boolean.FALSE;
         }
+    }, (logLevel, tag, msg) -> {
+        // 转发 SDK 日志
+    });
+}
+```
+
+说明：
+- `TSRSdk.init(...)` 是异步授权校验流程。
+- `TsrSdkHelper.isInit()` 是三态值：
+  - `null`：尚未完成初始化
+  - `true`：初始化成功，License 可用
+  - `false`：初始化失败或 License 不可用
+
+建议在 `Application.onCreate()` 中尽早初始化：
+
+```java
+public class SRApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        TsrSdkHelper.getInstance().init(this);
     }
-  };
-  TSRSdk.getInstance().init(context, appId, authId, callback, logger);
-```
-
-
-2. 当您已经不需要使用TSRSdk时，可以调用TSRSdk的deInit方法。
-
-### **2.2.2 TSRPass**
-[TSRPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRPass.html) 是用于进行超分辨率渲染的类，在创建 TSRPass 时，您需要传入 TSRAlgorithmType 设置超分的算法类型。
-
-**注意：TSRPass 不是线程安全的，必须在同一个线程中调用 TSRPass 的方法。**
-
-在 TSRAlgorithmType 枚举中，有 STANDARD、STANDARD_COLOR_RETOUCHING_EXT、PROFESSIONAL和PROFESSIONAL_COLOR_RETOUCHING_EXT四个算法运行模式：
-1. **STANDARD（标准版超分）模式**：提供快速的超分辨率处理速度，适用于高实时性要求的场景。在这种模式下，可以实现显著的图像质量改善。
-2. **STANDARD_COLOR_RETOUCHING_EXT（标准版超分+增强）模式**：在标准版超分辨率的基础上优化色彩表现。
-3. **PROFESSIONAL（专业版超分）模式**：确保了高图像质量，同时需要更高的设备性能。它适合于有高图像质量要求的场景，并推荐在中高端智能手机上使用。
-4. **PROFESSIONAL_COLOR_RETOUCHING_EXT（专业版超分+增强）模式**：在专业版超分辨率的基础上优化色彩表现。
-
-它包括了 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TSRPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TSRPass 实例的情况下更新输入图像的尺寸或缩放比例，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
-
-
-以下是超分代码示例：
-```
-// Create a TSRPass object using the constructor.
-TSRPass tsrPass = new TSRPass(TSRPass.TSRAlgorithmType.PROFESSIONAL); // STANDARD, STANDARD_COLOR_RETOUCHING_EXT, PROFESSIONAL, PROFESSIONAL_COLOR_RETOUCHING_EXT
-
-// The code below must be executed in the same glThread.
-//----------------------GL Thread---------------------//
-
-// Initialize TSRPass and set the input image width, height, and srRatio.
-TSRPass.TSRInitStatusCode initStatus = tsrPass.init(inputWidth, inputHeight, srRatio);
-
-if (initStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-   // Perform super-resolution rendering and get the enhanced texture ID.
-   int outputTextureId = tsrPass.render(inputTextureId);
-
-   // Reinitialize if there are changes in image dimensions or srRatio.
-   TSRPass.TSRInitStatusCode reInitStatus = tsrPass.reInit(newInputWidth, newInputHeight, newSrRatio);
-   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-      outputTextureId = tsrPass.render(inputTextureId);
-   } else {
-      // Handle reinitialization failure
-   }
-
-   // Release resources when no longer needed.
-   tsrPass.deInit();
-} else {
-   // Handle initialization failure
 }
-
-//----------------------GL Thread---------------------//
 ```
 
-TSRPass类还提供了接口用于管理和优化超分辨率渲染过程中的专业版超分辨率（Pro SR）功能。以下是对这些接口的详细介绍：
+在使用任何 TIE / TSR 能力前，先检查初始化状态：
 
-1. **enableProSRAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
-   该方法用于启用超分辨率处理的自动回退机制。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续consecutiveTimeoutFrames帧耗时超过指定的timeoutDurationMs，系统将触发回退至标准版算法，保证播放流畅，避免由于设备性能不足导致卡顿。请注意，此方法仅在创建TSRPass时使用的算法类型设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
-
-2. **disableProSRAutoFallback():**
-   该方法用于禁用超分辨率处理的自动回退机制。此方法应在之前使用enableProSRAutoFallback启用的自动回退功能关闭后调用。一旦调用此方法，系统将不再根据配置的参数触发回退。
-
-3. **benchmarkProSR(int inputWidth, int inputHeight, float srRatio):**
-   该方法用于评估专业版算法的渲染时间消耗。此方法根据给定的输入尺寸评估专业版算法的执行时间（以毫秒为单位）。此方法不应在主线程上调用，因为它可能需要大约2到5秒才能完成。此方法仅在创建TSRPass时使用的算法类型不设置为STANDARD时生效。如果算法执行因任何原因失败，此方法将返回-1。
-
-4. **forceProSRFallback(boolean enable):**
-   该方法用于在专业版和标准算法之间切换。当enable为true时，系统将切换到标准算法；否则，将使用专业版算法。此方法仅在创建TSRPass时使用的算法类型不设置为STANDARD时生效。
-
-这些接口为开发者提供了灵活的控制选项，以优化超分辨率渲染的性能和用户体验。
-
-### **2.2.3 TIEPass**
-[TIEPass](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TIEPass.html) 是用于进行图像增强渲染的类。在创建 TIEPass 时，您需要传入 TIEAlgorithmType 设置图像增强的算法类型：**STANDARD（标准版增强）模式** 或者 **PROFESSIONAL（专业版增强）模式**：。它包括 `init`, `reInit`, `render` 和 `deInit` 方法。在使用 TIEPass 前，您需要调用 `init` 方法进行初始化。如果需要在不创建新的 TIEPass 实例的情况下更新输入图像的尺寸，可以使用 `reInit` 方法。在使用结束后，您需要调用 `deInit` 方法释放资源。
-
-
-**注意：TIEPass 不是线程安全的，必须在同一个线程中调用 TIEPass 的方法。**
-
-以下是代码示例：
-```
-// Create a TIEPass object using the constructor.
-TIEPass tiePass = new TIEPass(TIEPass.TIEAlgorithmType.PROFESSIONAL);
-
-
-// The code below must be executed in the same glThread.
-//----------------------GL Thread---------------------//
-
-// Initialize TIEPass and set the input image width and height.
-TIEPass.TIEInitStatusCode initStatus = tiePass.init(inputWidth, inputHeight);
-
-if (initStatus == TIEPass.TIEInitStatusCode.SUCCESS) {
-   // If the type of inputTexture is TextureOES, you must transform it to Texture2D.
-   // Conversion code can be written according to actual requirements.
-   
-   // Perform image enhancement rendering on the input OpenGL texture and get the enhanced texture ID.
-   int outputTextureId = tiePass.render(inputTextureId);
-   
-   // Reinitialize with new dimensions if needed.
-   TIEPass.TIEInitStatusCode reInitStatus = tiePass.reInit(newInputWidth, newInputHeight);
-   if (reInitStatus == TSRPass.TSRInitStatusCode.SUCCESS) {
-      outputTextureId = tiePass.render(inputTextureId);
-   } else {
-      // Handle reinitialization failure
-   }
-
-   // Release resources when the TIEPass object is no longer needed.
-   tiePass.deInit();
-} else {
-   // Handle initialization failure
+```java
+Boolean init = TsrSdkHelper.getInstance().isInit();
+if (!Boolean.TRUE.equals(init)) {
+    // 提示用户“TSR SDK 尚未初始化完成或 License 不可用”
+    return;
 }
-
-//----------------------GL Thread---------------------//
 ```
 
-TIEPass类提供了接口用于管理和优化图像增强过程中的专业版图像增强（Pro IE）功能。以下是对这些接口的详细介绍：
+---
 
-1. **enableProIEAutoFallback(int consecutiveTimeoutFrames, int timeoutDurationMs, FallbackListener listener):**
-    该方法用于启用超分辨率处理的自动回退机制。此方法应在调用初始化方法之前调用。它配置了自动回退的参数，如果连续consecutiveTimeoutFrames帧耗时超过指定的timeoutDurationMs，系统将触发回退至标准版算法，保证播放流畅，避免由于设备性能不足导致卡顿。请注意，此方法仅在创建TSRPass时使用的算法类型设置为PROFESSINAL和PROFESSIONAL_COLOR_RETOUCHING_EXT时生效。此外，可以提供一个回退监听器来处理回退事件。当触发回退时，将调用回退监听器的onFallback()方法，允许用户实现自定义行为以响应回退事件。
-   
-3. **disableProIEAutoFallback():**
-   该方法用于禁用图像增强过程的自动回退机制。此方法应在之前使用enableProIEAutoFallback启用的自动回退功能关闭后调用。一旦调用此方法，系统将不再根据配置的参数触发回退。
+## 3.2 图像增强（TIE）
 
-4. **benchmarkProIE(int inputWidth, int inputHeight):**
-   该方法用于评估专业版算法的渲染时间消耗。此方法根据给定的输入尺寸评估专业版算法的执行时间（以毫秒为单位）。此方法不应在主线程上调用，因为它可能需要大约2到5秒才能完成。此方法仅在创建TIEPass时使用的算法类型不设置为STANDARD时生效。如果算法执行因任何原因失败，此方法将返回-1。
+使用 `v2` 接口
 
-5. **forceProIEFallback(boolean enable):**
-   该方法用于在专业版和标准算法之间切换。当enable为true时，系统将切换到标准算法；否则，将使用专业版算法。此方法仅在创建TIEPass时使用的算法类型不设置为STANDARD时生效。
+### 3.2.1 `TieStd`：标准版纹理增强
 
-这些接口为开发者提供了灵活的控制选项，以优化图像增强过程的性能和用户体验。
+`TieStd` 适合直接处理 OpenGL 纹理输入，调用方式简单。
 
-### **2.2.4 TSRLogger**
-[TSRLogger](https://tencentyun.github.io/TSR/android-docs/latest/com/tencent/mps/tie/api/TSRLogger.html)用于接收SDK内部的日志，请将这些日志写到文件，以便定位外网问题。
+主要接口：
+- 构造：`new TieStd()`
+- 初始化：`ErrorCode init(int width, int height)`
+- 处理：`int process(int textureId)`
+- 释放：`void release()`
 
-# **3 SDK 接口文档**
-您可以点击连接查看TSRSDK的API文档，内含接口注释与调用示例。
+线程要求：
+- `TieStd` 所有方法都必须在**同一个拥有有效 OpenGL ES 上下文的 GL 线程**中调用。
 
-[TSRSDK ANDROID API文档](https://tencentyun.github.io/TSR/android-docs/latest/index.html)
+### 3.2.2 `TiePro`：专业版Y通道增强
 
+`TiePro` **不直接处理 GL 纹理**，而是处理 **Y 通道内存数据**。
 
+主要接口：
+- 构造：`new TiePro()`
+- 初始化：`ErrorCode init(int width, int height)`
+- 处理：`void process(ByteBuffer yData, int width, int height)`
+- 释放：`void release()`
+
+调用约束：
+- `init(...)` 可能阻塞，**建议放到后台线程执行**。
+- `process(...)` 会对传入的 `ByteBuffer` 做**原地处理**。
+- `yData` 建议使用 direct `ByteBuffer`。
+
+如果你的业务链路本身就能拿到 YUV / Y 平面内存数据，可以直接使用。
+如果你的输入是 GL 纹理，而不是原始 Y 数据，那么需要像 Demo 一样增加一个桥接层：
+- 先把输入 RGBA 纹理转换为 Y 通道数据
+- 调用 `TiePro.process(...)` 做 NPU 增强
+- 再把增强后的 Y 通道与原始 RGBA 合成为输出纹理。
+
+Demo 中对应的桥接实现是 [TieProGlProcessor](./demo/tsr-android-demo/tsr-opengl-demo/app/src/main/java/com/tencent/mps/srplayer/pass/TieProGlProcessor.java)。
+
+它的处理流程如下：
+1. 后台线程调用 `mTiePro.init(width, height)` 初始化 NPU 模型
+2. GL 线程调用 `mTieProProcessor.init(width, height)` 初始化 OpenGL 资源
+3. 每帧调用 `mTieProProcessor.process(inputTextureId)` 获取增强后的输出纹理
+4. 退出时释放 `mTieProProcessor` 和 `mTiePro`
+
+---
+
+## 3.3 超分辨率（TSR）
+
+### 3.3.1 `TsrStd`：标准版纹理超分
+
+`TsrStd` 用于将输入纹理放大到指定输出分辨率。
+
+主要接口：
+- 构造：`new TsrStd()`
+- 初始化：`ErrorCode init(int inputWidth, int inputHeight, int outputWidth, int outputHeight)`
+- 处理：`int process(int textureId)`
+- 释放：`void release()`
+
+线程要求：
+- `TsrStd` 的所有方法都必须在**同一个拥有有效 OpenGL ES 上下文的 GL 线程**中调用。
+
+---
+
+## 3.4 生命周期与线程建议
+
+- 在创建任何 `TieStd`、`TiePro`、`TsrStd` 实例前，先确认 `TsrSdkHelper.getInstance().isInit()` 为 `true`。
+- `TieStd`、`TsrStd` 的 `init/process/release` 必须在同一个 GL 线程调用。
+- `TiePro.init(...)` 建议放在后台线程；如果配合 `TieProGlProcessor` 使用，则 `TieProGlProcessor.init/process/release` 必须在 GL 线程调用。
+- 同一个实例不要重复 `init(...)`；如果分辨率发生变化，建议释放旧实例后按新分辨率重新创建。
+- 页面退出、播放器销毁或 GL 上下文销毁前，请及时调用 `release()` 释放资源。
+
+---
+
+# 4. 示例
+
+参考 [Demo](./demo/tsr-android-demo/tsr-opengl-demo)
+
+---

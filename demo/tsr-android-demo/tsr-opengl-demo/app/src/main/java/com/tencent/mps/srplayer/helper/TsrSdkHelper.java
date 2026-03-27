@@ -54,10 +54,10 @@ public class TsrSdkHelper {
         TSRSdk.getInstance().init(context.getApplicationContext(), BuildConfig.APP_ID, BuildConfig.AUTH_ID, status -> {
             if (status == TSRSdkLicenseStatus.AVAILABLE) {
                 Log.i(TAG, "TSRSdk LicenseVerify success");
-                isInit = true;
+                isInit = Boolean.TRUE;
             } else {
                 Log.e(TAG, "TSRSdk LicenseVerify fail: " + status);
-                isInit = false;
+                isInit = Boolean.FALSE;
             }
         }, (logLevel, tag, msg) -> {
             switch (logLevel) {
