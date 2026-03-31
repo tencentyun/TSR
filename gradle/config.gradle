@@ -1,0 +1,33 @@
+ext {
+    // =========== 构建参数 ===========
+    // 构建时间
+    buildTime = project.findProperty('buildTime') ?: new Date().format("yyyyMMdd_HHmm", TimeZone.getTimeZone("GMT+08:00"))
+    // 组件版本,也是发布Maven的版本。默认SNAPSHOT
+    buildVersion = project.findProperty('buildVersion') ?: "1.0.0-SNAPSHOT"
+    // 流水线构建编号
+    buildNumber = project.findProperty('buildNumber') ?: "1"
+    // 默认VERBOSE级别, 构建时会被替换为INFO
+    debugLevel = project.findProperty('debugLevel') ?: 2 // VERBOSE
+    // sdkId，用于校验license
+    sdkId = "com.tencent.mps:tie-client"
+    // sdkversion，用于区分支持的算法。1: STANDARD, 2: PROFESSIONAL, 3: ULTIMATE
+    sdkFeatureVersion = project.findProperty("sdkFeatureVersion") ?: 2
+    // sdkLicenseEnv，用于区分请求鉴权的域名是国内站还是国际站。Domestic: 国内站 ｜ Overseass: 国际站
+    sdkLicenseEnv = project.findProperty('sdkLicenseEnv') ?: "Overseass"
+    // sdkLicense鉴权环境，1: 测试环境， 0: 正式环境
+    enableSdkLicenseTestEnv = project.findProperty('enableSdkLicenseTestEnv') ?: 0
+
+    // =========== 其他变量定义 ===========
+    // Git版本号
+    gitRevision = 'git rev-parse --short HEAD'.execute(null, project.rootDir).text.trim()
+
+    println "ext:"
+    println "buildTime=" + buildTime
+    println "buildVersion=" + buildVersion
+    println "buildNum=" + buildNumber
+    println "debugLevel=" + debugLevel
+    println "sdkId=" + sdkId
+    println "sdkFeatureVersion=" + sdkFeatureVersion
+    println "sdkLicenseEnv=" + sdkLicenseEnv
+    println "enableSdkLicenseTestEnv=" + enableSdkLicenseTestEnv
+}
