@@ -85,8 +85,8 @@
 		4D0D187F2FAD9A5900AC8A21 /* TIEPassV2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIEPassV2ViewController.h; sourceTree = "<group>"; };
 		4D0D18812FAD9A5F00AC8A21 /* VideoRendererMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRendererMetal.h; sourceTree = "<group>"; };
 		4D0D18822FAD9A5F00AC8A21 /* VideoRendererMetal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoRendererMetal.m; sourceTree = "<group>"; };
-		4D0D18872FAD9EF900AC8A21 /* VideoRendererMetal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = VideoRendererMetal.metal; path = "../../../../../../cloud_gaming_android/SRPlayer/ios/tsr-ios-demo/tsr-ios-demo/Resources/Shaders/VideoRendererMetal.metal"; sourceTree = "<group>"; };
-		4D0D18892FAD9F1500AC8A21 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = sample.mp4; path = "../../../../../../cloud_gaming_android/SRPlayer/ios/tsr-ios-demo/tsr-ios-demo/Resources/Videos/sample.mp4"; sourceTree = "<group>"; };
+		4D0D18872FAD9EF900AC8A21 /* VideoRendererMetal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = VideoRendererMetal.metal; path = "VideoRendererMetal.metal"; sourceTree = "<group>"; };
+		4D0D18892FAD9F1500AC8A21 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = sample.mp4; path = "sample.mp4"; sourceTree = "<group>"; };
 		4D1E68E52B67C6BB00B8FA8E /* Logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
 		4D1E68E72B67C6E200B8FA8E /* Logger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Logger.m; sourceTree = "<group>"; };
 		4D24116F2B60C1D000720192 /* tsr-ios-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tsr-ios-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
