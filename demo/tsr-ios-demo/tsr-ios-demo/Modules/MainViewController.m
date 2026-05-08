@@ -6,12 +6,14 @@
 #import "MainViewController.h"
 #import "SettingsViewController.h"
 #import "ProfileViewController.h"
+#import "TIEPassV2ViewController.h"
 #import "Logger.h"
 #import <tsr_client/TSRSdk.h>
 
 @interface MainViewController () <TSRSdkLicenseVerifyResultCallback>
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIButton *profileButton;
+@property (nonatomic, strong) UIButton *tiePassV2Button;
 @property (nonatomic, assign) BOOL licenseReady;
 @end
 
@@ -47,7 +49,18 @@
     self.profileButton.enabled = NO;
     self.profileButton.alpha = 0.5;
     [self.view addSubview:self.profileButton];
-    
+
+    self.tiePassV2Button = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.tiePassV2Button.frame = CGRectMake(centerX, 360, 200, 50);
+    [self.tiePassV2Button setTitle:@"效果对比（新）" forState:UIControlStateNormal];
+    [self.tiePassV2Button setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+    self.tiePassV2Button.backgroundColor = [UIColor colorWithRed:142/255.0 green:68/255.0 blue:173/255.0 alpha:1.0];
+    self.tiePassV2Button.layer.cornerRadius = 8;
+    [self.tiePassV2Button addTarget:self action:@selector(openTIEPassV2) forControlEvents:UIControlEventTouchUpInside];
+    self.tiePassV2Button.enabled = NO;
+    self.tiePassV2Button.alpha = 0.5;
+    [self.view addSubview:self.tiePassV2Button];
+
     [self verifyLicense];
 }
 
@@ -74,14 +87,18 @@
             self.licenseReady = YES;
             self.settingsButton.enabled = YES;
             self.profileButton.enabled = YES;
+            self.tiePassV2Button.enabled = YES;
             self.settingsButton.alpha = 1.0;
             self.profileButton.alpha = 1.0;
+            self.tiePassV2Button.alpha = 1.0;
         } else {
             self.licenseReady = NO;
             self.settingsButton.enabled = NO;
             self.profileButton.enabled = NO;
+            self.tiePassV2Button.enabled = NO;
             self.settingsButton.alpha = 0.5;
             self.profileButton.alpha = 0.5;
+            self.tiePassV2Button.alpha = 0.5;
             NSLog(@"License status: %ld", (long)status);
         }
     });
@@ -96,9 +113,15 @@
 
 - (void)openProfile {
     if (!self.licenseReady) { return; }
-    NSURL *videoURL = [[NSBundle mainBundle] URLForResource:@"480x854" withExtension:@"mp4"];
+    NSURL *videoURL = [[NSBundle mainBundle] URLForResource:@"720x1280" withExtension:@"mp4"];
     ProfileViewController *profileVC = [[ProfileViewController alloc] initWithVideoURL:videoURL srRatio:-1 algorithm:@"增强播放(专业版)"];
     [self.navigationController pushViewController:profileVC animated:YES];
+}
+
+- (void)openTIEPassV2 {
+    if (!self.licenseReady) { return; }
+    TIEPassV2ViewController *vc = [[TIEPassV2ViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

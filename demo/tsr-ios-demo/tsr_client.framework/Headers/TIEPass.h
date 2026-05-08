@@ -22,6 +22,8 @@
  *
  * TIEInitStatusCodeMLModelInitFailed -> Machine learning model module initialization failed, fallback to TIEAlgorithmType.STANDARD.
  *
+ * TIEInitStatusCodeMLModelInitFailedShaderOnly -> Machine learning model initialization failed but shader pipeline is still available. Rendering will use shader-only mode (color enhancement without CoreML inference).
+ *
  * TIEInitStatusCodeInputResolutionInvalid -> The input resolution is invalid; it must be between 8 to 4096.
  *
  * TIEInitStatusCodeInternalErr -> Internal error.
@@ -31,6 +33,7 @@ typedef NS_ENUM(NSInteger, TIEInitStatusCode) {
     TIEInitStatusCodeSDKLicenseStatusNotAvailable = -10002,
     TIEInitStatusCodeAlgorithmTypeInvalid = -10003,
     TIEInitStatusCodeMLModelInitFailed = -10004,
+    TIEInitStatusCodeMLModelInitFailedShaderOnly = -10005,
     TIEInitStatusCodeInputResolutionInvalid = -10006,
     TIEInitStatusCodeInternalErr = -10009,
     TIEInitStatusCodeInvalidParams = -10010,

@@ -259,6 +259,9 @@
         } else {
             _glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
             CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, _glContext, NULL, &_textureCache);
+            // GLKView 的 drawable 尺寸会考虑屏幕 contentScaleFactor，需用 drawableWidth/drawableHeight 作为 viewport 尺寸
+            // 此时 _glkView 尚未加入视图层级，drawable 尺寸还未确定，先用 outputWidth/outputHeight 占位，
+            // 实际渲染时会在 glkView:drawInRect: 中动态同步
             self.renderer = [[VideoRenderer alloc] initWithContext:_glContext inputWidth:_videoSize.width inputHeight:_videoSize.height outputWidth:_outputWidth outputHeight:_outputHeight];
             [self.renderer setupGL];
             // 设置MTKView
@@ -532,6 +535,9 @@
             NSTimeInterval duration = -[startDate timeIntervalSinceNow];
             NSLog(@"耗时: %.4f ms", duration * 1000);
 
+            // 同步 drawable 像素尺寸到 renderer，确保 glViewport 与 GLKView framebuffer 匹配
+            self.renderer.outputWidth = (int)view.drawableWidth;
+            self.renderer.outputHeight = (int)view.drawableHeight;
             // 实际渲染到屏幕
             [self.renderer render:outputTexture];
             
@@ -594,6 +600,9 @@
         
         if (err == noErr && cvTexture) {
             GLuint texture = CVOpenGLESTextureGetName(cvTexture);
+            // 同步 drawable 像素尺寸到 renderer，确保 glViewport 与 GLKView framebuffer 匹配
+            self.renderer.outputWidth = (int)view.drawableWidth;
+            self.renderer.outputHeight = (int)view.drawableHeight;
             [self.renderer render:texture];
             
             CVOpenGLESTextureCacheFlush(_textureCache, 0);
@@ -1066,11 +1075,8 @@
         // 更新视图frame
         if (!self->_isUseMetal) {
             self->_glkView.frame = rect;
-            // 更新 OpenGL renderer 的输出尺寸
-            if (self.renderer) {
-                self.renderer.outputWidth = self->_outputWidth;
-                self.renderer.outputHeight = self->_outputHeight;
-            }
+            // renderer 的 outputWidth/outputHeight 会在 glkView:drawInRect: 中
+            // 通过 view.drawableWidth/drawableHeight 动态同步，无需在此手动更新
         } else {
             self->_mtkView.frame = rect;
             // Metal 的纹理会在下次渲染时自动适配 drawable 的尺寸

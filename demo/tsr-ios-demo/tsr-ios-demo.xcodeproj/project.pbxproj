@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		446388CA2F0FBEE200A26AA7 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 446388C92F0FBEE200A26AA7 /* Config.xcconfig */; };
-		44B79A682F0A577B0016CC16 /* tsr_client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B79A662F0A576E0016CC16 /* tsr_client.framework */; };
-		44B79A692F0A577B0016CC16 /* tsr_client.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44B79A662F0A576E0016CC16 /* tsr_client.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44B79A792F0E10C20016CC16 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B79A782F0E10C20016CC16 /* MainViewController.m */; };
 		44B79A902F0E47CD0016CC16 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44B79A8F2F0E47CD0016CC16 /* ProfileViewController.m */; };
 		44B8EF552F3ACE93004E2CC4 /* 1920x1080.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 44B8EF542F3ACE93004E2CC4 /* 1920x1080.mp4 */; };
@@ -18,9 +16,15 @@
 		44B8EF582F3ACE93004E2CC4 /* 720x1280.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 44B8EF512F3ACE93004E2CC4 /* 720x1280.mp4 */; };
 		44B8EF592F3ACE93004E2CC4 /* 854x480.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 44B8EF522F3ACE93004E2CC4 /* 854x480.mp4 */; };
 		4D02E2142B6365DA0019EA2F /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D02E2132B6365DA0019EA2F /* SettingsViewController.m */; };
+		4D0D187D2FAD9A1A00AC8A21 /* VideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411792B60C1D000720192 /* VideoPlayViewController.m */; };
+		4D0D18802FAD9A5A00AC8A21 /* TIEPassV2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D0D187E2FAD9A5900AC8A21 /* TIEPassV2ViewController.m */; };
+		4D0D18832FAD9A6000AC8A21 /* VideoRendererMetal.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D0D18822FAD9A5F00AC8A21 /* VideoRendererMetal.m */; };
+		4D0D18852FAD9E5800AC8A21 /* tsr_client.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44B79A662F0A576E0016CC16 /* tsr_client.framework */; };
+		4D0D18862FAD9E9300AC8A21 /* tsr_client.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44B79A662F0A576E0016CC16 /* tsr_client.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4D0D18882FAD9EF900AC8A21 /* VideoRendererMetal.metal in Sources */ = {isa = PBXBuildFile; fileRef = 4D0D18872FAD9EF900AC8A21 /* VideoRendererMetal.metal */; };
+		4D0D188A2FAD9F1500AC8A21 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D0D18892FAD9F1500AC8A21 /* sample.mp4 */; };
 		4D1E68E82B67C6E200B8FA8E /* Logger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E68E72B67C6E200B8FA8E /* Logger.m */; };
 		4D2411742B60C1D000720192 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411732B60C1D000720192 /* AppDelegate.m */; };
-		4D24117A2B60C1D000720192 /* VideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2411792B60C1D000720192 /* VideoPlayViewController.m */; };
 		4D24117D2B60C1D000720192 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D24117B2B60C1D000720192 /* Main.storyboard */; };
 		4D24117F2B60C1D200720192 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D24117E2B60C1D200720192 /* Assets.xcassets */; };
 		4D2411822B60C1D200720192 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D2411802B60C1D200720192 /* LaunchScreen.storyboard */; };
@@ -56,7 +60,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				44B79A692F0A577B0016CC16 /* tsr_client.framework in Embed Frameworks */,
+				4D0D18862FAD9E9300AC8A21 /* tsr_client.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,6 +81,12 @@
 		44B8EF542F3ACE93004E2CC4 /* 1920x1080.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1920x1080.mp4; sourceTree = "<group>"; };
 		4D02E2122B6365A90019EA2F /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		4D02E2132B6365DA0019EA2F /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		4D0D187E2FAD9A5900AC8A21 /* TIEPassV2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TIEPassV2ViewController.m; sourceTree = "<group>"; };
+		4D0D187F2FAD9A5900AC8A21 /* TIEPassV2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TIEPassV2ViewController.h; sourceTree = "<group>"; };
+		4D0D18812FAD9A5F00AC8A21 /* VideoRendererMetal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoRendererMetal.h; sourceTree = "<group>"; };
+		4D0D18822FAD9A5F00AC8A21 /* VideoRendererMetal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoRendererMetal.m; sourceTree = "<group>"; };
+		4D0D18872FAD9EF900AC8A21 /* VideoRendererMetal.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = VideoRendererMetal.metal; path = "../../../../../../cloud_gaming_android/SRPlayer/ios/tsr-ios-demo/tsr-ios-demo/Resources/Shaders/VideoRendererMetal.metal"; sourceTree = "<group>"; };
+		4D0D18892FAD9F1500AC8A21 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = sample.mp4; path = "../../../../../../cloud_gaming_android/SRPlayer/ios/tsr-ios-demo/tsr-ios-demo/Resources/Videos/sample.mp4"; sourceTree = "<group>"; };
 		4D1E68E52B67C6BB00B8FA8E /* Logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
 		4D1E68E72B67C6E200B8FA8E /* Logger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Logger.m; sourceTree = "<group>"; };
 		4D24116F2B60C1D000720192 /* tsr-ios-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tsr-ios-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,7 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44B79A682F0A577B0016CC16 /* tsr_client.framework in Frameworks */,
+				4D0D18852FAD9E5800AC8A21 /* tsr_client.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,7 +167,11 @@
 				4D02E2122B6365A90019EA2F /* SettingsViewController.h */,
 				4D02E2132B6365DA0019EA2F /* SettingsViewController.m */,
 				4D2411782B60C1D000720192 /* VideoPlayViewController.h */,
+				4D0D18812FAD9A5F00AC8A21 /* VideoRendererMetal.h */,
+				4D0D18822FAD9A5F00AC8A21 /* VideoRendererMetal.m */,
 				4D2411792B60C1D000720192 /* VideoPlayViewController.m */,
+				4D0D187F2FAD9A5900AC8A21 /* TIEPassV2ViewController.h */,
+				4D0D187E2FAD9A5900AC8A21 /* TIEPassV2ViewController.m */,
 				4D812D622D6DBE060097ED2C /* VideoRenderer.h */,
 				4D812D642D6DBE220097ED2C /* VideoRenderer.m */,
 				4D1E68E52B67C6BB00B8FA8E /* Logger.h */,
@@ -186,6 +200,7 @@
 		446388AC2F0FB8CE00A26AA7 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				4D0D18872FAD9EF900AC8A21 /* VideoRendererMetal.metal */,
 				4D2411A92B60C21100720192 /* shader.metal */,
 			);
 			path = Shaders;
@@ -194,6 +209,7 @@
 		446388C02F0FB95A00A26AA7 /* Videos */ = {
 			isa = PBXGroup;
 			children = (
+				4D0D18892FAD9F1500AC8A21 /* sample.mp4 */,
 				44B8EF502F3ACE93004E2CC4 /* 480x854.mp4 */,
 				44B8EF512F3ACE93004E2CC4 /* 720x1280.mp4 */,
 				44B8EF522F3ACE93004E2CC4 /* 854x480.mp4 */,
@@ -373,6 +389,7 @@
 				44B8EF572F3ACE93004E2CC4 /* 1280x720.mp4 in Resources */,
 				44B8EF582F3ACE93004E2CC4 /* 720x1280.mp4 in Resources */,
 				44B8EF592F3ACE93004E2CC4 /* 854x480.mp4 in Resources */,
+				4D0D188A2FAD9F1500AC8A21 /* sample.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,13 +416,16 @@
 			files = (
 				4D812D652D6DBE220097ED2C /* VideoRenderer.m in Sources */,
 				44B79A902F0E47CD0016CC16 /* ProfileViewController.m in Sources */,
-				4D24117A2B60C1D000720192 /* VideoPlayViewController.m in Sources */,
+				4D0D18882FAD9EF900AC8A21 /* VideoRendererMetal.metal in Sources */,
+				4D0D187D2FAD9A1A00AC8A21 /* VideoPlayViewController.m in Sources */,
 				4D2411742B60C1D000720192 /* AppDelegate.m in Sources */,
 				4D2411852B60C1D200720192 /* main.m in Sources */,
 				44B79A792F0E10C20016CC16 /* MainViewController.m in Sources */,
+				4D0D18802FAD9A5A00AC8A21 /* TIEPassV2ViewController.m in Sources */,
 				4D02E2142B6365DA0019EA2F /* SettingsViewController.m in Sources */,
 				4D1E68E82B67C6E200B8FA8E /* Logger.m in Sources */,
 				4D2411AA2B60C21100720192 /* shader.metal in Sources */,
+				4D0D18832FAD9A6000AC8A21 /* VideoRendererMetal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
