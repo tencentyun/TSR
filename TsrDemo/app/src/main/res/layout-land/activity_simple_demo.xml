@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".demo.ByteBufferPathBaseActivity">
+
+    <!-- 视频显示区域 -->
+    <android.opengl.GLSurfaceView
+            android:id="@+id/glSurfaceView"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="match_parent" />
+
+    <!-- 操作面板：横屏时竖排靠右，避免遮挡中间播放区域 -->
+    <LinearLayout
+            android:id="@+id/controlPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="#00000000"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="12dp">
+        <!-- 播放/暂停切换按钮：图标根据 currentState 动态切换 ▶︎/❚❚ -->
+        <ImageButton
+                android:id="@+id/btnPlayPause"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="播放/暂停"
+                android:scaleType="fitCenter"
+                android:src="@android:drawable/ic_media_play" />
+
+        <!-- TsrPass 开关按钮（默认隐藏，由"增强/超分"子类主动打开） -->
+        <ToggleButton
+                android:id="@+id/toggleEnhance"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_margin="8dp"
+                android:enabled="false"
+                android:textAllCaps="false"
+                android:textOn="增强 开"
+                android:textOff="增强 关"
+                android:checked="false"
+                android:visibility="gone"
+                android:textSize="9sp"
+                android:minWidth="60dp"
+                android:minHeight="0dp"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp" />
+    </LinearLayout>
+
+    <!-- 底部状态显示 -->
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#7777"
+            android:layout_gravity="bottom">
+
+        <TextView
+                android:id="@+id/tvStatus1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="9sp" />
+
+        <TextView
+                android:id="@+id/tvStatus2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="56dp"
+                android:scrollbars="vertical"
+                android:isScrollContainer="true"
+                android:textSize="9sp" />
+
+    </LinearLayout>
+
+</FrameLayout>

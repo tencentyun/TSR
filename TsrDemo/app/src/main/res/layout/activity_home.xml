@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="16dp">
+
+        <!-- ============================================================
+                分组一：选择视频
+        ============================================================ -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="▎选择视频"
+            android:textSize="15sp"
+            android:textColor="#333333"
+            android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/video_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="内置"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical" />
+
+            <Spinner
+                android:id="@+id/video_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_pick_local_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="本地视频"
+                android:textAllCaps="false"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_current_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="当前选择："
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
+            android:background="#FFF3E0"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:layout_marginTop="8dp" />
+
+        <!-- ============================================================
+                分组二：ByteBuffer 路径演示
+        ============================================================ -->
+        <LinearLayout
+            android:id="@+id/section_bytebuffer_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="48dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▎ByteBuffer 路径演示"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/base_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="普通播放"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/profile_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="画质增强"
+                    android:textAllCaps="false"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/sr_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="超分辨率"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ============================================================
+                分组三：OES 纹理路径演示
+        ============================================================ -->
+        <LinearLayout
+            android:id="@+id/section_oes_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▎OES 纹理路径演示"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/oes_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="画质增强"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ============================================================
+                分组四：Surface 封装演示
+        ============================================================ -->
+        <LinearLayout
+            android:id="@+id/section_surface_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▎Surface 封装演示"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/tie_surface_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="画质增强"
+                    android:textAllCaps="false"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/tsr_surface_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="超分辨率"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ============================================================
+                分组五：TsrPass 演示
+        ============================================================ -->
+        <LinearLayout
+            android:id="@+id/section_tsrpass_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▎TsrPass 演示"
+                android:textSize="15sp"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/tsr_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="超分辨率"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

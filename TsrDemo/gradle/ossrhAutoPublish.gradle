@@ -1,0 +1,64 @@
+import groovy.json.JsonSlurper
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLEncoder
+
+tasks.register('ossrhAutoPublish') {
+    group = 'publishing'
+    description = 'Trigger OSSRH automatic publishing for all open repositories.'
+
+    doLast {
+        def ossrhBearerToken = findProperty('ossrhBearerToken') ?: System.getenv('OSSRH_BEARER_TOKEN')
+        def apiBase = 'https://ossrh-staging-api.central.sonatype.com'
+
+        if (!ossrhBearerToken) {
+            throw new GradleException('No OSSRH Bearer Token found. Set ossrhBearerToken in local.properties or OSSRH_BEARER_TOKEN env var.')
+        }
+
+        def searchUrlStr = "${apiBase}/manual/search/repositories?ip=any&state=open"
+        println "### Querying open repositories: ${searchUrlStr}"
+
+        HttpURLConnection searchConn = (HttpURLConnection) new URL(searchUrlStr).openConnection()
+        searchConn.setRequestMethod('GET')
+        searchConn.setRequestProperty('Authorization', "Bearer ${ossrhBearerToken}")
+
+        int searchResponseCode = searchConn.getResponseCode()
+        if (searchResponseCode != 200) {
+            def errorStream = searchConn.getErrorStream()
+            def errorMsg = errorStream ? errorStream.text : 'No error message'
+            throw new GradleException("Failed to query open repositories. Response code: ${searchResponseCode}, message: ${errorMsg}")
+        }
+
+        def responseText = searchConn.getInputStream().getText('UTF-8')
+        def json = new JsonSlurper().parseText(responseText)
+        def openRepos = json.repositories.findAll { it.state == 'open' }
+
+        if (openRepos.isEmpty()) {
+            println '### No open repositories found, nothing to publish.'
+            return
+        }
+
+        println "### Found ${openRepos.size()} open repositories:"
+        openRepos.each { println "    key: ${it.key}" }
+
+        openRepos.each { repo ->
+            def repoKey = repo.key
+            def uploadUrlStr = "${apiBase}/manual/upload/repository/${URLEncoder.encode(repoKey, 'UTF-8')}?publishing_type=automatic"
+            println "### Triggering OSSRH auto-publish for repository: ${repoKey}"
+
+            HttpURLConnection uploadConn = (HttpURLConnection) new URL(uploadUrlStr).openConnection()
+            uploadConn.setRequestMethod('POST')
+            uploadConn.setRequestProperty('Authorization', "Bearer ${ossrhBearerToken}")
+            uploadConn.setDoOutput(true)
+
+            int uploadResponseCode = uploadConn.getResponseCode()
+            if (uploadResponseCode >= 200 && uploadResponseCode < 300) {
+                println "    -> OSSRH auto-publish triggered successfully for ${repoKey}."
+            } else {
+                def errorStream = uploadConn.getErrorStream()
+                def errorMsg = errorStream ? errorStream.text : 'No error message'
+                println "    -> Failed to trigger OSSRH auto-publish for ${repoKey}. Response code: ${uploadResponseCode}, message: ${errorMsg}"
+            }
+        }
+    }
+}
