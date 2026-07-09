@@ -1,7 +1,5 @@
 pluginManagement {
     repositories {
-        maven { url "https://mirrors.tencent.com/repository/maven/thirdparty" }
-        maven { url "https://mirrors.tencent.com/repository/maven/AndroidQQRepo" }
         maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
         mavenCentral()
         gradlePluginPortal()
@@ -10,9 +8,6 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
-        maven { url "https://mirrors.tencent.com/repository/maven/thirdparty" }
-        maven { url "https://mirrors.tencent.com/repository/maven/AndroidQQRepo" }
-        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public/' }
         mavenLocal()
         google()
         mavenCentral()
